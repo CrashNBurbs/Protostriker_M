@@ -1,0 +1,8 @@
+Ideas for stuff to add:
+- Tile Engine
+- loading map data
+- save/load game functions
+- Debug mode
+- framework for some common game objects - In Progress
+- wrap game physics functions?
+

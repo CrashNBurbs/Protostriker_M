@@ -1,0 +1,11 @@
+begin_enemy	type enemy_01	x 1000		y 112		end_enemy
+begin_enemy	type enemy_01	x 1500		y 112		end_enemy
+begin_enemy	type enemy_02	x 2000		y 112		end_enemy
+begin_enemy	type enemy_03	x 3000		y 80		end_enemy
+begin_enemy	type enemy_03	x 4000		y 80		end_enemy
+begin_enemy	type enemy_04	x 5000		y 0		end_enemy
+begin_enemy	type enemy_06	x 7000		y 40		end_enemy
+begin_enemy	type enemy_06	x 8000		y 40		end_enemy
+begin_enemy	type enemy_07	x 9000		y 112		end_enemy
+begin_enemy	type enemy_07	x 10000		y 112		end_enemy
+begin_enemy	type enemy_05	x 11000		y 112		end_enemy

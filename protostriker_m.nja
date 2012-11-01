@@ -1,0 +1,28 @@
+{
+  "mainFile": "C:/Users/Owner/Documents/GameDev/Games/ProtostrikerM/Protostriker_M/main.py", 
+  "use-tabs": false, 
+  "venv": "", 
+  "relatedProjects": [], 
+  "name": "Protostriker_M", 
+  "license": "GNU General Public License v3", 
+  "url": "", 
+  "pythonPath": "python", 
+  "preExecScript": "", 
+  "programParams": "", 
+  "indentation": 4, 
+  "PYTHONPATH": "", 
+  "supported-extensions": [
+    ".py", 
+    ".html", 
+    ".jpg", 
+    ".png", 
+    ".ui", 
+    ".css", 
+    ".json", 
+    ".js", 
+    ".ini"
+  ], 
+  "project-type": "Import from sources", 
+  "postExecScript": "", 
+  "description": ""
+}

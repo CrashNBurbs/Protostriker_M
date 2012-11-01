@@ -1,0 +1,147 @@
+begin_enemy 	type enemy_01	x 1000		y 34		end_enemy
+
+begin_enemy 	type enemy_01	x 1024		y 34		end_enemy
+
+begin_enemy 	type enemy_01	x 1048		y 34		end_enemy
+
+begin_enemy 	type enemy_01	x 1500		y 160		end_enemy
+
+begin_enemy 	type enemy_01	x 1524		y 160		end_enemy
+
+begin_enemy 	type enemy_01	x 1548		y 160		end_enemy
+
+begin_enemy 	type enemy_02	x 2000		y 65		end_enemy
+
+begin_enemy 	type enemy_02	x 2000		y 165		end_enemy
+
+begin_enemy	type enemy_01	x 2200		y 34		end_enemy
+
+begin_enemy	type enemy_01	x 2200		y 112		end_enemy
+
+begin_enemy	type enemy_01	x 2200		y 190		end_enemy
+
+begin_enemy	type enemy_02	x 2700		y 34		end_enemy
+
+begin_enemy	type enemy_02	x 2700		y 190		end_enemy
+
+begin_enemy	type enemy_01	x 3200		y 112		end_enemy
+
+begin_enemy	type enemy_01	x 3200		y 88		end_enemy
+
+begin_enemy	type enemy_01	x 3200		y 136		end_enemy
+
+begin_enemy	type enemy_03	x 3800		y 70		end_enemy
+
+begin_enemy	type enemy_03	x 4300		y 20		end_enemy
+
+begin_enemy	type enemy_03	x 4300		y 136		end_enemy
+
+begin_enemy	type enemy_02	x 4700		y 112		end_enemy
+
+begin_enemy	type enemy_03	x 4900		y 20		end_enemy
+
+begin_enemy	type enemy_03	x 4900		y 136		end_enemy
+
+begin_enemy	type enemy_04	x 5300		y 0		end_enemy
+
+begin_enemy	type enemy_01	x 5600		y 34		end_enemy
+
+begin_enemy	type enemy_01	x 5700		y 112		end_enemy
+
+begin_enemy	type enemy_01	x 5800		y 190		end_enemy
+
+begin_enemy	type enemy_02	x 6200		y 34		end_enemy
+
+begin_enemy	type enemy_02	x 6200		y 56		end_enemy
+
+begin_enemy	type enemy_02	x 6200		y 80		end_enemy
+
+begin_enemy	type enemy_02	x 6400		y 104		end_enemy
+
+begin_enemy	type enemy_02	x 6400		y 128		end_enemy
+
+begin_enemy	type enemy_02	x 6400		y 152		end_enemy
+
+begin_enemy	type enemy_02	x 6600		y 176		end_enemy
+
+begin_enemy	type enemy_02	x 6600		y 200		end_enemy
+
+begin_enemy	type enemy_02	x 6600		y 224		end_enemy
+
+begin_enemy	type enemy_03	x 7100		y 104		end_enemy
+
+begin_enemy	type enemy_03	x 7100		y 128		end_enemy
+
+begin_enemy	type enemy_03	x 7100		y 152		end_enemy
+
+begin_enemy	type enemy_01	x 7400		y 34		end_enemy
+
+begin_enemy	type enemy_01	x 7400		y 56		end_enemy
+
+begin_enemy	type enemy_01	x 7400		y 80		end_enemy
+
+begin_enemy	type enemy_01	x 7800		y 112		end_enemy
+
+begin_enemy	type enemy_01	x 7810		y 96		end_enemy
+
+begin_enemy	type enemy_01	x 7810		y 128		end_enemy
+
+begin_enemy	type enemy_01	x 7820		y 80		end_enemy
+
+begin_enemy	type enemy_01	x 7820		y 144		end_enemy
+
+begin_enemy	type enemy_01	x 7830		y 64		end_enemy
+
+begin_enemy	type enemy_01	x 7830		y 160		end_enemy
+
+begin_enemy	type enemy_01	x 7840		y 48		end_enemy
+
+begin_enemy	type enemy_01	x 7840		y 176		end_enemy
+
+begin_enemy	type enemy_04	x 8200		y 0		end_enemy
+
+begin_enemy	type enemy_04	x 8200		y 224		end_enemy
+
+begin_enemy	type enemy_04	x 8500		y 224		end_enemy
+
+begin_enemy	type enemy_04	x 8520		y 0		end_enemy
+
+begin_enemy	type enemy_04	x 8540		y 224		end_enemy
+
+begin_enemy	type enemy_04	x 8580		y 0		end_enemy
+
+begin_enemy	type enemy_01	x 9000		y 34		end_enemy
+
+begin_enemy	type enemy_01	x 9010		y 50		end_enemy
+
+begin_enemy	type enemy_01	x 9020		y 66		end_enemy
+
+begin_enemy	type enemy_01	x 9030		y 82		end_enemy
+
+begin_enemy	type enemy_01	x 9040		y 98		end_enemy
+
+begin_enemy	type enemy_01	x 9050		y 114		end_enemy
+
+begin_enemy	type enemy_01	x 9060		y 130		end_enemy
+
+begin_enemy	type enemy_01	x 9070		y 146		end_enemy
+
+begin_enemy	type enemy_01	x 9080		y 162		end_enemy
+
+begin_enemy	type enemy_01	x 9090		y 178		end_enemy
+
+begin_enemy	type enemy_01	x 9100		y 194		end_enemy
+
+begin_enemy	type enemy_01	x 9110		y 210		end_enemy
+
+begin_enemy	type enemy_01	x 9120		y 226		end_enemy
+
+begin_enemy	type enemy_03	x 9600		y 90		end_enemy
+
+begin_enemy	type enemy_03	x 9630		y 40		end_enemy
+
+begin_enemy	type enemy_03 	x 9660		y 130		end_enemy
+
+begin_enemy	type enemy_02	x 9680		y 188		end_enemy
+
+begin_enemy	type enemy_02	x 9680		y 34		end_enemy
