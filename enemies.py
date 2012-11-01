@@ -198,6 +198,7 @@ class Enemy4(Enemy2):
 
 
 class Enemy5(Enemy2):
+    """ Large, multi-hit taking, enemy that creats shrapnel on explode """
     def __init__(self, x, y, images):
         Enemy2.__init__(self, x, y, images)
         self.speed = 15
@@ -248,6 +249,7 @@ class Enemy5(Enemy2):
         return ex
 
 class Enemy6(Enemy3):
+    """ Wide sine-wave enemy """
     def __init__(self, x, y, images):
         Enemy3.__init__(self, x, y, images)
         self.dAngle = 3.5
@@ -257,6 +259,7 @@ class Enemy6(Enemy3):
 
 
 class Enemy7(Enemy1):
+    """ Homing enemy """
     def __init__(self, x, y, images):
         Enemy1.__init__(self, x, y, images)
         self.speed = 95
