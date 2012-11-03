@@ -1,1 +1,0 @@
-begin_enemy	type enemy_05	x 616	y 128	end_enemy

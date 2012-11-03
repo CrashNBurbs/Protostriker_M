@@ -1,7 +1,0 @@
-begin_enemy	type enemy_01	x 784	y 40	end_enemy
-begin_enemy	type enemy_01	x 848	y 72	end_enemy
-begin_enemy	type enemy_01	x 848	y 80	end_enemy
-begin_enemy	type enemy_01	x 808	y 104	end_enemy
-begin_enemy	type enemy_01	x 720	y 112	end_enemy
-begin_enemy	type enemy_01	x 752	y 160	end_enemy
-begin_enemy	type enemy_01	x 832	y 160	end_enemy
