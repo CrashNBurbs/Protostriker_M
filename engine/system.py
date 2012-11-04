@@ -58,20 +58,32 @@ class Display():
 
     def init(self):
         res = self.res
-        os.environ["SDL_VIDEO_CENTERED"] = "1"  # center for window mode
-        pygame.mixer.pre_init(44100, -16, 2, 2048)  # pre-initialize mixer to fix audio lag
-        pygame.init()
-        desktop_h = pygame.display.Info().current_h  # save the desktop res before setting mode
-        self.window_scale = desktop_h / res[1] # calculate scale for window mode
 
-        # if scaled height is the same as desktop height, window will be cut off
-        # and aspect ratio will be distorted, use one scale smaller
+        # center for window mode
+        os.environ["SDL_VIDEO_CENTERED"] = "1"
+
+        # pre-initialize mixer to fix audio lag and
+        # initialize pygame
+        pygame.mixer.pre_init(44100, -16, 2, 2048)
+        pygame.init()
+
+        # save the desktop res before setting mode
+        desktop_h = pygame.display.Info().current_h
+
+        # calculate scale for window mode
+        self.window_scale = desktop_h / res[1]
+
+        # if scaled height is the same as desktop height, window will be cut
+        # off and aspect ratio will be distorted, use one scale smaller
         if res[1] * self.window_scale == desktop_h:
             self.window_scale -= 1
 
         # display, sets resolution at 2 times the size of the game res
-        #self.screen = pygame.display.set_mode((res[0] * 2, res[1] * 2), pygame.FULLSCREEN)
-        self.screen = pygame.display.set_mode((res[0] * self.window_scale, res[1] * self.window_scale))
+        #self.screen = pygame.display.set_mode((res[0] * 2, res[1] * 2),
+                                               #pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((res[0] * self.window_scale,
+                                               res[1] * self.window_scale))
+
         # create a buffer that is the same size as the game resolution
         self.buffer = pygame.Surface(res)
         pygame.mouse.set_visible(False)  # turn off the mouse pointer display
@@ -85,9 +97,12 @@ class Display():
         res = self.res
         window_scale = self.window_scale
         if self.fullscreen:  # scale settings for fullscreen
-            scaled_buffer = pygame.transform.scale(self.buffer, (res[0] * 2, res[1] * 2))
+            scaled_buffer = pygame.transform.scale(self.buffer,
+                                                  (res[0] * 2, res[1] * 2))
         else:  # scale settings for windowed mode
-            scaled_buffer = pygame.transform.scale(self.buffer, ((res[0] * window_scale, res[1] * window_scale)))
+            scaled_buffer = pygame.transform.scale(self.buffer,
+                                                   ((res[0] * window_scale,
+                                                     res[1] * window_scale)))
 
         self.screen.blit(scaled_buffer, (0,0))
         pygame.display.flip()
@@ -98,7 +113,8 @@ class Display():
         window_scale = self.window_scale
         if self.fullscreen:
             pygame.display.set_caption(self.caption)
-            self.screen = pygame.display.set_mode((res[0] * window_scale, res[1] * window_scale))
+            self.screen = pygame.display.set_mode((res[0] * window_scale,
+                                                   res[1] * window_scale))
             self.fullscreen = False
         else:
             self.screen = pygame.display.set_mode((640, 480), pygame.FULLSCREEN)
@@ -128,8 +144,12 @@ class InputManager():
     def __init__(self):
         pygame.joystick.init()
         self.redefined = False  # Start with default controls
-        self.held = {'keys' : [], 'buttons' : [], 'dpad' : []}  # dictionary of held buttons
-        self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}  # dictionary of pressed buttons
+
+        # dictionary of held buttons
+        self.held = {'keys' : [], 'buttons' : [], 'dpad' : []}
+
+         # dictionary of pressed buttons
+        self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}
         self.config_mode = False
 
         # block the d-pad diagonal and neutral JOTHATMOTION events
@@ -172,9 +192,12 @@ class InputManager():
 
     def handle_input(self):
         if self.config_mode:
-            pass # do not use this event loop if user is currently defining new controls
+            # do not use this event loop if user is currently
+            # defining new controls
+            pass
         else:
-            self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}  #reset pressed buttons every call
+            #reset pressed buttons every call
+            self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
@@ -196,7 +219,8 @@ class InputManager():
                         self.held['buttons'].remove(event.button)
                 elif event.type == JOYHATMOTION:  # d-pad
                     if event.value == (-1, 0):
-                        self.update_dpad('left')  # append a str representation
+                        # append a str representation
+                        self.update_dpad('left')
                     elif event.value == (1, 0):
                         self.update_dpad('right')
                     elif event.value == (0, 1):
@@ -204,14 +228,16 @@ class InputManager():
                     elif event.value == (0, -1):
                         self.update_dpad('down')
                     elif event.value == (-1, 1):
-                        self.update_dpad('up', 'left')  # for diagonals, append two str
+                        # for diagonals, append two str
+                        self.update_dpad('up', 'left')
                     elif event.value == (1, 1):
                         self.update_dpad('up', 'right')
                     elif event.value == (1, -1):
                         self.update_dpad('down', 'right')
                     elif event.value == (-1, -1):
                         self.update_dpad('down', 'left')
-                    elif event.value == (0, 0):  # empty held if d-pad in neutral position
+                    elif event.value == (0, 0):
+                        # empty held if d-pad in neutral position
                         self.held['dpad'] = []
 
     def config_handle_input(self):
@@ -238,15 +264,22 @@ class InputManager():
             if button in self.user_bound.iterkeys():
                 values = self.user_bound[button]
         else:
-            if button in self.default_bound.iterkeys():  # if button is a bound button
-                values = self.default_bound[button]  # get the list of bindings
+            # if button is a bound button
+            if button in self.default_bound.iterkeys():
+                # get the list of bindings
+                values = self.default_bound[button]
 
-        for key in self.pressed.iterkeys():  # for each type (keyboard and gamepad)
-            for pressed in self.pressed[key]: # for each value in pressed
-                if pressed in values:    # if pressed is found in the bindings
+        # for each type (keyboard and gamepad)
+        for key in self.pressed.iterkeys():
+            # for each value in pressed
+            for pressed in self.pressed[key]:
+                # if pressed is found in the bindings
+                if pressed in values:
                     return True
-        return False   # return false if the button passed in is not a bound button
-                        # or is not found in the list of pressed buttons
+        # return false if the button passed in is not a bound button
+        # or is not found in the list of pressed buttons
+        return False
+
     def is_held(self, button):
         # returns true if a button is being held
         if self.redefined:
@@ -394,7 +427,8 @@ class StateManager():
 
         current_state = self.get_current_state()
         while(current_state):
-            current_state = self.get_current_state() # check for state change
+            # check for state change
+            current_state = self.get_current_state()
 
             self.accumulator += self.clock.tick() / 1000.0
 
