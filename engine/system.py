@@ -14,6 +14,9 @@ import pygame
 from pygame.locals import *
 import os
 import game
+import graphics
+import sound
+import gui
 
 """ Some notes about Framerate Independent game Updates:
 This engine uses framerate independent game updates at a fixed timestep.
@@ -130,8 +133,7 @@ class Display():
         return self.buffer.get_rect()
 
     def set_caption(self, caption):
-        self.caption = caption
-        pygame.display.set_caption(self.caption)
+        pygame.display.set_caption(caption)
 
 
 class InputManager():
@@ -372,13 +374,20 @@ class State():
         pass
 
     def handle_input(self):
-        pass
-
-    def draw(self):
+        # All objects that process input should have their handle_input()
+        # functions called here
         pass
 
     def update(self):
+        # All objects that update should have their update() functions
+        # called here
         pass
+
+    def draw(self):
+        # All objects that draw should have their draw() functions called
+        # here
+        pass
+
 
     def activate(self):
         # called once when the state is first pushed
@@ -441,3 +450,31 @@ class StateManager():
 
             current_state.draw()
             game.display.update()
+
+
+class Game():
+    """ Abstract game class """
+    def __init__(self):
+        self.display = Display()
+        self.image_manager = graphics.ImageManager()
+        self.sound_manager = sound.SoundManager()
+        self.menu_manager = gui.MenuManager()
+        self.state_manager = StateManager()
+        self.input_manager = InputManager()
+        self.initial_state = None
+
+    def set_caption(self, caption):
+        # set the window title bar to caption
+        pygame.display.set_caption(caption)
+
+    def load_content(self):
+        # load all images and sounds here
+        pass
+
+    def run(self):
+        # Push the initial state to the state manager
+        if self.initial_state is not None:
+            self.state_manager.push_state(self.initial_state)
+
+
+

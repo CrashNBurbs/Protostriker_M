@@ -113,11 +113,11 @@ class Viewport():
         if self.auto_scroll: # background scrolls on its own
             self.coordinate += self.advance_velocity * self.timestep
             self.level_pos += self.advance_velocity * self.timestep
-        else:  # background scrolls as a result of the player passing a point on screen
-            if self.player.rect.right >= 130 and \
-            game.input_manager.is_held('RIGHT') and \
-            not self.player.kicking and not self.player.punching:
-                self.coordinate += self.advance_velocity * self.timestep
+        #else:  # background scrolls as a result of the player passing a point on screen
+            #if self.player.rect.right >= 130 and \
+            #game.input_manager.is_held('RIGHT') and \
+            #not self.player.kicking and not self.player.punching:
+                #self.coordinate += self.advance_velocity * self.timestep
 
         # loop image
         if self.coordinate > self.maxScroll:
