@@ -14,7 +14,6 @@
 import pygame
 from pygame.locals import *
 import os
-import game
 
 class ImageManager():
     """ loads all game images and font into a single dictionary
@@ -95,7 +94,6 @@ class Viewport():
     of the screen, from a larger background image to
      enable scrolling"""
     def __init__(self, background, player, auto_scroll = True):
-        self.screen = game.display.get_screen()
         self.background = background
         self.player = player
         self.auto_scroll = auto_scroll
@@ -123,8 +121,8 @@ class Viewport():
         if self.coordinate > self.maxScroll:
                 self.coordinate = 0
 
-    def draw(self):
+    def draw(self, screen):
         # create new subsurface from updated coordinate
         # draw it to the screen
         self.vp = self.background.subsurface((self.coordinate, 0, self.width, self.height))
-        self.screen.blit(self.vp, (0,0))
+        screen.blit(self.vp, (0,0))

@@ -13,7 +13,6 @@
 import pygame
 from pygame.locals import *
 import engine
-import game
 import bullets
 
 class Player(engine.objects.AnimatedSprite):
@@ -21,12 +20,12 @@ class Player(engine.objects.AnimatedSprite):
         spaceship. Note: intermediate values for x,y coords
         are used(dx,dy) to assign floating point values to
         rect attributes """
-    def __init__(self, x, y, images):
+    def __init__(self, game, x, y, images):
         engine.objects.AnimatedSprite.__init__(self,x,y,images, 20)
+        self.game = game
         self.speed = 90
         self.direction = [0,0] # [x,y]
         self.bounds = game.display.get_screen_bounds()
-        self.bullet_image = game.image_manager.get_image('pshot')
         self.shoot_speed = 200 # delay for creating shots
         self.last_shot = 0 # time of last shot
         self.hitbox = pygame.Rect(0,0,28,8) # rect for collsion
@@ -106,7 +105,7 @@ class Player(engine.objects.AnimatedSprite):
         # shoot a bullet every self.shoot_speed m/s
         if current_time - self.last_shot > self.shoot_speed:
             self.shot = bullets.PlayerBullet(self.rect.right - 6,
-                             self.rect.centery + 4, self.bullet_image)
+                             self.rect.centery + 4, self.game.image_manager.get_image('pshot'))
             self.shoot_sound.play()
             self.last_shot = current_time
         else:
@@ -115,22 +114,22 @@ class Player(engine.objects.AnimatedSprite):
     def handle_input(self, current_time):
         # check input, set direction to appropriate values
         if not self.respawning: # disable input if respawning
-            if game.input_manager.is_held('UP'):
+            if self.game.input_manager.is_held('UP'):
                 self.direction[1] = -1
-            elif game.input_manager.is_held('DOWN'):
+            elif self.game.input_manager.is_held('DOWN'):
                 self.direction[1] = 1
             else: # not moving up or down
                 self.direction[1] = 0
 
-            if game.input_manager.is_held('LEFT'):
+            if self.game.input_manager.is_held('LEFT'):
                 self.direction[0] = -1
-            elif game.input_manager.is_held('RIGHT'):
+            elif self.game.input_manager.is_held('RIGHT'):
                 self.direction[0] = 1
             else: # not moving left or right
                 self.direction[0] = 0
 
             # shoot on 'B' button press
-            if game.input_manager.is_held('B'):
+            if self.game.input_manager.is_held('B'):
                 self.shoot(current_time)
                 return self.shot
 

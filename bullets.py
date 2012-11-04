@@ -13,12 +13,11 @@
 
 import pygame
 import engine
-import game
 import math
 
 class Bullet(pygame.sprite.Sprite):
     """ Abstract class for a bullet """
-    def __init__(self, x, y, image):
+    def __init__(self, game, x, y, image):
         pygame.sprite.Sprite.__init__(self)
         self.image = image
         self.rect = self.image.get_rect()
@@ -101,8 +100,8 @@ class Explosion(engine.objects.AnimatedSprite):
 
 class Shrapnel(Bullet):
     """ Shrapnel object """
-    def __init__(self, x, y, images, angle):
-        Bullet.__init__(self,x,y,images[0])
+    def __init__(self, game, x, y, images, angle):
+        Bullet.__init__(self, game, x, y, images[0])
         self.images = images
         self.hitbox = pygame.Rect(self.dx,self.dy,6,6)
         self.hb_offsetx = 1

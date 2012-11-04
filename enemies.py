@@ -11,7 +11,6 @@
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
 import engine
-import game
 import math
 import pygame
 import bullets
@@ -19,8 +18,9 @@ import bullets
 class Enemy1(engine.objects.AnimatedSprite):
     """ First enemy type, moves in a straight line
     at a high speed """
-    def __init__(self, x, y, images, fps = 20):
+    def __init__(self, game, x, y, images, fps = 20):
         engine.objects.AnimatedSprite.__init__(self, x, y, images, fps)
+        self.game = game
         self.speed = 145
         self.bounds = game.display.get_screen_bounds()
         self.hitbox = pygame.Rect(0,0,15,12)
@@ -57,7 +57,7 @@ class Enemy1(engine.objects.AnimatedSprite):
         ex = []
         # create explosion sprite
         ex.append(bullets.Explosion(self.rect.x, self.rect.y,
-                game.image_manager.get_image('explosion')))
+                self.game.image_manager.get_image('explosion')))
         # play sound
         self.explosion_sound.play()
 
@@ -69,10 +69,9 @@ class Enemy1(engine.objects.AnimatedSprite):
 class Enemy2(Enemy1):
     """ Second enemy type, moves in a straight line
     at a slow speed and shoots """
-    def __init__(self, x, y, images):
-        Enemy1.__init__(self, x, y, images)
+    def __init__(self, game, x, y, images):
+        Enemy1.__init__(self, game, x, y, images)
         self.speed = 25
-        self.bullet_image = game.image_manager.get_image('eshot')
         self.shoot_speed = 150  # shooting delay
         self.last_shot = 0 # time of last shot
         self.volley_speed = 2000 # volley of shots delay
@@ -112,8 +111,8 @@ class Enemy2(Enemy1):
         # fire a shot at current pos, every
         # self.shoot_speed m/s, keep track of shots fired
         if current_time - self.last_shot > self.shoot_speed:
-            self.shot = bullets.EnemyBullet(self.rect.left,
-                             self.rect.centery, self.bullet_image)
+            self.shot = bullets.EnemyBullet(self.game, self.rect.left,
+                             self.rect.centery, self.game.image_manager.get_image('eshot'))
             self.shots += 1
             self.last_shot = current_time
         else:
@@ -122,8 +121,8 @@ class Enemy2(Enemy1):
 class Enemy3(Enemy1):
     """ Third enemy type, moves in a sine wave
     pattern at a moderate speed """
-    def __init__(self, x, y, images):
-        Enemy1.__init__(self, x, y, images, 40)
+    def __init__(self, game, x, y, images):
+        Enemy1.__init__(self, game, x, y, images, 40)
         self.speed = 95
         self.angle = 0.0  # starting point for sin calc
         self.radius = 2.0 # value to scale sin calc by
@@ -151,8 +150,8 @@ class Enemy4(Enemy2):
     """ Fourth enemy type, moves into position and
     then vertical from the top to the bottom of the screen
     until destroyed """
-    def __init__(self, x, y, images):
-        Enemy2.__init__(self, x, y, images)
+    def __init__(self, game, x, y, images):
+        Enemy2.__init__(self, game, x, y, images)
         self.speed = 50
         self.direction = -1
         self.bounds = game.display.get_screen_bounds()
@@ -199,8 +198,8 @@ class Enemy4(Enemy2):
 
 class Enemy5(Enemy2):
     """ Large, multi-hit taking, enemy that creats shrapnel on explode """
-    def __init__(self, x, y, images):
-        Enemy2.__init__(self, x, y, images)
+    def __init__(self, game, x, y, images):
+        Enemy2.__init__(self, game, x, y, images)
         self.speed = 15
         self.shoot_speed = 1000
         self.points = 250
@@ -221,7 +220,7 @@ class Enemy5(Enemy2):
         # fire a shot at current pos, every
         # self.shoot_speed m/s, keep track of shots fired
         if current_time - self.last_shot > self.shoot_speed:
-            self.shot = bullets.EnemyBullet(self.rect.left + 2,
+            self.shot = bullets.EnemyBullet(self.game, self.rect.left + 2,
                              self.rect.centery + 5, self.bullet_image)
             self.last_shot = current_time
         else:
@@ -237,8 +236,8 @@ class Enemy5(Enemy2):
         # create explosion sprite
 
         for angle in range(0,360,45):
-            ex.append(bullets.Shrapnel(self.rect.centerx, self.rect.centery,
-                game.image_manager.get_image('shrapnel'), angle))
+            ex.append(bullets.Shrapnel(self.game, self.rect.centerx, self.rect.centery,
+                self.game.image_manager.get_image('shrapnel'), angle))
 
         # play sound
         self.explosion_sound.play()
@@ -250,8 +249,8 @@ class Enemy5(Enemy2):
 
 class Enemy6(Enemy3):
     """ Wide sine-wave enemy """
-    def __init__(self, x, y, images):
-        Enemy3.__init__(self, x, y, images)
+    def __init__(self, game, x, y, images):
+        Enemy3.__init__(self, game, x, y, images)
         self.dAngle = 3.5
         self.radius = 3.0
         self.points = 250
@@ -260,8 +259,8 @@ class Enemy6(Enemy3):
 
 class Enemy7(Enemy1):
     """ Homing enemy """
-    def __init__(self, x, y, images):
-        Enemy1.__init__(self, x, y, images)
+    def __init__(self, game, x, y, images):
+        Enemy1.__init__(self, game, x, y, images)
         self.speed = 95
         self.vspeed = 45
         self.direction = 0

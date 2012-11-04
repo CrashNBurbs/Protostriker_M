@@ -12,19 +12,18 @@
 
 import pygame
 from pygame.locals import *
-import game
-
 
 class TextBox():
     """ Abstract base class for displaying a bordered text box in game.
         Menus, dialog boxes, etc. """
-    def __init__(self, x, y):
-        self.screen = game.display.get_screen()
+    def __init__(self, game, x, y):
         # create font
-        self.font = game.image_manager.get_font()
+        self.game = game
+        self.screen = game.display.get_screen()
+        self.font = self.game.image_manager.get_font()
         self.text_color = (252,248,252)
         # load border images
-        self.border_tiles= game.image_manager.get_image('textborder')
+        self.border_tiles= self.game.image_manager.get_image('textborder')
 
     def build_text_box(self):
         # This function blits all menu elements to the menu background
@@ -54,9 +53,8 @@ class Menu(TextBox):
     sizes depending on the number of options in the menu.  Inherit from
     this class to create specific menus and handle input
     options - a list of desired options in string form """
-    def __init__(self, x, y,options):
-        TextBox.__init__(self, x, y)
-        self.type = 'menu'
+    def __init__(self, game, x, y,options):
+        TextBox.__init__(self, game, x, y)
         self.options = options
         self.current_option = 0  # option currently selected
         # load cursor and set rect
@@ -155,11 +153,11 @@ class Menu(TextBox):
     def handle_input(self):
         # moves cursor up and down
         # returns selected option on B or START button press
-        if game.input_manager.is_pressed('DOWN'):
+        if self.game.input_manager.is_pressed('DOWN'):
             self.move_cursor(1)
-        elif game.input_manager.is_pressed('UP'):
+        elif self.game.input_manager.is_pressed('UP'):
             self.move_cursor(-1)
-        elif game.input_manager.is_pressed('B') or game.input_manager.is_pressed('START'):
+        elif self.game.input_manager.is_pressed('B') or game.input_manager.is_pressed('START'):
             self.selected = self.get_selected_option()
             return self.selected
 
@@ -172,8 +170,8 @@ class Menu(TextBox):
 
 class DialogBox(TextBox):
     """ A class for displaying dialog or text in-game """
-    def __init__(self, x, y):
-        TextBox.__init__(self, x, y)
+    def __init__(self, game, x, y):
+        TextBox.__init__(self, game, x, y)
         self.type = 'dialogbox'
         self.width = 288  # w,h of dialog boxes are always 288x72
         self.height = 72
@@ -256,13 +254,13 @@ class DialogBox(TextBox):
     def handle_input(self):
         # go to next page or close dialog box
         # on B button press
-        if game.input_manager.is_pressed('B'):
+        if self.game.input_manager.is_pressed('B'):
             self.progress()
 
 class Message():
     """ Message class for creating text messages that
     display for an amount of time """
-    def __init__(self, x, y, message, lifetime):
+    def __init__(self, game, x, y, message, lifetime):
         self.x = x
         self.y = y
         self.screen = game.display.get_screen()
@@ -289,7 +287,7 @@ class MenuManager():
     to draw all menus on the stack and erase them.push a menu onto the
     stack to draw it and make it the currentmenu, pop it to hide it and
     restore the current menu to the previous menu """
-    def __init__(self):
+    def __init__(self, game):
         self.menus = []
         self.screen = game.display.get_screen()
         self.background = game.image_manager.get_image('background')
