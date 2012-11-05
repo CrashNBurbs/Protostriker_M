@@ -18,9 +18,7 @@ class TextBox():
         Menus, dialog boxes, etc. """
     def __init__(self, game, x, y):
         # create font
-        self.game = game
-        self.screen = game.display.get_screen()
-        self.font = self.game.image_manager.get_font()
+        self.font = game.image_manager.get_font()
         self.text_color = (252,248,252)
         # load border images
         self.border_tiles= self.game.image_manager.get_image('textborder')
@@ -96,10 +94,10 @@ class Menu(TextBox):
         # menu manager updates)
         pass
 
-    def draw(self):
+    def draw(self, screen):
         # draws the menu to the screen
         self.background.blit(self.cursor, (8, self.cursor_rect.y))
-        self.screen.blit(self.background, (self.rect.x, self.rect.y))
+        screen.blit(self.background, (self.rect.x, self.rect.y))
 
     def calc_width(self):
         # steps throught options, sets width to the
@@ -150,14 +148,14 @@ class Menu(TextBox):
         self.select_sound.play()  # option was selected, play sound
         return self.options[self.current_option] # return option string at current index
 
-    def handle_input(self):
+    def handle_input(self, input_manager):
         # moves cursor up and down
         # returns selected option on B or START button press
-        if self.game.input_manager.is_pressed('DOWN'):
+        if input_manager.is_pressed('DOWN'):
             self.move_cursor(1)
-        elif self.game.input_manager.is_pressed('UP'):
+        elif input_manager.is_pressed('UP'):
             self.move_cursor(-1)
-        elif self.game.input_manager.is_pressed('B') or game.input_manager.is_pressed('START'):
+        elif input_manager.is_pressed('B') or input_manager.is_pressed('START'):
             self.selected = self.get_selected_option()
             return self.selected
 
@@ -172,7 +170,6 @@ class DialogBox(TextBox):
     """ A class for displaying dialog or text in-game """
     def __init__(self, game, x, y):
         TextBox.__init__(self, game, x, y)
-        self.type = 'dialogbox'
         self.width = 288  # w,h of dialog boxes are always 288x72
         self.height = 72
         self.background = pygame.Surface((self.width, self.height))
@@ -247,14 +244,14 @@ class DialogBox(TextBox):
             else:  # this is the last page
                 self.page_done = True # allow input
 
-    def draw(self):
+    def draw(self, screen):
         # draw the dialog box to the screen, in it's current state
-        self.screen.blit(self.background, (self.rect.x, self.rect.y))
+        screen.blit(self.background, (self.rect.x, self.rect.y))
 
-    def handle_input(self):
+    def handle_input(self, input_manager):
         # go to next page or close dialog box
         # on B button press
-        if self.game.input_manager.is_pressed('B'):
+        if input_manager.is_pressed('B'):
             self.progress()
 
 class Message():
@@ -263,7 +260,6 @@ class Message():
     def __init__(self, game, x, y, message, lifetime):
         self.x = x
         self.y = y
-        self.screen = game.display.get_screen()
         self.font = game.image_manager.get_font()
         self.color = (252,248,252)
         self.message = message
@@ -271,12 +267,12 @@ class Message():
         self.created = pygame.time.get_ticks()
         self.render = self.font.render(self.message, False, self.color)
 
-    def show(self, current_time):
+    def show(self, screen, current_time):
         # shows the message for the duration of self.lifetime
         # returns true when message is done
         done = False
         if current_time - self.created < self.lifetime:
-            self.screen.blit(self.render, (self.x, self.y))
+            screen.blit(self.render, (self.x, self.y))
         else: # lifetime has passed
             done = True
         return done
@@ -289,25 +285,24 @@ class MenuManager():
     restore the current menu to the previous menu """
     def __init__(self, game):
         self.menus = []
-        self.screen = game.display.get_screen()
         self.background = game.image_manager.get_image('background')
 
     def push_menu(self, menu):
         # Adds a menu to the top of the stack
         self.menus.append(menu)
 
-    def pop_menu(self):
+    def pop_menu(self, screen):
         # pop the menu and reset for future calls
         # blit a the portion of the background image that is
         # under the menu, over the menu to erase it.
         popped = self.menus.pop()
         popped.reset()  # set the cursor back at the top
-        self.screen.blit(self.background, popped.rect, popped.rect)  # 'erase' menu
+        screen.blit(self.background, popped.rect, popped.rect)  # 'erase' menu
 
-    def draw(self):
+    def draw(self, screen):
         # draw all menus in the stack
         for menu in self.menus:
-            menu.draw()
+            menu.draw(screen)
 
     def get_current_menu(self):
         # returns the menu at the top
