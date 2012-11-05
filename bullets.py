@@ -17,7 +17,7 @@ import math
 
 class Bullet(pygame.sprite.Sprite):
     """ Abstract class for a bullet """
-    def __init__(self, game, x, y, image):
+    def __init__(self, x, y, image, bounds):
         pygame.sprite.Sprite.__init__(self)
         self.image = image
         self.rect = self.image.get_rect()
@@ -26,7 +26,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.left = self.dx
         self.rect.centery = self.dy
         self.speed = 0
-        self.bounds = game.display.get_screen_bounds()
+        self.bounds = bounds
         self.timestep = 1 / 60.0
         self.hitbox = pygame.Rect(self.dx, self.dy, 0, 0)
         self.hb_offsetx = 0
@@ -40,8 +40,8 @@ class PlayerBullet(Bullet):
     """ Player bullet class, sub-class of Bullet
     Object moves horizontally from left to right for the duration
     it is on screen """
-    def __init__(self, x, y, image):
-        Bullet.__init__(self, x, y, image)
+    def __init__(self, x, y, image, bounds):
+        Bullet.__init__(self, x, y, image, bounds)
         self.speed = 400
         self.hitbox = pygame.Rect(self.dx,self.dy,8,3)
 
@@ -62,8 +62,8 @@ class EnemyBullet(Bullet):
     """ Enemy bullet class, sub-class of Bullet.
     Object moves horizontally from right to left for the duration
     it is on screen """
-    def __init__(self, x, y, image):
-        Bullet.__init__(self, x, y, image)
+    def __init__(self, x, y, image, bounds):
+        Bullet.__init__(self, x, y, image, bounds)
         self.speed = 135
         self.hitbox = pygame.Rect(self.dx,self.dy,6,6)
         self.hb_offsetx = 1
@@ -100,8 +100,8 @@ class Explosion(engine.objects.AnimatedSprite):
 
 class Shrapnel(Bullet):
     """ Shrapnel object """
-    def __init__(self, game, x, y, images, angle):
-        Bullet.__init__(self, game, x, y, images[0])
+    def __init__(self, game, x, y, images, bounds, angle):
+        Bullet.__init__(self, game, x, y, images[0], bounds)
         self.images = images
         self.hitbox = pygame.Rect(self.dx,self.dy,6,6)
         self.hb_offsetx = 1
@@ -109,7 +109,6 @@ class Shrapnel(Bullet):
         self.speed = 35
         self.diag_speed = self.speed / math.sqrt(2)
         self.angle = angle
-        self.bounds = game.display.get_screen_bounds()
 
     def update(self, current_time):
 

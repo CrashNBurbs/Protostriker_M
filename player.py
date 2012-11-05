@@ -22,7 +22,6 @@ class Player(engine.objects.AnimatedSprite):
         rect attributes """
     def __init__(self, game, x, y, images):
         engine.objects.AnimatedSprite.__init__(self,x,y,images, 20)
-        self.game = game
         self.speed = 90
         self.direction = [0,0] # [x,y]
         self.bounds = game.display.get_screen_bounds()
@@ -36,6 +35,7 @@ class Player(engine.objects.AnimatedSprite):
         self.respawning = False
         self.protected = False
         self.score = 0
+        self.explosion_image = game.image_manager.get_image('explosion')
         self.explosion_sound = game.sound_manager.get_sound('pl_exp')
         self.shoot_sound = game.sound_manager.get_sound('laser')
 
@@ -111,19 +111,19 @@ class Player(engine.objects.AnimatedSprite):
         else:
             self.shot = None
 
-    def handle_input(self, current_time):
+    def handle_input(self, game, current_time):
         # check input, set direction to appropriate values
         if not self.respawning: # disable input if respawning
-            if self.game.input_manager.is_held('UP'):
+            if game.input_manager.is_held('UP'):
                 self.direction[1] = -1
-            elif self.game.input_manager.is_held('DOWN'):
+            elif game.input_manager.is_held('DOWN'):
                 self.direction[1] = 1
             else: # not moving up or down
                 self.direction[1] = 0
 
-            if self.game.input_manager.is_held('LEFT'):
+            if game.input_manager.is_held('LEFT'):
                 self.direction[0] = -1
-            elif self.game.input_manager.is_held('RIGHT'):
+            elif game.input_manager.is_held('RIGHT'):
                 self.direction[0] = 1
             else: # not moving left or right
                 self.direction[0] = 0
@@ -135,8 +135,7 @@ class Player(engine.objects.AnimatedSprite):
 
     def explode(self):
         # create explosion sprite
-        ex = bullets.Explosion(self.rect.x, self.rect.y,
-                game.image_manager.get_image('explosion'))
+        ex = bullets.Explosion(self.rect.x, self.rect.y, self.explosion_image)
 
         # play sound
         self.explosion_sound.play()

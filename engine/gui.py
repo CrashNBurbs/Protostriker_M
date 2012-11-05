@@ -148,14 +148,14 @@ class Menu(TextBox):
         self.select_sound.play()  # option was selected, play sound
         return self.options[self.current_option] # return option string at current index
 
-    def handle_input(self, input_manager):
+    def handle_input(self, game):
         # moves cursor up and down
         # returns selected option on B or START button press
-        if input_manager.is_pressed('DOWN'):
+        if game.input_manager.is_pressed('DOWN'):
             self.move_cursor(1)
-        elif input_manager.is_pressed('UP'):
+        elif game.input_manager.is_pressed('UP'):
             self.move_cursor(-1)
-        elif input_manager.is_pressed('B') or input_manager.is_pressed('START'):
+        elif game.input_manager.is_pressed('B') or game.input_manager.is_pressed('START'):
             self.selected = self.get_selected_option()
             return self.selected
 
@@ -202,7 +202,7 @@ class DialogBox(TextBox):
         self.page = 0
         self.page_done = False
 
-    def progress(self):
+    def progress(self, game):
         # called when input from the player is given
         # either goes to the next page, or pops the
         # dialog box
@@ -248,11 +248,11 @@ class DialogBox(TextBox):
         # draw the dialog box to the screen, in it's current state
         screen.blit(self.background, (self.rect.x, self.rect.y))
 
-    def handle_input(self, input_manager):
+    def handle_input(self, game):
         # go to next page or close dialog box
         # on B button press
-        if input_manager.is_pressed('B'):
-            self.progress()
+        if game.input_manager.is_pressed('B'):
+            self.progress(game)
 
 class Message():
     """ Message class for creating text messages that

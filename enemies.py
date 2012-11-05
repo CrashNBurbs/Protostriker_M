@@ -28,6 +28,7 @@ class Enemy1(engine.objects.AnimatedSprite):
         self.hb_offsety = 2
         self.points = 160 # point value
         self.explosion_sound = game.sound_manager.get_sound('en_exp')
+        self.explosion_image = game.image_manager.get_image('explosion')
         self.hits = 0 # number of hits enemy takes, 0 is a one-shot kill
 
     def update(self, current_time, player_rect):
@@ -56,8 +57,7 @@ class Enemy1(engine.objects.AnimatedSprite):
     def explode(self):
         ex = []
         # create explosion sprite
-        ex.append(bullets.Explosion(self.rect.x, self.rect.y,
-                self.game.image_manager.get_image('explosion')))
+        ex.append(bullets.Explosion(self.rect.x, self.rect.y, self.explosion_image))
         # play sound
         self.explosion_sound.play()
 
@@ -72,6 +72,7 @@ class Enemy2(Enemy1):
     def __init__(self, game, x, y, images):
         Enemy1.__init__(self, game, x, y, images)
         self.speed = 25
+        self.bullet_image = game.image_manager.get_image('eshot')
         self.shoot_speed = 150  # shooting delay
         self.last_shot = 0 # time of last shot
         self.volley_speed = 2000 # volley of shots delay
@@ -112,7 +113,7 @@ class Enemy2(Enemy1):
         # self.shoot_speed m/s, keep track of shots fired
         if current_time - self.last_shot > self.shoot_speed:
             self.shot = bullets.EnemyBullet(self.game, self.rect.left,
-                             self.rect.centery, self.game.image_manager.get_image('eshot'))
+                             self.rect.centery, self.bullet_image)
             self.shots += 1
             self.last_shot = current_time
         else:
@@ -208,6 +209,7 @@ class Enemy5(Enemy2):
         self.hb_offsety = 4
         self.hits = 8
         self.hit_sound = game.sound_manager.get_sound('hit')
+        self.explosion_image = game.image_manager.get_image('shrapnel')
 
     def update(self, current_time, player_rect):
         Enemy1.update(self, current_time, player_rect)
@@ -237,7 +239,7 @@ class Enemy5(Enemy2):
 
         for angle in range(0,360,45):
             ex.append(bullets.Shrapnel(self.game, self.rect.centerx, self.rect.centery,
-                self.game.image_manager.get_image('shrapnel'), angle))
+                self.explosion_image, angle))
 
         # play sound
         self.explosion_sound.play()
