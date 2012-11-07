@@ -21,9 +21,8 @@ class SpriteManager(engine.objects.SpriteManager):
     """ Container for all game sprite groups and their sprites.
     Can update and draw all groups with respective methods.
     Also handles the loading of level files and the creation of enemies """
-    def __init__(self, game):
+    def __init__(self):
         engine.objects.SpriteManager.__init__(self)
-        self.game = game
         # Create all sprite groups and add them to
         # self.objects
         player_group = pygame.sprite.Group()
@@ -121,7 +120,7 @@ class SpriteManager(engine.objects.SpriteManager):
         # return True if player has died
         return player_die
 
-    def load_level(self, filename):
+    def load_level(self, game, filename):
         # Load a level consisting of enemy types and x,y
         # coords.
         enemy_data = [] # list of strings parsed in
@@ -153,30 +152,30 @@ class SpriteManager(engine.objects.SpriteManager):
                 elif element == 'y':
                     y = int(enemy_data[index + 1])
                 elif element == 'end_enemy':
-                    self.create_enemy(enemy_type, x, y)
+                    self.create_enemy(game, enemy_type, x, y)
                     enemy_data = []  # reset the list
 
         # close the level file
         level.close()
 
-    def create_enemy(self, enemy_type, x, y):
+    def create_enemy(self, game, enemy_type, x, y):
         # Creates an enemy of enemy_type at x, y
 
         # create appropriate enemy depending on enemy_type
         if enemy_type == 'enemy_01':
-            enemy = enemies.Enemy1(x, y, self.game.image_manager.get_image('enemy1'))
+            enemy = enemies.Enemy1(x, y, game.image_manager.get_image('enemy1'))
         elif enemy_type == 'enemy_02':
-            enemy = enemies.Enemy2(x, y, self.game.image_manager.get_image('enemy2'))
+            enemy = enemies.Enemy2(x, y, game.image_manager.get_image('enemy2'))
         elif enemy_type == 'enemy_03':
-            enemy = enemies.Enemy3(x, y, self.game.image_manager.get_image('enemy3'))
+            enemy = enemies.Enemy3(x, y, game.image_manager.get_image('enemy3'))
         elif enemy_type == 'enemy_04':
-            enemy = enemies.Enemy4(x, y, self.game.image_manager.get_image('enemy4'))
+            enemy = enemies.Enemy4(x, y, game.image_manager.get_image('enemy4'))
         elif enemy_type == 'enemy_05':
-            enemy = enemies.Enemy5(x, y, self.game.image_manager.get_image('enemy5'))
+            enemy = enemies.Enemy5(x, y, game.image_manager.get_image('enemy5'))
         elif enemy_type == 'enemy_06':
-            enemy = enemies.Enemy6(x, y, self.game.image_manager.get_image('enemy6'))
+            enemy = enemies.Enemy6(x, y, game.image_manager.get_image('enemy6'))
         elif enemy_type == 'enemy_07':
-            enemy = enemies.Enemy7(x, y, self.game.image_manager.get_image('enemy7'))
+            enemy = enemies.Enemy7(x, y, game.image_manager.get_image('enemy7'))
 
         # Add enemy to enemy queue
         self.enemy_queue.append(enemy)

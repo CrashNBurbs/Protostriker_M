@@ -215,7 +215,8 @@ class DialogBox(TextBox):
                 self.page += 1  # go to the next page
 
             else:  # close the dialog box
-                game.menu_manager.pop_menu()
+                return True
+
 
     def update(self, current_time):
         # draws the text one page at a time and
@@ -252,7 +253,9 @@ class DialogBox(TextBox):
         # go to next page or close dialog box
         # on B button press
         if game.input_manager.is_pressed('B'):
-            self.progress(game)
+            done = self.progress()
+            if done:
+                game.menu_manager.pop_menu()
 
 class Message():
     """ Message class for creating text messages that

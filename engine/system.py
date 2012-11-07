@@ -192,7 +192,7 @@ class InputManager():
 
 
 
-    def handle_input(self):
+    def process_input(self):
         if self.config_mode:
             # do not use this event loop if user is currently
             # defining new controls
@@ -242,7 +242,7 @@ class InputManager():
                         # empty held if d-pad in neutral position
                         self.held['dpad'] = []
 
-    def config_handle_input(self):
+    def config_process_input(self):
         # input handling for control reconfiguration
         # checks for key/button down events and returns their value
         for event in pygame.event.get():
@@ -348,7 +348,7 @@ class InputManager():
     def convert_dpad(self, value):
         # converts d-pad values returned from pygame.JOYHATMOTION
         # to strings. Called from the menu that is getting values
-        # from config_handle_input
+        # from config_process_input
         if value == (-1, 0):
             value = 'left'
         elif value == (1, 0):
@@ -441,7 +441,7 @@ class StateManager():
 
             self.accumulator += self.clock.tick() / 1000.0
 
-            game.input_manager.handle_input()
+            game.input_manager.process_input()
             current_state.handle_input()
 
             while self.accumulator >= self.timestep:

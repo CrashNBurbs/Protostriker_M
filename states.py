@@ -14,7 +14,6 @@
 import pygame
 from pygame.locals import *
 import engine
-import game
 import player
 import menus
 import sprite_manager
@@ -32,9 +31,9 @@ class GameState(engine.system.State):
         self.font = game.image_manager.get_font()
         self.text_color = (252,248,252)
         self.score_render = self.font.render("SCORE " + str(self.player.score),
-                                False, self.text_color)
+                                             False, self.text_color)
         self.lives_render = self.font.render("LIVES " + str(self.player.lives),
-                                False, self.text_color)
+                                             False, self.text_color)
         self.game_over = False
 
     def activate(self):
@@ -54,6 +53,20 @@ class GameState(engine.system.State):
 
     def reactivate(self):
         game.sound_manager.music_control('unpause')
+
+
+    def handle_input(self):
+        # input passed to the player object
+        # player.handle_input() returns a bullet sprite if req's are met,
+        # none if not.
+        for player in self.sprite_manager.sprites['player_group']:
+            bullet = player.handle_input(pygame.time.get_ticks())
+            if bullet is not None:
+                self.sprite_manager.add_sprite(bullet, 'player_shots')
+
+        # On start button press, push the pause state
+        if game.input_manager.is_pressed('START'):
+            game.state_manager.push_state(self.pause)
 
     def update(self):
         # scroll the background
@@ -132,18 +145,6 @@ class GameState(engine.system.State):
 ##            pygame.draw.rect(self.screen, (255,0,0), shot.hitbox, 1)
 
 
-    def handle_input(self):
-        # input passed to the player object
-        # player.handle_input() returns a bullet sprite if req's are met,
-        # none if not.
-        for player in self.sprite_manager.sprites['player_group']:
-            bullet = player.handle_input(pygame.time.get_ticks())
-            if bullet is not None:
-                self.sprite_manager.add_sprite(bullet, 'player_shots')
-
-        # On start button press, push the pause state
-        if game.input_manager.is_pressed('START'):
-            game.state_manager.push_state(self.pause)
 
 class PauseState(engine.system.State):
     """ pause menu state """
@@ -165,6 +166,11 @@ class PauseState(engine.system.State):
         # re-show the pause menu
         game.menu_manager.push_menu(self.pause_menu)
 
+    def handle_input(self):
+        # get the current menu and pass input to it
+        current_menu = game.menu_manager.get_current_menu()
+        current_menu.handle_input()
+
     def update(self):
         # update menus only if there is one
         if game.menu_manager.has_menu():
@@ -174,19 +180,13 @@ class PauseState(engine.system.State):
         # draw all menus
         game.menu_manager.draw()
 
-    def handle_input(self):
-        # get the current menu and pass input to it
-        current_menu = game.menu_manager.get_current_menu()
-        current_menu.handle_input()
-
 class TitleScreenState(engine.system.State):
     def __init__(self):
         engine.system.State.__init__(self)
         self.screen = game.display.get_screen()
         self.background = game.image_manager.get_image('title')
         self.game_state = GameState()
-        self.menu = menus.StartMenu(120, 144, ['START', 'OPTIONS', 'QUIT'],
-                        self.game_state)
+        self.menu = menus.StartMenu(120, 144, ['START', 'OPTIONS', 'QUIT'])
 
     def activate(self):
         # Play music, Show the start menu
@@ -199,6 +199,15 @@ class TitleScreenState(engine.system.State):
         game.menu_manager.push_menu(self.menu)
         self.game_state = GameState()
 
+    def handle_input(self):
+        # pass input to current menu,
+        # push gamestate if user selects START
+        current_menu = game.menu_manager.get_current_menu()
+        start_game = current_menu.handle_input()
+        if start_game:
+            game.menu_manager.pop_menu()
+            game.state_manager.push_state(self.game_state)
+
     def update(self):
         # update menus only if there is one
         if game.menu_manager.has_menu():
@@ -210,11 +219,3 @@ class TitleScreenState(engine.system.State):
         game.menu_manager.draw()
 
 
-    def handle_input(self):
-        # pass input to current menu,
-        # push gamestate if user selects START
-        current_menu = game.menu_manager.get_current_menu()
-        start_game = current_menu.handle_input()
-        if start_game:
-            game.menu_manager.pop_menu()
-            game.state_manager.push_state(self.game_state)
