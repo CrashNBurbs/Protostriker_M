@@ -19,7 +19,7 @@ import menus
 import sprite_manager
 
 class GameState(engine.system.State):
-    def __init__(self):
+    def __init__(self, game):
         engine.system.State.__init__(self)
         self.player = player.Player(16,112, game.image_manager.get_image('ship'))
         self.background = game.image_manager.get_image('background')
@@ -27,7 +27,7 @@ class GameState(engine.system.State):
         self.sprite_manager = sprite_manager.SpriteManager()
         self.sprite_manager.add_sprite(self.player, 'player_group')
         self.screen = game.display.get_screen()
-        self.pause = PauseState()
+        self.pause = PauseState(game)
         self.font = game.image_manager.get_font()
         self.text_color = (252,248,252)
         self.score_render = self.font.render("SCORE " + str(self.player.score),
@@ -148,7 +148,7 @@ class GameState(engine.system.State):
 
 class PauseState(engine.system.State):
     """ pause menu state """
-    def __init__(self):
+    def __init__(self, game):
         engine.system.State.__init__(self)
         self.screen = game.display.get_screen()
         self.pause_menu = menus.PauseMenu(96, 16, ['RESUME','OPTIONS',

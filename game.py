@@ -74,7 +74,7 @@ class PsmGame(engine.system.Game):
 
     def __init__(self):
         engine.system.Game.__init__(self)
-        self.initial_state = states.GameState()
+        self.initial_state = states.GameState(self)
 
     def load_content(self):
         # load images

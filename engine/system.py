@@ -405,9 +405,7 @@ class StateManager():
     call run to start the game loop """
     def __init__(self):
         self.states = []
-        self.clock = pygame.time.Clock()
-        self.accumulator = 0.0
-        self.timestep = 1 / 60.0
+        
 
     def quit(self):
         pygame.quit()
@@ -432,26 +430,6 @@ class StateManager():
             self.states.pop()
             self.get_current_state().reactivate()
 
-    def run(self):
-
-        current_state = self.get_current_state()
-        while(current_state):
-            # check for state change
-            current_state = self.get_current_state()
-
-            self.accumulator += self.clock.tick() / 1000.0
-
-            game.input_manager.process_input()
-            current_state.handle_input()
-
-            while self.accumulator >= self.timestep:
-                current_state.update()
-                self.accumulator -= self.timestep
-
-            current_state.draw()
-            game.display.update()
-
-
 class Game():
     """ Abstract game class """
     def __init__(self):
@@ -462,6 +440,9 @@ class Game():
         self.state_manager = StateManager()
         self.input_manager = InputManager()
         self.initial_state = None
+        self.clock = pygame.time.Clock()
+        self.accumulator = 0.0
+        self.timestep = 1 / 60.0
 
     def set_caption(self, caption):
         # set the window title bar to caption
@@ -475,6 +456,23 @@ class Game():
         # Push the initial state to the state manager
         if self.initial_state is not None:
             self.state_manager.push_state(self.initial_state)
+
+        current_state = self.get_current_state()
+        while(current_state):
+            # check for state change
+            current_state = self.state_manager.get_current_state()
+
+            self.accumulator += self.clock.tick() / 1000.0
+
+            self.input_manager.process_input()
+            current_state.handle_input()
+
+            while self.accumulator >= self.timestep:
+                current_state.update()
+                self.accumulator -= self.timestep
+
+            current_state.draw()
+            self.display.update()
 
 
 
