@@ -452,12 +452,11 @@ class Game():
         # load all images and sounds here
         pass
 
-    def run(self):
-        # Push the initial state to the state manager
-        if self.initial_state is not None:
-            self.state_manager.push_state(self.initial_state)
+    def initialize(self, state):
+        self.state_manager.push_state(state)
 
-        current_state = self.get_current_state()
+    def run(self):
+        current_state = self.state_manager.get_current_state()
         while(current_state):
             # check for state change
             current_state = self.state_manager.get_current_state()
@@ -471,7 +470,7 @@ class Game():
                 current_state.update()
                 self.accumulator -= self.timestep
 
-            current_state.draw()
+            current_state.draw(self.display.get_screen())
             self.display.update()
 
 
