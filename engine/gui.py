@@ -255,7 +255,7 @@ class DialogBox(TextBox):
         if game.input_manager.is_pressed('B'):
             done = self.progress()
             if done:
-                game.menu_manager.pop_menu()
+                game.menu_manager.pop_menu(game.display.get_screen())
 
 class Message():
     """ Message class for creating text messages that
@@ -299,7 +299,7 @@ class MenuManager():
         # under the menu, over the menu to erase it.
         popped = self.menus.pop()
         popped.reset()  # set the cursor back at the top
-        screen.blit(self.background, popped.rect, popped.rect)  # 'erase' menu
+        #screen.blit(self.background, popped.rect, popped.rect)  # 'erase' menu
 
     def draw(self, screen):
         # draw all menus in the stack

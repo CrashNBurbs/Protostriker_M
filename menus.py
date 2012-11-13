@@ -44,12 +44,12 @@ class PauseMenu(engine.gui.Menu):
         # selected option, call appropriate methods
         selected = engine.gui.Menu.handle_input(self)
         if selected == 'RESUME':
-            game.menu_manager.pop_menu()
+            game.menu_manager.pop_menu(game.display.get_screen())
             game.state_manager.pop_state()
         elif selected == 'OPTIONS':
             game.menu_manager.push_menu(self.options_menu)
         elif selected == 'OUIT TO TITLE':
-            game.menu_manager.pop_menu()
+            game.menu_manager.pop_menu(game.display.get_screen())
             game.state_manager.pop_all()
         elif selected == 'QUIT GAME':
             game.state_manager.quit()
@@ -72,7 +72,7 @@ class OptionMenu(engine.gui.Menu):
         elif selected == 'CONTROLS':
             game.menu_manager.push_menu(self.controls_menu)
         elif selected == 'BACK':
-            game.menu_manager.pop_menu()
+            game.menu_manager.pop_menu(game.display.get_screen())
 
 class ControlsMenu(engine.gui.Menu):
     """ Controls Menu, nested in options menu
@@ -123,10 +123,10 @@ class ControlsMenu(engine.gui.Menu):
             game.menu_manager.push_menu(self.reset_dialog)
             game.input_manager.toggle_default()
         elif selected == 'CHECK GAMEPAD':
-            self.check_gamepad()
+            self.check_gamepad(game.input_manager)
             game.menu_manager.push_menu(self.gamepad_dialog)
         elif selected == 'BACK':
-            game.menu_manager.pop_menu()
+            game.menu_manager.pop_menu(game.display.get_screen())
 
 class ConfigDialogBox(engine.gui.DialogBox):
     """ Guides the user in setting a custom button config

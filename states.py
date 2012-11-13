@@ -43,7 +43,7 @@ class TitleScreenState(engine.system.State):
         current_menu = self.game.menu_manager.get_current_menu()
         start_game = current_menu.handle_input(self.game)
         if start_game:
-            self.game.menu_manager.pop_menu()
+            self.game.menu_manager.pop_menu(self.game.display.get_screen())
             self.game.state_manager.push_state(self.game_state)
 
     def update(self):
