@@ -112,7 +112,7 @@ class Enemy2(Enemy1):
         # fire a shot at current pos, every
         # self.shoot_speed m/s, keep track of shots fired
         if current_time - self.last_shot > self.shoot_speed:
-            self.shot = bullets.EnemyBullet(self.game, self.rect.left,
+            self.shot = bullets.EnemyBullet(self.rect.left,
                              self.rect.centery, self.bullet_image)
             self.shots += 1
             self.last_shot = current_time

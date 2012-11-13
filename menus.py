@@ -42,7 +42,7 @@ class PauseMenu(engine.gui.Menu):
     def handle_input(self, game):
         # call parent class handle input method, get
         # selected option, call appropriate methods
-        selected = engine.gui.Menu.handle_input(self)
+        selected = engine.gui.Menu.handle_input(self, game)
         if selected == 'RESUME':
             game.menu_manager.pop_menu(game.display.get_screen())
             game.state_manager.pop_state()

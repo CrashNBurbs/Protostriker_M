@@ -43,6 +43,7 @@ Factor the time leftover in the accumulator into the next check for game updates
 This keeps things smoother than just checking if the last loop took at
 least 1/60 second.  """
 
+SCREEN_RECT = pygame.rect.Rect(0,0,320,240)
 
 class Display():
     """ This class handles the initialization of pygame, the window,
@@ -83,7 +84,7 @@ class Display():
                                                res[1] * self.window_scale))
 
         # create a buffer that is the same size as the game resolution
-        self.buffer = pygame.Surface(res)
+        self.buffer = pygame.Surface((SCREEN_RECT.width, SCREEN_RECT.height))
         pygame.mouse.set_visible(False)  # turn off the mouse pointer display
 
         self.update()
@@ -418,6 +419,10 @@ class StateManager():
         self.states.pop()
         self.get_current_state().reactivate()
 
+    def change_state(self, state):
+        self.states.pop()
+        self.states.append(state)
+        state.activate()
 
     def pop_all(self):
         # This function will pop all states except the

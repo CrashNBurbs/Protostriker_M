@@ -24,7 +24,7 @@ class Player(engine.objects.AnimatedSprite):
         engine.objects.AnimatedSprite.__init__(self,x,y,images, 20)
         self.speed = 90
         self.direction = [0,0] # [x,y]
-        self.bounds = game.display.get_screen_bounds()
+        self.bounds = engine.system.SCREEN_RECT
         self.shoot_speed = 200 # delay for creating shots
         self.last_shot = 0 # time of last shot
         self.hitbox = pygame.Rect(0,0,28,8) # rect for collsion
@@ -101,11 +101,11 @@ class Player(engine.objects.AnimatedSprite):
         self.hitbox.x = self.rect.x + self.hb_offsetx
         self.hitbox.y = self.rect.y + self.hb_offsety
 
-    def shoot(self, current_time):
+    def shoot(self, current_time, image):
         # shoot a bullet every self.shoot_speed m/s
         if current_time - self.last_shot > self.shoot_speed:
             self.shot = bullets.PlayerBullet(self.rect.right - 6,
-                             self.rect.centery + 4, self.game.image_manager.get_image('pshot'))
+                             self.rect.centery + 4, image)
             self.shoot_sound.play()
             self.last_shot = current_time
         else:
@@ -129,8 +129,8 @@ class Player(engine.objects.AnimatedSprite):
                 self.direction[0] = 0
 
             # shoot on 'B' button press
-            if self.game.input_manager.is_held('B'):
-                self.shoot(current_time)
+            if game.input_manager.is_held('B'):
+                self.shoot(current_time, game.image_manager.get_image('pshot'))
                 return self.shot
 
     def explode(self):

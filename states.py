@@ -44,7 +44,7 @@ class TitleScreenState(engine.system.State):
         start_game = current_menu.handle_input(self.game)
         if start_game:
             self.game.menu_manager.pop_menu(self.game.display.get_screen())
-            self.game.state_manager.push_state(self.game_state)
+            self.game.state_manager.change_state(self.game_state)
 
     def update(self):
         # update menus only if there is one
@@ -79,15 +79,15 @@ class GameState(engine.system.State):
         self.game.input_manager.clear()
 
         # load the level on state activation
-        self.sprite_manager.load_level('level_1.txt')
+        self.sprite_manager.load_level(self.game, 'level_1.txt')
 
         # play music
         self.game.sound_manager.play_music("gamemusic.wav")
 
         # Create messages, add to message list
-        self.level_message = engine.gui.Message(132,116, "LEVEL 1", 3000)
-        self.get_ready = engine.gui.Message(120,124,"GET READY!", 3000)
-        self.messages = [self.level_message, self.get_ready]
+        #self.level_message = engine.gui.Message(132,116, "LEVEL 1", 3000)
+        #self.get_ready = engine.gui.Message(120,124,"GET READY!", 3000)
+        #self.messages = [self.level_message, self.get_ready]
 
     def reactivate(self):
         self.game.sound_manager.music_control('unpause')
@@ -125,15 +125,15 @@ class GameState(engine.system.State):
         # if player has lost all lives, create a game over message,
         # set game over to True.
         if self.player.lives == -1:
-            message = engine.gui.Message(124,116, "GAME OVER", 4000)
-            self.messages.append(message)
+            #message = engine.gui.Message(124,116, "GAME OVER", 4000)
+            #self.messages.append(message)
             self.game_over = True
 
         # If player has reached the end of the level, create a
         # level complete message, set game over to True.
         if self.viewport.level_pos > 10400:
-            message = engine.gui.Message(92,116, "LEVEL 1 COMPLETE!", 4000)
-            self.messages.append(message)
+            #message = engine.gui.Message(92,116, "LEVEL 1 COMPLETE!", 4000)
+            #self.messages.append(message)
             self.game_over = True
 
         # update the score display
@@ -157,12 +157,12 @@ class GameState(engine.system.State):
 
         # show any messages, pop game state on
         # message done if self.game_over
-        for message in self.messages:
-            done = message.show(pygame.time.get_ticks())
-            if done and not self.game_over:
-                self.messages.remove(message)
-            elif done and self.game_over:
-                self.game.state_manager.pop_state()
+        #for message in self.messages:
+        #    done = message.show(pygame.time.get_ticks())
+        #    if done and not self.game_over:
+        #        self.messages.remove(message)
+        #    elif done and self.game_over:
+        #        self.game.state_manager.pop_state()
 
           # uncomment this code to display all the sprites image rects
           # in green, and their hitboxes (collision region) in red
@@ -213,9 +213,9 @@ class PauseState(engine.system.State):
         if self.game.menu_manager.has_menu():
             self.game.menu_manager.get_current_menu().update(pygame.time.get_ticks())
 
-    def draw(self):
+    def draw(self, screen):
         # draw all menus
-        self.game.menu_manager.draw(self.screen)
+        self.game.menu_manager.draw(screen)
 
 
 

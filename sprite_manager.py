@@ -163,19 +163,19 @@ class SpriteManager(engine.objects.SpriteManager):
 
         # create appropriate enemy depending on enemy_type
         if enemy_type == 'enemy_01':
-            enemy = enemies.Enemy1(x, y, game.image_manager.get_image('enemy1'))
+            enemy = enemies.Enemy1(game, x, y, game.image_manager.get_image('enemy1'))
         elif enemy_type == 'enemy_02':
-            enemy = enemies.Enemy2(x, y, game.image_manager.get_image('enemy2'))
+            enemy = enemies.Enemy2(game, x, y, game.image_manager.get_image('enemy2'))
         elif enemy_type == 'enemy_03':
-            enemy = enemies.Enemy3(x, y, game.image_manager.get_image('enemy3'))
+            enemy = enemies.Enemy3(game, x, y, game.image_manager.get_image('enemy3'))
         elif enemy_type == 'enemy_04':
-            enemy = enemies.Enemy4(x, y, game.image_manager.get_image('enemy4'))
+            enemy = enemies.Enemy4(game, x, y, game.image_manager.get_image('enemy4'))
         elif enemy_type == 'enemy_05':
-            enemy = enemies.Enemy5(x, y, game.image_manager.get_image('enemy5'))
+            enemy = enemies.Enemy5(game, x, y, game.image_manager.get_image('enemy5'))
         elif enemy_type == 'enemy_06':
-            enemy = enemies.Enemy6(x, y, game.image_manager.get_image('enemy6'))
+            enemy = enemies.Enemy6(game, x, y, game.image_manager.get_image('enemy6'))
         elif enemy_type == 'enemy_07':
-            enemy = enemies.Enemy7(x, y, game.image_manager.get_image('enemy7'))
+            enemy = enemies.Enemy7(game, x, y, game.image_manager.get_image('enemy7'))
 
         # Add enemy to enemy queue
         self.enemy_queue.append(enemy)
