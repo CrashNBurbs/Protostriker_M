@@ -16,7 +16,7 @@ import game
 class StartMenu(engine.gui.Menu):
     """ Menu on titlescreen
     Options - START, OPTIONS, QUIT  """
-    def __init__(self, x, y, options):
+    def __init__(self, game, x, y, options):
         engine.gui.Menu.__init__(self, game, x, y, options)
         self.options_menu = OptionMenu(game, 52, 144, ['TOGGLE FULLSCREEN/WINDOW', 'CONTROLS', 'BACK'])
 
@@ -80,9 +80,9 @@ class ControlsMenu(engine.gui.Menu):
     RESET TO DEFAULT, CHECK GAMEPAD, BACK
     Shows various dialog boxes based on the option selected """
     def __init__(self, game, x, y, options):
-        engine.gui.Menu.__init__(self, x, y, options)
+        engine.gui.Menu.__init__(self, game, x, y, options)
 
-        self.view_controls = engine.gui.DialogBox(16, 160)
+        self.view_controls = engine.gui.DialogBox(game, 16, 160)
         self.view_controls.set_text(['MOVE - arrow keys or D-pad' \
                                     +'\nSHOOT\CONFIRM - Z key or button 2'])
 
@@ -97,7 +97,7 @@ class ControlsMenu(engine.gui.Menu):
                                      'Press button for START',
                                      'Configure Complete!'])
 
-        self.gamepad_dialog = engine.gui.DialogBox(16, 160)
+        self.gamepad_dialog = engine.gui.DialogBox(game, 16, 160)
 
     def check_gamepad(self, input_manager):
         # Show gamepad name if gamepad is detected.

@@ -21,7 +21,7 @@ class TextBox():
         self.font = game.image_manager.get_font()
         self.text_color = (252,248,252)
         # load border images
-        self.border_tiles= self.game.image_manager.get_image('textborder')
+        self.border_tiles= game.image_manager.get_image('textborder')
 
     def build_text_box(self):
         # This function blits all menu elements to the menu background
@@ -286,9 +286,8 @@ class MenuManager():
     to draw all menus on the stack and erase them.push a menu onto the
     stack to draw it and make it the currentmenu, pop it to hide it and
     restore the current menu to the previous menu """
-    def __init__(self, game):
+    def __init__(self):
         self.menus = []
-        self.background = game.image_manager.get_image('background')
 
     def push_menu(self, menu):
         # Adds a menu to the top of the stack

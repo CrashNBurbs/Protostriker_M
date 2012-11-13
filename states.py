@@ -24,7 +24,7 @@ class TitleScreenState(engine.system.State):
         self.game = game
         self.background = game.image_manager.get_image('title')
         self.game_state = GameState(game)
-        self.menu = menus.StartMenu(120, 144, ['START', 'OPTIONS', 'QUIT'])
+        self.menu = menus.StartMenu(game, 120, 144, ['START', 'OPTIONS', 'QUIT'])
 
     def activate(self):
         # Play music, Show the start menu
@@ -60,7 +60,7 @@ class GameState(engine.system.State):
     def __init__(self, game):
         engine.system.State.__init__(self)
         self.game = game
-        self.player = player.Player(16,112, game.image_manager.get_image('ship'))
+        self.player = player.Player(game, 16, 112, game.image_manager.get_image('ship'))
         self.background = game.image_manager.get_image('background')
         self.viewport = engine.graphics.Viewport(self.background, self.player)
         self.sprite_manager = sprite_manager.SpriteManager()
@@ -188,7 +188,7 @@ class PauseState(engine.system.State):
         engine.system.State.__init__(self)
         self.game = game
         self.screen = game.display.get_screen()
-        self.pause_menu = menus.PauseMenu(96, 16, ['RESUME','OPTIONS',
+        self.pause_menu = menus.PauseMenu(game, 96, 16, ['RESUME','OPTIONS',
                             'OUIT TO TITLE','QUIT GAME'])
         self.pause_sound = game.sound_manager.get_sound('pause')
 

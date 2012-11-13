@@ -65,11 +65,6 @@ class Display():
         # center for window mode
         os.environ["SDL_VIDEO_CENTERED"] = "1"
 
-        # pre-initialize mixer to fix audio lag and
-        # initialize pygame
-        pygame.mixer.pre_init(44100, -16, 2, 2048)
-        pygame.init()
-
         # save the desktop res before setting mode
         desktop_h = pygame.display.Info().current_h
 
@@ -78,8 +73,8 @@ class Display():
 
         # if scaled height is the same as desktop height, window will be cut
         # off and aspect ratio will be distorted, use one scale smaller
-        if res[1] * self.window_scale == desktop_h:
-            self.window_scale -= 1
+        #if res[1] * self.window_scale == desktop_h:
+            #self.window_scale -= 1
 
         # display, sets resolution at 2 times the size of the game res
         #self.screen = pygame.display.set_mode((res[0] * 2, res[1] * 2),
@@ -433,6 +428,8 @@ class StateManager():
 class Game():
     """ Abstract game class """
     def __init__(self):
+        pygame.mixer.pre_init(44100, -16, 2, 2048)
+        pygame.init()
         self.display = Display()
         self.image_manager = graphics.ImageManager()
         self.sound_manager = sound.SoundManager()

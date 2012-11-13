@@ -73,7 +73,7 @@ class ImageManager():
         self.images[key] = images
 
     def load_font(self, name, size):
-        fullname = os.path.join('Data', name)
+        fullname = os.path.join('data', name)
         try:
             font = pygame.font.Font(fullname, size)
         except pygame.error, message:

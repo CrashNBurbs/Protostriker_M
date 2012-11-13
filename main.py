@@ -14,7 +14,6 @@ import states
 
 def main():
     new_game = game.PsmGame()
-    new_game.load_content()
     new_game.run()
 
 if __name__ == '__main__':
