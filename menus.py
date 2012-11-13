@@ -23,7 +23,7 @@ class StartMenu(engine.gui.Menu):
     def handle_input(self, game):
         # call parent class handle input method, get
         # selected option, call appropriate methods
-        selected = engine.gui.Menu.handle_input(self)
+        selected = engine.gui.Menu.handle_input(self, game)
         if selected == 'START':
             return True
         elif selected == 'OPTIONS':
@@ -66,7 +66,7 @@ class OptionMenu(engine.gui.Menu):
     def handle_input(self, game):
         # call parent class handle input method, get
         # selected option, call appropriate methods
-        selected = engine.gui.Menu.handle_input(self)
+        selected = engine.gui.Menu.handle_input(self, game)
         if selected == 'TOGGLE FULLSCREEN/WINDOW':
             game.display.change_mode()
         elif selected == 'CONTROLS':
@@ -113,7 +113,7 @@ class ControlsMenu(engine.gui.Menu):
     def handle_input(self, game):
         # call parent class handle input method, get
         # selected option, call appropriate methods
-        selected = engine.gui.Menu.handle_input(self)
+        selected = engine.gui.Menu.handle_input(self, game)
         if selected == 'VIEW DEFAULT':
             game.menu_manager.push_menu(self.view_controls)
         elif selected == 'RECONFIGURE':
@@ -148,7 +148,7 @@ class ConfigDialogBox(engine.gui.DialogBox):
                 pygame.event.clear()
             new_value = game.input_manager.config_process_input() # get input, assign to new_value
             new_value = game.input_manager.convert_dpad(new_value) # convert hat motion values to string
-            if new_value is not None and new_value not in self.game.input_manager.set:  # if a key has been pressed
+            if new_value is not None and new_value not in game.input_manager.set:  # if a key has been pressed
                 if self.current <= len(self.buttons): # keep button index in bounds
                     # set current button to new value
                     game.input_manager.redefine_button(self.buttons[self.current], new_value)

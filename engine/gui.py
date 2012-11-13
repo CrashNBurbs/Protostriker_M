@@ -202,7 +202,7 @@ class DialogBox(TextBox):
         self.page = 0
         self.page_done = False
 
-    def progress(self, game):
+    def progress(self):
         # called when input from the player is given
         # either goes to the next page, or pops the
         # dialog box

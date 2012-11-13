@@ -129,6 +129,7 @@ class Display():
 
     def set_caption(self, caption):
         pygame.display.set_caption(caption)
+        self.caption = caption
 
 
 class InputManager():
@@ -426,7 +427,8 @@ class StateManager():
             self.get_current_state().reactivate()
 
 class Game():
-    """ Abstract game class """
+    """ game class - Contains all managers, initializes pygame
+        and runs a game loop """
     def __init__(self):
         pygame.mixer.pre_init(44100, -16, 2, 2048)
         pygame.init()
