@@ -77,6 +77,7 @@ class PsmGame(engine.system.Game):
         self.set_caption("Protstriker M")
         self.display.init()
         self.load_content()
+        self.viewport = engine.graphics.Viewport(self.image_manager.get_image('background'))
         self.initialize(states.TitleScreenState(self))
 
     def load_content(self):

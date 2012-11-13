@@ -93,9 +93,8 @@ class Viewport():
     """ This class creates a viewport that is the size
     of the screen, from a larger background image to
      enable scrolling"""
-    def __init__(self, background, player, auto_scroll = True):
+    def __init__(self, background, auto_scroll = True):
         self.background = background
-        self.player = player
         self.auto_scroll = auto_scroll
         self.width = 320 # width of screen
         self.height = 240 # height of screen
