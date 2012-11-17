@@ -190,11 +190,7 @@ class InputManager():
 
 
     def process_input(self):
-        if self.config_mode:
-            # do not use this event loop if user is currently
-            # defining new controls
-            pass
-        else:
+        if not self.config_mode:
             #reset pressed buttons every call
             self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}
             for event in pygame.event.get():
@@ -242,6 +238,7 @@ class InputManager():
     def config_process_input(self):
         # input handling for control reconfiguration
         # checks for key/button down events and returns their value
+        print "config input being called"
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -327,7 +324,7 @@ class InputManager():
             self.config_mode = True # switch to config event loop
 
             # block diagonal d-pad movements
-            self.set = [(-1, 1), (1, 1), (1, -1), (-1, -1), (0, 0)]
+            #self.set = [(-1, 1), (1, 1), (1, -1), (-1, -1), (0, 0)]
 
             # empty out all user bound controls
             self.user_bound =  {'RIGHT' : [],
