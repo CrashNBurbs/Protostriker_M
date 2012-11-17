@@ -148,12 +148,12 @@ class ConfigDialogBox(engine.gui.DialogBox):
                 pygame.event.clear()
             new_value = game.input_manager.config_process_input() # get input, assign to new_value
             new_value = game.input_manager.convert_dpad(new_value) # convert hat motion values to string
-            if new_value is not None and new_value not in game.input_manager.set:  # if a key has been pressed
-                if self.current <= len(self.buttons): # keep button index in bounds
-                    # set current button to new value
-                    game.input_manager.redefine_button(self.buttons[self.current], new_value)
+            if new_value is not None:  # if a key has been pressed
+                # set current button to new value
+                button_bound = game.input_manager.redefine_button(self.buttons[self.current], new_value)
+                if button_bound:
                     self.current += 1  # move to next button
-                self.progress()  # go to next page
+                    self.progress()  # go to next page
         else:  # all buttons have been configured, showing 'config complete!'
             pressed = game.input_manager.config_process_input()  # get any key pressed
             if pressed:

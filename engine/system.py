@@ -307,10 +307,12 @@ class InputManager():
 
     def redefine_button(self, button, new_value):
         # adds new values to user made button configuration
-
+        button_changed = False
         if new_value not in self.set:
             self.user_bound[button].append(new_value)
             self.set.append(new_value)
+            button_changed = True
+        return button_changed
 
     def toggle_default(self):
         # switch to default controls
