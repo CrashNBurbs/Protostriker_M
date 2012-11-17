@@ -473,8 +473,9 @@ class Game():
             while self.accumulator >= self.timestep:
                 current_state.update()
                 self.accumulator -= self.timestep
-
-            current_state.draw(self.display.get_screen())
+            
+            for state in self.state_manager.states:
+                state.draw(self.display.get_screen())
             self.display.update()
 
 

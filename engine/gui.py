@@ -299,7 +299,6 @@ class MenuManager():
         # under the menu, over the menu to erase it.
         popped = self.menus.pop()
         popped.reset()  # set the cursor back at the top
-        #screen.blit(self.background, popped.rect, popped.rect)  # 'erase' menu
 
     def draw(self, screen):
         # draw all menus in the stack

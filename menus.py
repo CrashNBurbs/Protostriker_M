@@ -143,7 +143,7 @@ class ConfigDialogBox(engine.gui.DialogBox):
         # Show each dialog box page, prompt user for a
         # button press, assign that button to a control.
 
-        if self.page < 6:  # buttons left to configure
+        if self.page < len(self.buttons):  # buttons left to configure
             if not self.page_done:  # only get button presses when the page is done
                 pygame.event.clear()
             new_value = game.input_manager.config_process_input() # get input, assign to new_value
@@ -160,4 +160,6 @@ class ConfigDialogBox(engine.gui.DialogBox):
                 game.input_manager.toggle_user() # set input manager to check user buttons
                 game.input_manager.toggle_config_mode() # go back to normal input handling
                 self.current = 0 # reset index
-                self.progress() # advance and close dialog box
+                done = self.progress() # advance and close dialog box
+                if done:
+                    game.menu_manager.pop_menu(game.display.get_screen())
