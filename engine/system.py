@@ -59,7 +59,6 @@ class Display():
         self.desktop_h = None  # height of desktop, in pixels
         self.caption = None  # window caption
 
-
     def init(self):
         res = self.res
 
@@ -88,7 +87,6 @@ class Display():
         pygame.mouse.set_visible(False)  # turn off the mouse pointer display
 
         self.update()
-
 
     def update(self):
         #updates the display
@@ -119,7 +117,6 @@ class Display():
             self.screen = pygame.display.set_mode((640, 480), pygame.FULLSCREEN)
             self.fullscreen = True
 
-
     def get_screen(self):
         # get game size offscreen buffer, always draw to this surface
         return self.buffer
@@ -143,18 +140,12 @@ class InputManager():
     def __init__(self):
         pygame.joystick.init()
         self.redefined = False  # Start with default controls
-
         # dictionary of held buttons
         self.held = {'keys' : [], 'buttons' : [], 'dpad' : []}
-
          # dictionary of pressed buttons
         self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}
         self.config_mode = False
-
-        # block the d-pad diagonal and neutral JOTHATMOTION events
-        # from from being bound to a button
-        self.set = [(-1, 1), (1, 1), (1, -1), (-1, -1), (0, 0)]
-
+        self.set = [(-1, 1), (1, 1), (1, -1), (-1, -1)]
         self.gamepad_name = None
         if pygame.joystick.get_count() > 0: # if gamepad plugged in
             self.gamepad = pygame.joystick.Joystick(0)
@@ -187,8 +178,6 @@ class InputManager():
                            'Y' : [],
                            'X' : []}
 
-
-
     def process_input(self):
         if not self.config_mode:
             #reset pressed buttons every call
@@ -213,32 +202,22 @@ class InputManager():
                     if event.button in self.held['buttons']:
                         self.held['buttons'].remove(event.button)
                 elif event.type == JOYHATMOTION:  # d-pad
-                    if event.value == (-1, 0):
-                        # append a str representation
-                        self.update_dpad('left')
-                    elif event.value == (1, 0):
-                        self.update_dpad('right')
-                    elif event.value == (0, 1):
-                        self.update_dpad('up')
-                    elif event.value == (0, -1):
-                        self.update_dpad('down')
-                    elif event.value == (-1, 1):
-                        # for diagonals, append two str
-                        self.update_dpad('up', 'left')
-                    elif event.value == (1, 1):
-                        self.update_dpad('up', 'right')
-                    elif event.value == (1, -1):
-                        self.update_dpad('down', 'right')
-                    elif event.value == (-1, -1):
-                        self.update_dpad('down', 'left')
-                    elif event.value == (0, 0):
-                        # empty held if d-pad in neutral position
-                        self.held['dpad'] = []
+                    dpad_state = []
+                    if event.value[0] < 0:
+                        dpad_state.append('left')
+                    if event.value[0] > 0:
+                        dpad_state.append('right')
+                    if event.value[1] < 0:
+                        dpad_state.append('down')
+                    if event.value[1] > 0:
+                        dpad_state.append('up')
+                    self.update_dpad(dpad_state)
+                    print self.held['dpad']
 
     def config_process_input(self):
         # input handling for control reconfiguration
         # checks for key/button down events and returns their value
-        print "config input being called"
+        new_button = None
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -247,12 +226,19 @@ class InputManager():
                 if event.key == K_ESCAPE:
                     pygame.quit()
                     quit()
-                return event.key
+                new_button = event.key
             elif event.type == JOYBUTTONDOWN:
-                return event.button
+                new_button = event.button
             elif event.type == JOYHATMOTION:
-                return event.value
-
+                if event.value[0] < 0:
+                    new_button = 'left'
+                if event.value[0] > 0:
+                    new_button = 'right'
+                if event.value[1] < 0:
+                    new_button = 'down'
+                if event.value[1] > 0:
+                    new_button = 'up'
+        return new_button
 
     def is_pressed(self, button):
         # returns true if button is pressed
@@ -291,16 +277,13 @@ class InputManager():
                     return True
         return False
 
-    def update_dpad(self, button, combo = None):
+    def update_dpad(self, state):
         # append string representations of gamepad hat (d-pad)
         # movements. can pass two strings in for diagonals
         self.held['dpad'] = []
-        self.pressed['dpad'].append(button)
-        self.held['dpad'].append(button)
-
-        if combo is not None:
-            self.pressed['dpad'].append(combo)
-            self.held['dpad'].append(combo)
+        for button in state:
+            self.pressed['dpad'].append(button)
+            self.held['dpad'].append(button)
 
     def redefine_button(self, button, new_value):
         # adds new values to user made button configuration
@@ -323,8 +306,8 @@ class InputManager():
         if self.config_mode == False:
             self.config_mode = True # switch to config event loop
 
-            # block diagonal d-pad movements
-            #self.set = [(-1, 1), (1, 1), (1, -1), (-1, -1), (0, 0)]
+            # reset bound buttons and block diagonal d-pad movements
+            self.set = [(-1, 1), (1, 1), (1, -1), (-1, -1)]
 
             # empty out all user bound controls
             self.user_bound =  {'RIGHT' : [],
@@ -340,27 +323,9 @@ class InputManager():
         else: # returning from config mode
             self.config_mode = False
 
-
-    def convert_dpad(self, value):
-        # converts d-pad values returned from pygame.JOYHATMOTION
-        # to strings. Called from the menu that is getting values
-        # from config_process_input
-        if value == (-1, 0):
-            value = 'left'
-        elif value == (1, 0):
-            value = 'right'
-        elif value == (0, 1):
-            value = 'up'
-        elif value == (0, -1):
-            value = 'down'
-        return value
-
-
     def clear(self):
         self.held = {'keys' : [], 'buttons' : [], 'dpad' : []}
         self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}
-
-
 
 class State():
     """ Abstract state class, intended for inheritance

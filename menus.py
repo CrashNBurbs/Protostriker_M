@@ -147,7 +147,6 @@ class ConfigDialogBox(engine.gui.DialogBox):
             if not self.page_done:  # only get button presses when the page is done
                 pygame.event.clear()
             new_value = game.input_manager.config_process_input() # get input, assign to new_value
-            new_value = game.input_manager.convert_dpad(new_value) # convert hat motion values to string
             if new_value is not None:  # if a key has been pressed
                 # set current button to new value
                 button_bound = game.input_manager.redefine_button(self.buttons[self.current], new_value)
