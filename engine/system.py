@@ -334,6 +334,11 @@ class InputManager():
         self.held = {'keys' : [], 'buttons' : [], 'dpad' : []}
         self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}
 
+    def has_gamepad(self):
+        # returns true if a gamepad is connected
+        if self.gamepad_name is not None:
+            return True
+
 class State():
     """ Abstract state class, intended for inheritance
         handle_input, update, and draw all called every frame

@@ -12,13 +12,13 @@
 import pygame
 import engine
 import game
+import states
 
 class StartMenu(engine.gui.Menu):
     """ Menu on titlescreen
     Options - START, OPTIONS, QUIT  """
     def __init__(self, game, x, y, options):
         engine.gui.Menu.__init__(self, game, x, y, options)
-        self.options_menu = OptionMenu(game, 52, 144, ['TOGGLE FULLSCREEN/WINDOW', 'CONTROLS', 'BACK'])
 
     def handle_input(self, game):
         # call parent class handle input method, get
@@ -27,7 +27,8 @@ class StartMenu(engine.gui.Menu):
         if selected == 'START':
             return True
         elif selected == 'OPTIONS':
-            game.menu_manager.push_menu(self.options_menu)
+            options = ['TOGGLE FULLSCREEN/WINDOW', 'CONTROLS', 'BACK']
+            game.menu_manager.push_menu(OptionMenu(game, 52, 144, options))
         elif selected == 'QUIT':
             game.quit()
 
@@ -36,21 +37,21 @@ class PauseMenu(engine.gui.Menu):
     Options - RESUME, OPTIONS, QUIT TO TITLE, QUIT GAME """
     def __init__(self, game, x, y, options):
         engine.gui.Menu.__init__(self, game, x, y, options)
-        self.options_menu = OptionMenu(game, 52, 16, ['TOGGLE FULLSCREEN/WINDOW',
-                                 'CONTROLS', 'BACK'])
 
     def handle_input(self, game):
         # call parent class handle input method, get
         # selected option, call appropriate methods
         selected = engine.gui.Menu.handle_input(self, game)
         if selected == 'RESUME':
-            game.menu_manager.pop_menu(game.display.get_screen())
+            game.input_manager.clear()
+            game.menu_manager.pop_menu()
             game.pop_state()
         elif selected == 'OPTIONS':
-            game.menu_manager.push_menu(self.options_menu)
+            options = ['TOGGLE FULLSCREEN/WINDOW', 'CONTROLS', 'BACK']
+            game.menu_manager.push_menu(OptionMenu(game, 52, 16, options))
         elif selected == 'OUIT TO TITLE':
-            game.menu_manager.pop_menu(game.display.get_screen())
-            game.pop_all()
+            game.menu_manager.pop_menu()
+            game.change_state(states.TitleScreenState(game))
         elif selected == 'QUIT GAME':
             game.quit()
 
@@ -59,9 +60,7 @@ class OptionMenu(engine.gui.Menu):
     Options - FULLSCREEN/WINDOW, CONTROLS, BACK """
     def __init__(self, game, x, y, options):
         engine.gui.Menu.__init__(self, game, x, y, options)
-        self.controls_menu = ControlsMenu(game, 84, 128, ['VIEW DEFAULT','RECONFIGURE',
-                                'RESET TO DEFAULT','CHECK GAMEPAD', 'BACK'])
-
+      
     def handle_input(self, game):
         # call parent class handle input method, get
         # selected option, call appropriate methods
@@ -69,9 +68,14 @@ class OptionMenu(engine.gui.Menu):
         if selected == 'TOGGLE FULLSCREEN/WINDOW':
             game.display.change_mode()
         elif selected == 'CONTROLS':
-            game.menu_manager.push_menu(self.controls_menu)
+            options = ['VIEW DEFAULT',
+                       'RECONFIGURE',
+                       'RESET TO DEFAULT',
+                       'CHECK GAMEPAD',
+                       'BACK']
+            game.menu_manager.push_menu(ControlsMenu(game, 84, 128, options))
         elif selected == 'BACK':
-            game.menu_manager.pop_menu(game.display.get_screen())
+            game.menu_manager.pop_menu()
 
 class ControlsMenu(engine.gui.Menu):
     """ Controls Menu, nested in options menu
@@ -81,58 +85,47 @@ class ControlsMenu(engine.gui.Menu):
     def __init__(self, game, x, y, options):
         engine.gui.Menu.__init__(self, game, x, y, options)
 
-        self.view_controls = engine.gui.DialogBox(game, 16, 160)
-        self.view_controls.set_text(['MOVE - arrow keys or D-pad' \
-                                    +'\nSHOOT\CONFIRM - Z key or button 2'])
-
-        self.reset_dialog = engine.gui.DialogBox(game, 16, 160)
-        self.reset_dialog.set_text(['Controls reset to default!'])
-        self.config_screen = ConfigDialogBox(game, 16, 160)
-        self.config_screen.set_text(['Press button for LEFT',
-                                     'Press button for RIGHT',
-                                     'Press button for UP',
-                                     'Press button for DOWN',
-                                     'Press button for SHOOT',
-                                     'Press button for START',
-                                     'Configure Complete!'])
-
-        self.gamepad_dialog = engine.gui.DialogBox(game, 16, 160)
-
-    def check_gamepad(self, input_manager):
-        # Show gamepad name if gamepad is detected.
-        # show error message if not.
-        if input_manager.gamepad_name is not None:
-            gamepad_text = self.game.input_manager.gamepad_name + '\nDetected'
-        else:
-            gamepad_text = 'Gamepad not detected\nPlease plug in a gamepad ' \
-                                + 'and\nrestart the game'
-        self.gamepad_dialog.set_text([gamepad_text])
-
-
     def handle_input(self, game):
         # call parent class handle input method, get
         # selected option, call appropriate methods
         selected = engine.gui.Menu.handle_input(self, game)
         if selected == 'VIEW DEFAULT':
-            game.menu_manager.push_menu(self.view_controls)
+            text = ['MOVE - arrow keys or D-pad\nSHOOT\CONFIRM' \
+                    + '- Z key or button 2']
+            game.menu_manager.push_menu(engine.gui \
+                                              .DialogBox(game, 16, 160, text))
         elif selected == 'RECONFIGURE':
             game.input_manager.toggle_config_mode()
-            game.menu_manager.push_menu(self.config_screen)
+            text = ['Press button for LEFT',
+                    'Press button for RIGHT',
+                    'Press button for UP',
+                    'Press button for DOWN',
+                    'Press button for SHOOT',
+                    'Press button for START',
+                    'Configure Complete!']
+            game.menu_manager.push_menu(ConfigDialogBox(game, 16, 160, text))
         elif selected == 'RESET TO DEFAULT':
-            game.menu_manager.push_menu(self.reset_dialog)
+            text = ['Controls reset to default!']
+            game.menu_manager.push_menu(engine.gui.DialogBox(game, 16, 160, 
+                                                             text))
             game.input_manager.toggle_default()
         elif selected == 'CHECK GAMEPAD':
-            self.check_gamepad(game.input_manager)
-            game.menu_manager.push_menu(self.gamepad_dialog)
+            if game.input_manager.has_gamepad():
+                text = [self.game.input_manager.gamepad_name + '\nDetected']
+            else:
+                text = ['Gamepad not detected\nPlease plug in a gamepad ' \
+                       + 'and\nrestart the game']
+            game.menu_manager.push_menu(engine.gui.DialogBox(game, 16, 160, 
+                                                             text))
         elif selected == 'BACK':
-            game.menu_manager.pop_menu(game.display.get_screen())
+            game.menu_manager.pop_menu()
 
 class ConfigDialogBox(engine.gui.DialogBox):
     """ Guides the user in setting a custom button config
     Each dialog box page will prompt the user to press a button
     they wish to assign to that control. """
-    def __init__(self, game, x, y):
-        engine.gui.DialogBox.__init__(self, game, x, y)
+    def __init__(self, game, x, y, text):
+        engine.gui.DialogBox.__init__(self, game, x, y, text)
         # buttons to reconfigure
         self.buttons = ['LEFT', 'RIGHT', 'UP', 'DOWN',
                         'B','START']
@@ -160,4 +153,4 @@ class ConfigDialogBox(engine.gui.DialogBox):
                 self.current = 0 # reset index
                 done = self.progress() # advance and close dialog box
                 if done:
-                    game.menu_manager.pop_menu(game.display.get_screen())
+                    game.menu_manager.pop_menu()

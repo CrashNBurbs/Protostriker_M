@@ -23,19 +23,22 @@ class TitleScreenState(engine.system.State):
         engine.system.State.__init__(self)
         self.game = game
         self.background = game.image_manager.get_image('title')
-        self.game_state = GameState(game)
-        self.menu = menus.StartMenu(game, 120, 144, ['START', 'OPTIONS', 'QUIT'])
 
     def activate(self):
         # Play music, Show the start menu
-        self.game.menu_manager.push_menu(self.menu)
-
+        self.game \
+            .menu_manager \
+            .push_menu(menus.StartMenu(self.game, 120, 144, 
+                                       ['START', 'OPTIONS', 'QUIT']))
+                         
     def reactivate(self):
-        # Re-show the start menu,
+        # Re-show the start menu,                                             
         # Create new game state to reset all values
         self.game.sound_manager.music_control('pause')
-        self.game.menu_manager.push_menu(self.menu)
-        self.game_state = GameState(self.game)
+        self.game \
+            .menu_manager \
+            .push_menu(menus.StartMenu(game, 120, 144, 
+                                       ['START', 'OPTIONS', 'QUIT']))
 
     def handle_input(self):
         # pass input to current menu,
@@ -43,13 +46,14 @@ class TitleScreenState(engine.system.State):
         current_menu = self.game.menu_manager.get_current_menu()
         start_game = current_menu.handle_input(self.game)
         if start_game:
-            self.game.menu_manager.pop_menu(self.game.display.get_screen())
-            self.game.change_state(self.game_state)
+            self.game.menu_manager.pop_menu()
+            self.game.change_state(GameState(self.game))
 
     def update(self):
         # update menus only if there is one
         if self.game.menu_manager.has_menu():
-            self.game.menu_manager.get_current_menu().update(pygame.time.get_ticks())
+            self.game.menu_manager \
+                .get_current_menu().update(pygame.time.get_ticks())
 
     def draw(self, screen):
         # Draw background and all menus
@@ -60,12 +64,12 @@ class GameState(engine.system.State):
     def __init__(self, game):
         engine.system.State.__init__(self)
         self.game = game
-        self.player = player.Player(game, 16, 112, game.image_manager.get_image('ship'))
+        self.player = player.Player(game, 16, 112, 
+                                    game.image_manager.get_image('ship'))
         self.background = game.image_manager.get_image('background')
         self.viewport = engine.graphics.Viewport(self.background, self.player)
         self.sprite_manager = sprite_manager.SpriteManager()
         self.sprite_manager.add_sprite(self.player, 'player_group')
-        self.pause = PauseState(game)
         self.font = game.image_manager.get_font()
         self.text_color = (252,248,252)
         self.score_render = self.font.render("SCORE " + str(self.player.score),
@@ -104,7 +108,7 @@ class GameState(engine.system.State):
 
         # On start button press, push the pause state
         if self.game.input_manager.is_pressed('START'):
-            self.game.push_state(self.pause)
+            self.game.push_state(PauseState(self.game))
 
     def update(self):
         # scroll the background
@@ -188,8 +192,6 @@ class PauseState(engine.system.State):
         engine.system.State.__init__(self)
         self.game = game
         self.screen = game.display.get_screen()
-        self.pause_menu = menus.PauseMenu(game, 96, 16, ['RESUME','OPTIONS',
-                            'OUIT TO TITLE','QUIT GAME'])
         self.pause_sound = game.sound_manager.get_sound('pause')
 
     def activate(self):
@@ -197,11 +199,17 @@ class PauseState(engine.system.State):
         # and push the pause menu on the menu manager
         self.game.sound_manager.music_control('pause')
         self.pause_sound.play()
-        self.game.menu_manager.push_menu(self.pause_menu)
+        self.game \
+            .menu_manager \
+            .push_menu(menus.PauseMenu(self.game, 96, 16, ['RESUME','OPTIONS',
+                            'OUIT TO TITLE','QUIT GAME']))
 
     def reactivate(self):
         # re-show the pause menu
-        self.game.menu_manager.push_menu(self.pause_menu)
+        self.game \
+            .menu_manager \
+            .push_menu(menus.PauseMenu(self.game, 96, 16, ['RESUME','OPTIONS',
+                            'OUIT TO TITLE','QUIT GAME']))
 
     def handle_input(self):
         # get the current menu and pass input to it
@@ -211,7 +219,8 @@ class PauseState(engine.system.State):
     def update(self):
         # update menus only if there is one
         if self.game.menu_manager.has_menu():
-            self.game.menu_manager.get_current_menu().update(pygame.time.get_ticks())
+            self.game.menu_manager \
+                .get_current_menu().update(pygame.time.get_ticks())
 
     def draw(self, screen):
         # draw all menus

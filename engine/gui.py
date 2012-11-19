@@ -160,15 +160,15 @@ class Menu(TextBox):
             return self.selected
 
 
-    def reset(self):
-        # Reset the cursor and current option back to the first option
-        self.background.fill((0,0,0), self.cursor_rect)
-        self.current_option = 0
-        self.cursor_rect.y = 8
+    #def reset(self):
+    #    # Reset the cursor and current option back to the first option
+    #    self.background.fill((0,0,0), self.cursor_rect)
+    #    self.current_option = 0
+    #    self.cursor_rect.y = 8
 
 class DialogBox(TextBox):
     """ A class for displaying dialog or text in-game """
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y, text):
         TextBox.__init__(self, game, x, y)
         self.width = 288  # w,h of dialog boxes are always 288x72
         self.height = 72
@@ -188,19 +188,15 @@ class DialogBox(TextBox):
         self.page_done = False # false when still blitting text
         self.build_text_box()
         self.render = None
-
-    def set_text(self, text):
-        # sets dialog box text.
-        # text is a list of strings, each string is a page.
         self.text = text
         self.page = 0
         self.pages = len(text)
 
-    def reset(self):
-        # if dialog box is called again
-        # it needs to be reset.
-        self.page = 0
-        self.page_done = False
+    #def reset(self):
+    #    # if dialog box is called again
+    #    # it needs to be reset.
+    #    self.page = 0
+    #    self.page_done = False
 
     def progress(self):
         # called when input from the player is given
@@ -255,7 +251,7 @@ class DialogBox(TextBox):
         if game.input_manager.is_pressed('B'):
             done = self.progress()
             if done:
-                game.menu_manager.pop_menu(game.display.get_screen())
+                game.menu_manager.pop_menu()
 
 class Message():
     """ Message class for creating text messages that
@@ -293,12 +289,12 @@ class MenuManager():
         # Adds a menu to the top of the stack
         self.menus.append(menu)
 
-    def pop_menu(self, screen):
+    def pop_menu(self):
         # pop the menu and reset for future calls
         # blit a the portion of the background image that is
         # under the menu, over the menu to erase it.
         popped = self.menus.pop()
-        popped.reset()  # set the cursor back at the top
+        #popped.reset()  # set the cursor back at the top
 
     def draw(self, screen):
         # draw all menus in the stack
