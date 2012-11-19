@@ -22,10 +22,25 @@ class TitleScreenState(engine.system.State):
     def __init__(self, game):
         engine.system.State.__init__(self)
         self.game = game
-        self.background = game.image_manager.get_image('title')
+        
+
+    def load_content(self):
+        # load images
+        self.game.image_manager.load_single('titlescreen.bmp', 'title')
+        self.game.image_manager.load_sheet('textborder.bmp', 'textborder', 8, 8, False)
+        self.game.image_manager.load_single('menuarrow.bmp', 'cursor', -1)
+        self.game.image_manager.load_single('dialogarrow.bmp', 'arrow', -1)
+
+        # load sounds
+        self.game.sound_manager.load_sound('pause.wav', 'pause')
+        self.game.sound_manager.load_sound('cursor.wav', 'cursor', volume = 0.2)
+        self.game.sound_manager.load_sound('select.wav', 'select', volume = 0.2)
+        self.game.sound_manager.load_sound('blip.wav', 'blip', volume = 0.1)
 
     def activate(self):
         # Play music, Show the start menu
+        self.load_content()
+        self.background = self.game.image_manager.get_image('title')
         self.game \
             .menu_manager \
             .push_menu(menus.StartMenu(self.game, 120, 144, 

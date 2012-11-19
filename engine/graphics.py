@@ -31,7 +31,9 @@ class ImageManager():
 
     def load_image(self, filename, colorkey = None):
         # call pygame image load function
-        fullname = os.path.join('res', 'images', filename) # create platform independent path
+
+        # create platform independent path
+        fullname = os.path.join('res', 'images', filename)
         try:
             image = pygame.image.load(fullname)
         except pygame.error, message:
@@ -54,7 +56,8 @@ class ImageManager():
             for j in range(int(master_height/h)):
                 images.append([])  # add a new row to the list
                 for i in range(int(master_width/w)):  # number of frames wide
-                    images[j].append(master_image.subsurface((i*w,j*h,w,h)))  # add each frame, from left to right
+                     # add each frame, from left to right
+                    images[j].append(master_image.subsurface((i*w,j*h,w,h))) 
         else: # for single row image sheets
             for i in range(int(master_width/w)):
                 images.append(master_image.subsurface((i*w,0,w,h)))
@@ -87,6 +90,10 @@ class ImageManager():
 
     def get_font(self):
         return self.font
+
+    def unload_image(self, key):
+        # unload an image from the image manager
+        del self.images[key]
 
 class Viewport():
     """ This class creates a viewport that is the size

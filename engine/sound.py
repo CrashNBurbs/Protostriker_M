@@ -40,6 +40,10 @@ class SoundManager():
     def get_sound(self, key):
         return self.sounds[key]
 
+    def unload_sound(self, key):
+        # remove a sound from the sound manager
+        del self.sounds[key]
+
     def play_music(self, filename, loops = -1):
         # play selected music, if already playing, stop current song, play new one
         # loops song infinitely by default

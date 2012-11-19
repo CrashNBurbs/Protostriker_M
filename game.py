@@ -25,12 +25,10 @@ class PsmGame(engine.system.Game):
 
     def load_content(self):
         # load images
-        self.image_manager.load_single('titlescreen.bmp', 'title')
+        
         self.image_manager.load_sheet('ship1.bmp','ship', 32, 16, False, -1)
         self.image_manager.load_single('background.bmp', 'background')
-        self.image_manager.load_sheet('textborder.bmp', 'textborder', 8, 8, False)
-        self.image_manager.load_single('menuarrow.bmp', 'cursor', -1)
-        self.image_manager.load_single('dialogarrow.bmp', 'arrow', -1)
+        
         self.image_manager.load_sheet('enemy1.bmp', 'enemy1', 16, 16, False, -1)
         self.image_manager.load_sheet('enemy2.bmp', 'enemy2', 16, 16, False, -1)
         self.image_manager.load_sheet('enemy3.bmp', 'enemy3', 24,16, False, -1)
@@ -47,10 +45,7 @@ class PsmGame(engine.system.Game):
         self.image_manager.load_font('prstartk.ttf', 8)
 
         # load sounds and music
-        self.sound_manager.load_sound('pause.wav', 'pause')
-        self.sound_manager.load_sound('cursor.wav', 'cursor', volume = 0.2)
-        self.sound_manager.load_sound('select.wav', 'select', volume = 0.2)
-        self.sound_manager.load_sound('blip.wav', 'blip', volume = 0.1)
+        
         self.sound_manager.load_sound('enemy_exp.wav','en_exp', volume = 0.4)
         self.sound_manager.load_sound('player_exp.wav', 'pl_exp', volume = 0.4)
         self.sound_manager.load_sound('laser.wav', 'laser', volume = 0.2)

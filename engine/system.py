@@ -346,6 +346,25 @@ class State():
     def __init__(self):
         pass
 
+    def load_content(self):
+        # load images and sounds for the state here
+        pass
+
+    def unload_content(self):
+        # unload images and sounds that will not be used
+        # again
+        pass
+
+    def activate(self):
+        # called once when the state is first pushed
+        # useful for starting music, sound effects, etc.
+        pass
+
+    def reactivate(self):
+        # called once when a previous active state is
+        # made active again.
+        pass
+
     def handle_input(self):
         # All objects that process input should have their handle_input()
         # functions called here
@@ -362,15 +381,7 @@ class State():
         pass
 
 
-    def activate(self):
-        # called once when the state is first pushed
-        # useful for starting music, sound effects, etc.
-        pass
 
-    def reactivate(self):
-        # called once when a previous active state is
-        # made active again.
-        pass
 
 class Game():
     """ game class - Contains all managers, initializes pygame
