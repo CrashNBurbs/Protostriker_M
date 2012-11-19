@@ -27,18 +27,28 @@ class TextBox():
         # This function blits all menu elements to the menu background
 
         # add border tiles based on the size of the menu
+        # top left corner
         self.background.blit(self.border_tiles[0], (0,0))
-        self.background.blit(self.border_tiles[1], (0, self.background.get_height() - 8))
-        self.background.blit(self.border_tiles[2], (self.background.get_width() - 8, 0))
-        self.background.blit(self.border_tiles[3], (self.background.get_width() - 8, self.background.get_height() - 8))
-
+        # bottom left corner
+        self.background.blit(self.border_tiles[1], 
+                             (0, self.background.get_height() - 8))
+        # top right corner
+        self.background.blit(self.border_tiles[2], 
+                             (self.background.get_width() - 8, 0))
+        # bottom right corner
+        self.background.blit(self.border_tiles[3], 
+                             (self.background.get_width() - 8, 
+                             self.background.get_height() - 8))
+        # tile horizontal border
         for i in range(1, self.background.get_width() / 8 - 1):
             self.background.blit(self.border_tiles[4], (i * 8, 0))
-            self.background.blit(self.border_tiles[5], (i * 8, self.background.get_height() - 8))
-
+            self.background.blit(self.border_tiles[5], 
+                                 (i * 8, self.background.get_height() - 8))
+        # tile vertical border
         for i in range(1, self.background.get_height() / 8 - 1):
             self.background.blit(self.border_tiles[6], (0, i * 8))
-            self.background.blit(self.border_tiles[7], (self.background.get_width() - 8, i * 8))
+            self.background.blit(self.border_tiles[7], 
+                                 (self.background.get_width() - 8, i * 8))
 
     def draw(self):
         pass
@@ -58,8 +68,7 @@ class Menu(TextBox):
         # load cursor and set rect
         self.width = self.calc_width()
         self.height = self.calc_height()
-        self.background = pygame.Surface((self.width, self.height))
-        self.background.convert()
+        self.background = pygame.Surface((self.width, self.height)).convert()
         self.rect = self.background.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -98,7 +107,7 @@ class Menu(TextBox):
         # draws the menu to the screen
         self.background.blit(self.cursor, (8, self.cursor_rect.y))
         screen.blit(self.background, (self.rect.x, self.rect.y))
-
+       
     def calc_width(self):
         # steps throught options, sets width to the
         # longest option + border
@@ -165,8 +174,7 @@ class DialogBox(TextBox):
         TextBox.__init__(self, game, x, y)
         self.width = 288  # w,h of dialog boxes are always 288x72
         self.height = 72
-        self.background = pygame.Surface((self.width, self.height))
-        self.background.convert()
+        self.background = pygame.Surface((self.width, self.height)).convert()
         self.rect = self.background.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -277,11 +285,8 @@ class MenuManager():
         self.menus.append(menu)
 
     def pop_menu(self):
-        # pop the menu and reset for future calls
-        # blit a the portion of the background image that is
-        # under the menu, over the menu to erase it.
-        popped = self.menus.pop()
-        #popped.reset()  # set the cursor back at the top
+        # remove a menu from the stack
+        self.menus.pop()
 
     def draw(self, screen):
         # draw all menus in the stack

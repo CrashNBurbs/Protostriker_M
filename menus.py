@@ -135,22 +135,34 @@ class ConfigDialogBox(engine.gui.DialogBox):
         # Show each dialog box page, prompt user for a
         # button press, assign that button to a control.
 
-        if self.page < len(self.buttons):  # buttons left to configure
-            if not self.page_done:  # only get button presses when the page is done
+        # configure a new button for each control
+        if self.page < len(self.buttons):
+            # only get button presses when the page is done
+            if not self.page_done:  
                 pygame.event.clear()
-            new_value = game.input_manager.config_process_input() # get input, assign to new_value
-            if new_value is not None:  # if a key has been pressed
+            # get input, assign to new_value
+            new_value = game.input_manager.config_process_input()
+            # if a key has been pressed
+            if new_value is not None:  
                 # set current button to new value
-                button_bound = game.input_manager.redefine_button(self.buttons[self.current], new_value)
+                button_bound = game.input_manager \
+                                   .redefine_button(self.buttons[self.current],
+                                                     new_value)
+                # if button reconfig was successful
                 if button_bound:
                     self.current += 1  # move to next button
                     self.progress()  # go to next page
         else:  # all buttons have been configured, showing 'config complete!'
-            pressed = game.input_manager.config_process_input()  # get any key pressed
+            # get any key pressed
+            pressed = game.input_manager.config_process_input()
             if pressed:
-                game.input_manager.toggle_user() # set input manager to check user buttons
-                game.input_manager.toggle_config_mode() # go back to normal input handling
-                self.current = 0 # reset index
-                done = self.progress() # advance and close dialog box
-                if done:
+                # set input manager to check user buttons
+                game.input_manager.toggle_user() 
+                # go back to normal input handling
+                game.input_manager.toggle_config_mode() 
+                # reset index
+                self.current = 0 
+                # advance and close dialog box
+                done = self.progress() 
+                if done: # user has pressed a button
                     game.menu_manager.pop_menu()
