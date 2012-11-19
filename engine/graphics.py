@@ -28,7 +28,6 @@ class ImageManager():
 
     def __init__(self):
         self.images = dict()  # dictionary of all images loaded
-        self.font = self.load_font('prstartk.ttf', 8)
 
     def load_image(self, filename, colorkey = None):
         # call pygame image load function
@@ -79,7 +78,7 @@ class ImageManager():
         except pygame.error, message:
             print 'Cannot load font:', name
             raise SystemExit, message
-        return font
+        self.font = font
 
     def get_image(self, key):
         # accessor method for images

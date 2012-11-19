@@ -186,22 +186,27 @@ class InputManager():
                 if event.type == QUIT:
                     pygame.quit()
                     quit()
-                elif event.type == KEYDOWN:  # keypress event
+                # keypress event
+                elif event.type == KEYDOWN:  
                     if event.key == K_ESCAPE:
                         pygame.quit()
                         quit()
                     self.pressed['keys'].append(event.key)
                     self.held['keys'].append(event.key)
-                elif event.type == KEYUP:   # key release event
+                # key release event
+                elif event.type == KEYUP:   
                     if event.key in self.held['keys']:
                         self.held['keys'].remove(event.key)
+                # gamepad button press event
                 elif event.type == JOYBUTTONDOWN:
                     self.pressed['buttons'].append(event.button)
                     self.held['buttons'].append(event.button)
+                # gamepad button release event
                 elif event.type == JOYBUTTONUP:
                     if event.button in self.held['buttons']:
                         self.held['buttons'].remove(event.button)
-                elif event.type == JOYHATMOTION:  # d-pad
+                # d-pad
+                elif event.type == JOYHATMOTION:  
                     dpad_state = []
                     if event.value[0] < 0:
                         dpad_state.append('left')
@@ -324,6 +329,8 @@ class InputManager():
             self.config_mode = False
 
     def clear(self):
+        # clear everything in input manager states
+        # useful for state transitions
         self.held = {'keys' : [], 'buttons' : [], 'dpad' : []}
         self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}
 

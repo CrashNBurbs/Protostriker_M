@@ -100,6 +100,9 @@ class PsmGame(engine.system.Game):
         self.image_manager.load_sheet('explosion.bmp', 'explosion', 16,16, False, -1)
         self.image_manager.load_sheet('shrapnel.bmp', 'shrapnel', 8,8, False, -1)
 
+        #load font
+        self.image_manager.load_font('prstartk.ttf', 8)
+
         # load sounds and music
         self.sound_manager = engine.sound.SoundManager()
         self.sound_manager.load_sound('pause.wav', 'pause')
