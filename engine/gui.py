@@ -159,13 +159,6 @@ class Menu(TextBox):
             self.selected = self.get_selected_option()
             return self.selected
 
-
-    #def reset(self):
-    #    # Reset the cursor and current option back to the first option
-    #    self.background.fill((0,0,0), self.cursor_rect)
-    #    self.current_option = 0
-    #    self.cursor_rect.y = 8
-
 class DialogBox(TextBox):
     """ A class for displaying dialog or text in-game """
     def __init__(self, game, x, y, text):
@@ -191,12 +184,6 @@ class DialogBox(TextBox):
         self.text = text
         self.page = 0
         self.pages = len(text)
-
-    #def reset(self):
-    #    # if dialog box is called again
-    #    # it needs to be reset.
-    #    self.page = 0
-    #    self.page_done = False
 
     def progress(self):
         # called when input from the player is given
