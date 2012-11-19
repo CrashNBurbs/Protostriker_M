@@ -32,7 +32,7 @@ class ImageManager():
 
     def load_image(self, filename, colorkey = None):
         # call pygame image load function
-        fullname = os.path.join('data', filename) # create platform independent path
+        fullname = os.path.join('res', 'images', filename) # create platform independent path
         try:
             image = pygame.image.load(fullname)
         except pygame.error, message:
@@ -72,8 +72,8 @@ class ImageManager():
         images = self.load_sliced_images(filename, w, h, rows, colorkey)
         self.images[key] = images
 
-    def load_font(self, name, size):
-        fullname = os.path.join('data', name)
+    def load_font(self, filename, size):
+        fullname = os.path.join('res', 'fonts', filename)
         try:
             font = pygame.font.Font(fullname, size)
         except pygame.error, message:

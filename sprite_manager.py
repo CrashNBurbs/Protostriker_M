@@ -127,7 +127,7 @@ class SpriteManager(engine.objects.SpriteManager):
 
         # create platform independent path, open
         # file if available.
-        fullname = os.path.join('Data', filename)
+        fullname = os.path.join('res', 'levels', filename)
         try:
             level = open(fullname, "r")
         except IOError:
