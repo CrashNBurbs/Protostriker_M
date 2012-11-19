@@ -367,17 +367,30 @@ class State():
         # made active again.
         pass
 
-class StateManager():
-    """ Manager of states. Push a state onto the stack to
-    make it active, pop it to return to the previous state
-    call run to start the game loop """
+class Game():
+    """ game class - Contains all managers, initializes pygame
+        and runs a game loop """
     def __init__(self):
+        pygame.mixer.pre_init(44100, -16, 2, 2048)
+        pygame.init()
+        self.display = Display()
+        self.image_manager = graphics.ImageManager()
+        self.sound_manager = sound.SoundManager()
+        self.menu_manager = gui.MenuManager()
+        self.input_manager = InputManager()
         self.states = []
-        
+        self.initial_state = None
+        self.clock = pygame.time.Clock()
+        self.accumulator = 0.0
+        self.timestep = 1 / 60.0
 
-    def quit(self):
-        pygame.quit()
-        quit()
+    def set_caption(self, caption):
+        # set the window title bar to caption
+        pygame.display.set_caption(caption)
+
+    def load_content(self):
+        # load all images and sounds here
+        pass
 
     def get_current_state(self):
         return self.states[-1]
@@ -402,39 +415,11 @@ class StateManager():
             self.states.pop()
             self.get_current_state().reactivate()
 
-class Game():
-    """ game class - Contains all managers, initializes pygame
-        and runs a game loop """
-    def __init__(self):
-        pygame.mixer.pre_init(44100, -16, 2, 2048)
-        pygame.init()
-        self.display = Display()
-        self.image_manager = graphics.ImageManager()
-        self.sound_manager = sound.SoundManager()
-        self.menu_manager = gui.MenuManager()
-        self.state_manager = StateManager()
-        self.input_manager = InputManager()
-        self.initial_state = None
-        self.clock = pygame.time.Clock()
-        self.accumulator = 0.0
-        self.timestep = 1 / 60.0
-
-    def set_caption(self, caption):
-        # set the window title bar to caption
-        pygame.display.set_caption(caption)
-
-    def load_content(self):
-        # load all images and sounds here
-        pass
-
-    def initialize(self, state):
-        self.state_manager.push_state(state)
-
     def run(self):
-        current_state = self.state_manager.get_current_state()
+        current_state = self.get_current_state()
         while(current_state):
             # check for state change
-            current_state = self.state_manager.get_current_state()
+            current_state = self.get_current_state()
 
             self.accumulator += self.clock.tick() / 1000.0
 
@@ -445,9 +430,13 @@ class Game():
                 current_state.update()
                 self.accumulator -= self.timestep
             
-            for state in self.state_manager.states:
+            for state in self.states:
                 state.draw(self.display.get_screen())
             self.display.update()
+
+    def quit(self):
+        pygame.quit()
+        quit()
 
 
 

@@ -44,7 +44,7 @@ class TitleScreenState(engine.system.State):
         start_game = current_menu.handle_input(self.game)
         if start_game:
             self.game.menu_manager.pop_menu(self.game.display.get_screen())
-            self.game.state_manager.change_state(self.game_state)
+            self.game.change_state(self.game_state)
 
     def update(self):
         # update menus only if there is one
@@ -104,7 +104,7 @@ class GameState(engine.system.State):
 
         # On start button press, push the pause state
         if self.game.input_manager.is_pressed('START'):
-            self.game.state_manager.push_state(self.pause)
+            self.game.push_state(self.pause)
 
     def update(self):
         # scroll the background
@@ -162,7 +162,7 @@ class GameState(engine.system.State):
         #    if done and not self.game_over:
         #        self.messages.remove(message)
         #    elif done and self.game_over:
-        #        self.game.state_manager.pop_state()
+        #        self.game.pop_state()
 
           # uncomment this code to display all the sprites image rects
           # in green, and their hitboxes (collision region) in red

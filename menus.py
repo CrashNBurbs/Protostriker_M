@@ -29,7 +29,7 @@ class StartMenu(engine.gui.Menu):
         elif selected == 'OPTIONS':
             game.menu_manager.push_menu(self.options_menu)
         elif selected == 'QUIT':
-            game.state_manager.quit()
+            game.quit()
 
 class PauseMenu(engine.gui.Menu):
     """ First menu that displays on pause
@@ -45,15 +45,14 @@ class PauseMenu(engine.gui.Menu):
         selected = engine.gui.Menu.handle_input(self, game)
         if selected == 'RESUME':
             game.menu_manager.pop_menu(game.display.get_screen())
-            game.state_manager.pop_state()
+            game.pop_state()
         elif selected == 'OPTIONS':
             game.menu_manager.push_menu(self.options_menu)
         elif selected == 'OUIT TO TITLE':
             game.menu_manager.pop_menu(game.display.get_screen())
-            game.state_manager.pop_all()
+            game.pop_all()
         elif selected == 'QUIT GAME':
-            game.state_manager.quit()
-
+            game.quit()
 
 class OptionMenu(engine.gui.Menu):
     """ Options menu, nested in Pause menu
