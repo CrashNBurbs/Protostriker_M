@@ -217,7 +217,6 @@ class InputManager():
                     if event.value[1] > 0:
                         dpad_state.append('up')
                     self.update_dpad(dpad_state)
-                    print self.held['dpad']
 
     def config_process_input(self):
         # input handling for control reconfiguration
@@ -399,6 +398,7 @@ class Game():
         self.clock = pygame.time.Clock()
         self.accumulator = 0.0
         self.timestep = 1 / 60.0
+        self.alpha = 0.0
 
     def set_caption(self, caption):
         # set the window title bar to caption
@@ -437,7 +437,10 @@ class Game():
             # check for state change
             current_state = self.get_current_state()
 
-            self.accumulator += self.clock.tick() / 1000.0
+            tick = self.clock.tick() / 1000.0
+            if tick > 0.25:
+                tick = 0.25
+            self.accumulator += tick
 
             self.input_manager.process_input()
             current_state.handle_input()
@@ -446,8 +449,10 @@ class Game():
                 current_state.update()
                 self.accumulator -= self.timestep
             
+            self.alpha = self.accumulator / self.timestep
+            
             for state in self.states:
-                state.draw(self.display.get_screen())
+                state.draw(self.display.get_screen(), self.alpha)
             self.display.update()
 
     def quit(self):

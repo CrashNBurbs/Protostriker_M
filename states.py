@@ -70,7 +70,7 @@ class TitleScreenState(engine.system.State):
             self.game.menu_manager \
                 .get_current_menu().update(pygame.time.get_ticks())
 
-    def draw(self, screen):
+    def draw(self, screen, alpha):
         # Draw background and all menus
         screen.blit(self.background, (0,0))
         self.game.menu_manager.draw(screen)
@@ -98,7 +98,7 @@ class GameState(engine.system.State):
         self.game.input_manager.clear()
 
         # load the level on state activation
-        self.sprite_manager.load_level(self.game, 'level_1.txt')
+        self.sprite_manager.load_level(self.game, 'empty.txt')
 
         # play music
         self.game.sound_manager.play_music("gamemusic.wav")
@@ -165,10 +165,10 @@ class GameState(engine.system.State):
             self.lives_render = self.font.render("LIVES " + str(self.player.lives),
                                 False, self.text_color)
 
-    def draw(self, screen):
+    def draw(self, screen, alpha):
         # draw the background and all sprites
-        self.viewport.draw(screen)
-        self.sprite_manager.draw(screen)
+        self.viewport.draw(screen, alpha)
+        self.sprite_manager.draw(screen, alpha)
 
         # draw the score and player lives
         screen.blit(self.score_render, (8,8))
@@ -237,7 +237,7 @@ class PauseState(engine.system.State):
             self.game.menu_manager \
                 .get_current_menu().update(pygame.time.get_ticks())
 
-    def draw(self, screen):
+    def draw(self, screen, alpha):
         # draw all menus
         self.game.menu_manager.draw(screen)
 

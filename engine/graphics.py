@@ -105,6 +105,7 @@ class Viewport():
         self.width = 320 # width of screen
         self.height = 240 # height of screen
         self.coordinate = 0  # left edge of viewport
+        self.last_coordinate = 0
         self.level_pos = 0
         self.minScroll = 0 # max value for left scrolling
         self.maxScroll = self.background.get_width() - 320 # max for right
@@ -114,8 +115,12 @@ class Viewport():
 
     def update(self):
         if self.auto_scroll: # background scrolls on its own
+            self.last_coordinate = self.coordinate
+            self.last_level_pos = self.level_pos
+
             self.coordinate += self.advance_velocity * self.timestep
             self.level_pos += self.advance_velocity * self.timestep
+
         #else:  # background scrolls as a result of the player passing a point on screen
             #if self.player.rect.right >= 130 and \
             #game.input_manager.is_held('RIGHT') and \
@@ -124,10 +129,13 @@ class Viewport():
 
         # loop image
         if self.coordinate > self.maxScroll:
+                self.last_coordinate = 0
                 self.coordinate = 0
 
-    def draw(self, screen):
+    def draw(self, screen, alpha):
         # create new subsurface from updated coordinate
         # draw it to the screen
-        self.vp = self.background.subsurface((self.coordinate, 0, self.width, self.height))
+        drawat = self.coordinate * alpha + self.last_coordinate * ( 1.0 - alpha )
+      
+        self.vp = self.background.subsurface((drawat, 0, self.width, self.height))
         screen.blit(self.vp, (0,0))
