@@ -40,8 +40,6 @@ class SpriteManager(engine.objects.SpriteManager):
     def update(self, current_time, viewport, player_rect):
         # update all sprites in the game
 
-        screen_width = 320
-
         # step through self.objects and call
         # each groups update method
         for key in self.sprites.iterkeys():
@@ -59,7 +57,7 @@ class SpriteManager(engine.objects.SpriteManager):
         # queue, call enemy's spawn method, and add it
         # to the enemy group for update and draw
         for enemy in self.enemy_queue:
-            if viewport.level_pos + (screen_width) >= enemy.dx:
+            if viewport.level_pos + viewport.width >= enemy.dx:
                 index = self.enemy_queue.index(enemy)
                 spawn_enemy = self.enemy_queue.pop(index)
                 spawn_enemy.spawn()

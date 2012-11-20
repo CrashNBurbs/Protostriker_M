@@ -410,17 +410,21 @@ class Game():
         pass
 
     def get_current_state(self):
+        # get state at the top of the stack
         return self.states[-1]
 
     def push_state(self, state):
+        # push a new state onto the stack
         self.states.append(state)
         state.activate()
 
     def pop_state(self):
+        # remove and return state on the top of the stack
         self.states.pop()
         self.get_current_state().reactivate()
 
     def change_state(self, state):
+        # replace the current top state with state
         self.states.pop()
         self.states.append(state)
         state.activate()
@@ -433,6 +437,7 @@ class Game():
             self.get_current_state().reactivate()
 
     def interpolate_draw(self, current, last):
+        # returns an interpolated draw position
         if not self.paused:
            draw_pos = current * self.alpha + last * (1.0 - self.alpha)
         else:
@@ -445,25 +450,37 @@ class Game():
             # check for state change
             current_state = self.get_current_state()
 
+            # get time passed since last frame (in seconds)
             tick = self.clock.tick() / 1000.0
+            # cap the max frame time
             if tick > 0.25:
                 tick = 0.25
+            # add frame time to accumulator
             self.accumulator += tick
 
+            # handle input
             self.input_manager.process_input()
             current_state.handle_input()
 
+            # update the game in self.timestep increments
+            # if frame time was long, update as many times as needed 
+            # to catch up
             while self.accumulator >= self.timestep:
                 current_state.update()
                 self.accumulator -= self.timestep
             
+            # store alpha for interpolated draws
             self.alpha = self.accumulator / self.timestep
             
+            # draw all states
             for state in self.states:
                 state.draw(self.display.get_screen())
+
+            # scale and flip the buffer
             self.display.update()
 
     def quit(self):
+        # close the game
         pygame.quit()
         quit()
 

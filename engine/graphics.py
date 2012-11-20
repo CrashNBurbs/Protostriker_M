@@ -112,10 +112,10 @@ class Viewport():
         self.maxScroll = self.background.get_width() - 320 # max for right
         self.advance_velocity = 100  # speed of scroll
         self.timestep = 1 / 60.0  # target frame rate
-        self.vp = self.background.subsurface((self.coordinate, 0, self.width, self.height))
+        self.vp = self.background.subsurface((self.coordinate, 0,
+                                              self.width, self.height))
 
     def update(self):
-        self.scrolling = False
 
         self.last_coordinate = self.coordinate
         self.last_level_pos = self.level_pos

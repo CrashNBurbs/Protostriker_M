@@ -27,14 +27,17 @@ class TitleScreenState(engine.system.State):
     def load_content(self):
         # load images
         self.game.image_manager.load_single('titlescreen.bmp', 'title')
-        self.game.image_manager.load_sheet('textborder.bmp', 'textborder', 8, 8, False)
+        self.game.image_manager.load_sheet('textborder.bmp', 'textborder',
+                                           8, 8, False)
         self.game.image_manager.load_single('menuarrow.bmp', 'cursor', -1)
         self.game.image_manager.load_single('dialogarrow.bmp', 'arrow', -1)
 
         # load sounds
         self.game.sound_manager.load_sound('pause.wav', 'pause')
-        self.game.sound_manager.load_sound('cursor.wav', 'cursor', volume = 0.2)
-        self.game.sound_manager.load_sound('select.wav', 'select', volume = 0.2)
+        self.game.sound_manager.load_sound('cursor.wav', 'cursor',
+                                           volume = 0.2)
+        self.game.sound_manager.load_sound('select.wav', 'select',
+                                           volume = 0.2)
         self.game.sound_manager.load_sound('blip.wav', 'blip', volume = 0.1)
 
     def activate(self):
@@ -98,10 +101,12 @@ class GameState(engine.system.State):
         self.game.input_manager.clear()
 
         # load the level on state activation
-        self.sprite_manager.load_level(self.game, 'empty.txt')
+        self.sprite_manager.load_level(self.game, 'level_1.txt')
 
         # play music
         self.game.sound_manager.play_music("gamemusic.wav")
+
+        self.game.paused = False
 
         # Create messages, add to message list
         #self.level_message = engine.gui.Message(132,116, "LEVEL 1", 3000)
@@ -109,6 +114,7 @@ class GameState(engine.system.State):
         #self.messages = [self.level_message, self.get_ready]
 
     def reactivate(self):
+        self.game.paused = False
         self.game.sound_manager.music_control('unpause')
 
 
