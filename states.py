@@ -42,7 +42,7 @@ class TitleScreenState(engine.system.State):
         self.game.sound_manager.load_sound('blip.wav', 'blip', volume = 0.1)
 
     def unload_content(self):
-        print "title unload called"
+        # unload everything not used by future states
         self.game.image_manager.unload_image('title')
 
     def activate(self):
@@ -132,7 +132,7 @@ class GameState(engine.system.State):
         self.game.sound_manager.load_sound('hit.wav', 'hit',
                                            volume = 0.4)
     def unload_content(self):
-        print "game unload called"
+        # unload everything not used by future states
         for key in self.game.image_manager.images.keys():
             print key
             self.game.image_manager.unload_image(key)
@@ -154,6 +154,8 @@ class GameState(engine.system.State):
         # play music
         self.game.sound_manager.play_music("gamemusic.wav")
 
+        # create player, viewport, score and lives render, 
+        # add player to sprite manager group
         self.player = player.Player(self.game, 16, 112, 
                                     self.game.image_manager.get_image('ship'))
         self.background = self.game.image_manager.get_image('background')
@@ -163,6 +165,7 @@ class GameState(engine.system.State):
                                              False, self.text_color)
         self.lives_render = self.font.render("LIVES " + str(self.player.lives),
                                              False, self.text_color)
+        # toggle game.paused 
         self.game.paused = False
 
     def reactivate(self):
@@ -189,7 +192,8 @@ class GameState(engine.system.State):
         self.viewport.update()
 
         # update all sprites
-        self.sprite_manager.update(pygame.time.get_ticks(), self.viewport, self.player.rect)
+        self.sprite_manager.update(pygame.time.get_ticks(), self.viewport,
+                                   self.player.rect)
 
         # check for all collsions, get player death
         player_die = self.sprite_manager.check_collisions(self.player)
@@ -221,8 +225,9 @@ class GameState(engine.system.State):
         # update lives display if not game over
         # (not checking if game over results in -1 being displayed)
         if not self.game_over:
-            self.lives_render = self.font.render("LIVES " + str(self.player.lives),
-                                False, self.text_color)
+            self.lives_render = self.font.render("LIVES " + 
+                                                 str(self.player.lives),
+                                                 False, self.text_color)
 
     def draw(self, screen):
         # draw the background and all sprites
@@ -232,15 +237,6 @@ class GameState(engine.system.State):
         # draw the score and player lives
         screen.blit(self.score_render, (8,8))
         screen.blit(self.lives_render, (256,8))
-
-        # show any messages, pop game state on
-        # message done if self.game_over
-        #for message in self.messages:
-        #    done = message.show(pygame.time.get_ticks())
-        #    if done and not self.game_over:
-        #        self.messages.remove(message)
-        #    elif done and self.game_over:
-        #        self.game.pop_state()
 
           # uncomment this code to display all the sprites image rects
           # in green, and their hitboxes (collision region) in red

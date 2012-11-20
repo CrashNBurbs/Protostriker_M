@@ -238,8 +238,9 @@ class Enemy5(Enemy2):
         # create explosion sprite
 
         for angle in range(0,360,45):
-            ex.append(bullets.Shrapnel(self.game, self.rect.centerx, self.rect.centery,
-                self.explosion_image, angle))
+            ex.append(bullets.Shrapnel(self.game, self.rect.centerx,
+                                       self.rect.centery,self.explosion_image,
+                                       angle))
 
         # play sound
         self.explosion_sound.play()
@@ -281,15 +282,16 @@ class Enemy7(Enemy1):
         elif self.direction == -1:
             self.dy -= self.vspeed * self.timestep
 
-        if self.rect.x < player_rect.centerx and self.rect.y < player_rect.y and\
-        not self.changed_dir:
-            self.direction = 1
-            self.changed_dir = True
-        elif self.rect.x < player_rect.centerx and self.rect.y > player_rect.y and\
-        not self.changed_dir:
-            self.direction = -1
-            self.changed_dir = True
-
+        if self.rect.x < player_rect.centerx and \
+           self.rect.y < player_rect.y and\
+           not self.changed_dir:
+                self.direction = 1
+                self.changed_dir = True
+        elif self.rect.x < player_rect.centerx and \
+             self.rect.y > player_rect.y and \
+             not self.changed_dir:
+                self.direction = -1
+                self.changed_dir = True
 
         self.rect.x = self.dx
         self.rect.y = self.dy

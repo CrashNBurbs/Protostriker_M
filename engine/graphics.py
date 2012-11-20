@@ -131,6 +131,8 @@ class Viewport():
     def draw(self, screen):
         # create new subsurface from updated coordinate
         # draw it to the screen
-        draw_pos = self.game.interpolate_draw(self.coordinate, self.last_coordinate)
-        self.vp = self.background.subsurface((draw_pos, 0, self.width, self.height))
+        draw_pos = self.game.interpolate_draw(self.coordinate, 
+                                              self.last_coordinate)
+        self.vp = self.background.subsurface((draw_pos, 0, self.width,
+                                              self.height))
         screen.blit(self.vp, (0,0))

@@ -43,12 +43,15 @@ class SpriteManager(engine.objects.SpriteManager):
         # step through self.objects and call
         # each groups update method
         for key in self.sprites.iterkeys():
-            if key == 'enemy_group':  # update enemies, get return value
+            # update enemies, get return value
+            if key == 'enemy_group': 
                 for sprite in self.sprites['enemy_group']:
                     enemy_bullet = sprite.update(current_time, player_rect)
-                    if enemy_bullet is not None:  # if enemy is shooting
-                        self.add_sprite(enemy_bullet, 'enemy_shots') # add a bullet
-            else:
+                    # if enemy is shooting 
+                    if enemy_bullet is not None: 
+                        # add a bullet 
+                        self.add_sprite(enemy_bullet, 'enemy_shots') 
+            else: # update all other sprites
                 self.sprites[key].update(current_time)
 
         # spawn enemies
@@ -61,7 +64,6 @@ class SpriteManager(engine.objects.SpriteManager):
                 index = self.enemy_queue.index(enemy)
                 spawn_enemy = self.enemy_queue.pop(index)
                 spawn_enemy.spawn()
-                #spawn_enemy.update(current_time, player_rect)
                 self.add_sprite(spawn_enemy, 'enemy_group')
 
     def check_collisions(self, player):
@@ -161,19 +163,26 @@ class SpriteManager(engine.objects.SpriteManager):
 
         # create appropriate enemy depending on enemy_type
         if enemy_type == 'enemy_01':
-            enemy = enemies.Enemy1(game, x, y, game.image_manager.get_image('enemy1'))
+            enemy = enemies.Enemy1(game, x, y, 
+                                   game.image_manager.get_image('enemy1'))
         elif enemy_type == 'enemy_02':
-            enemy = enemies.Enemy2(game, x, y, game.image_manager.get_image('enemy2'))
+            enemy = enemies.Enemy2(game, x, y,
+                                   game.image_manager.get_image('enemy2'))
         elif enemy_type == 'enemy_03':
-            enemy = enemies.Enemy3(game, x, y, game.image_manager.get_image('enemy3'))
+            enemy = enemies.Enemy3(game, x, y, 
+                                   game.image_manager.get_image('enemy3'))
         elif enemy_type == 'enemy_04':
-            enemy = enemies.Enemy4(game, x, y, game.image_manager.get_image('enemy4'))
+            enemy = enemies.Enemy4(game, x, y,
+                                   game.image_manager.get_image('enemy4'))
         elif enemy_type == 'enemy_05':
-            enemy = enemies.Enemy5(game, x, y, game.image_manager.get_image('enemy5'))
+            enemy = enemies.Enemy5(game, x, y,
+                                   game.image_manager.get_image('enemy5'))
         elif enemy_type == 'enemy_06':
-            enemy = enemies.Enemy6(game, x, y, game.image_manager.get_image('enemy6'))
+            enemy = enemies.Enemy6(game, x, y,
+                                   game.image_manager.get_image('enemy6'))
         elif enemy_type == 'enemy_07':
-            enemy = enemies.Enemy7(game, x, y, game.image_manager.get_image('enemy7'))
+            enemy = enemies.Enemy7(game, x, y,
+                                   game.image_manager.get_image('enemy7'))
 
         # Add enemy to enemy queue
         self.enemy_queue.append(enemy)

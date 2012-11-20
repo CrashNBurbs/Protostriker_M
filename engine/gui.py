@@ -93,8 +93,9 @@ class Menu(TextBox):
             render = self.font.render(option, False, self.text_color)
             self.background.blit(render, (16, opt_pos))
             opt_pos += 16 # leave a space between options
-
-        self.background.blit(self.cursor, (8, self.cursor_rect.y))  # add the cursor
+        
+        # add the cursor
+        self.background.blit(self.cursor, (8, self.cursor_rect.y))  
 
     def update(self, time):
         # menus do not need to update every cycle
@@ -137,25 +138,32 @@ class Menu(TextBox):
         # play cursor sound
         self.cursor_sound.play()
         # move cursor down (1) and up (-1)
-        self.background.fill((0,0,0), self.cursor_rect)  # erase previous cursor pos
+        # erase previous cursor pos
+        self.background.fill((0,0,0), self.cursor_rect)  
         if direction == 1:   # down
-            self.current_option += 1  # increase the option index
-            if self.current_option > len(self.options) - 1:  # wrap to the top
+            # increase the option index
+            self.current_option += 1 
+            # wrap to the top if went past last option
+            if self.current_option > len(self.options) - 1:  
                 self.current_option = 0
                 self.cursor_rect.y = 8
             else:
                 self.cursor_rect.y += 16
         if direction == -1:  # up
-            self.current_option -= 1 # decrease the option index
-            if self.current_option < 0:  # wrap to the bottom
+            # decrease the option index
+            self.current_option -= 1 
+            # wrap to the bottom if went past first option
+            if self.current_option < 0: 
                 self.current_option = len(self.options) - 1
                 self.cursor_rect.y = self.background.get_height() - 16
             else:
                 self.cursor_rect.y -= 16
 
     def get_selected_option(self):
-        self.select_sound.play()  # option was selected, play sound
-        return self.options[self.current_option] # return option string at current index
+        # option was selected, play sound
+        self.select_sound.play()  
+        # return option string at current index
+        return self.options[self.current_option] 
 
     def handle_input(self, game):
         # moves cursor up and down
@@ -164,9 +172,10 @@ class Menu(TextBox):
             self.move_cursor(1)
         elif game.input_manager.is_pressed('UP'):
             self.move_cursor(-1)
-        elif game.input_manager.is_pressed('B') or game.input_manager.is_pressed('START'):
-            self.selected = self.get_selected_option()
-            return self.selected
+        elif game.input_manager.is_pressed('B') or \
+             game.input_manager.is_pressed('START'):
+                self.selected = self.get_selected_option()
+                return self.selected
 
 class DialogBox(TextBox):
     """ A class for displaying dialog or text in-game """
@@ -197,13 +206,20 @@ class DialogBox(TextBox):
         # called when input from the player is given
         # either goes to the next page, or pops the
         # dialog box
-        if self.page_done:  #only allow if text is done blitting
-            self.background.fill((0,0,0), self.inner_rect)  # erase inside the border
-            self.text_x = 8  # reset text blit coords
+
+        #only allow if text is done blitting
+        if self.page_done:  
+            # erase inside the border
+            self.background.fill((0,0,0), self.inner_rect)  
+            # reset text blit coords
+            self.text_x = 8  
             self.text_y = 8
-            self.char = 0  # reset character index
-            if self.page < self.pages-1: # if there are more pages
-                self.page += 1  # go to the next page
+            # reset character index
+            self.char = 0  
+            # if there are more pages
+            if self.page < self.pages-1:
+                # go to the next page
+                self.page += 1  
 
             else:  # close the dialog box
                 return True
