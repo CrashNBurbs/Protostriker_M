@@ -425,7 +425,9 @@ class Game():
 
     def change_state(self, state):
         # replace the current top state with state
-        self.states.pop()
+        while self.states:
+            self.get_current_state().unload_content()
+            self.states.pop()
         self.states.append(state)
         state.activate()
 

@@ -17,6 +17,7 @@ import engine
 import player
 import menus
 import sprite_manager
+import sys
 
 class TitleScreenState(engine.system.State):
     def __init__(self, game):
@@ -39,6 +40,10 @@ class TitleScreenState(engine.system.State):
         self.game.sound_manager.load_sound('select.wav', 'select',
                                            volume = 0.2)
         self.game.sound_manager.load_sound('blip.wav', 'blip', volume = 0.1)
+
+    def unload_content(self):
+        print "title unload called"
+        self.game.image_manager.unload_image('title')
 
     def activate(self):
         # Play music, Show the start menu
@@ -82,21 +87,64 @@ class GameState(engine.system.State):
     def __init__(self, game):
         engine.system.State.__init__(self)
         self.game = game
-        self.player = player.Player(game, 16, 112, 
-                                    game.image_manager.get_image('ship'))
-        self.background = game.image_manager.get_image('background')
-        self.viewport = engine.graphics.Viewport(self.game, self.background)
+        
         self.sprite_manager = sprite_manager.SpriteManager()
-        self.sprite_manager.add_sprite(self.player, 'player_group')
+       
         self.font = game.image_manager.get_font()
         self.text_color = (252,248,252)
-        self.score_render = self.font.render("SCORE " + str(self.player.score),
-                                             False, self.text_color)
-        self.lives_render = self.font.render("LIVES " + str(self.player.lives),
-                                             False, self.text_color)
+        
         self.game_over = False
 
+    def load_content(self):
+        # load images
+        self.game.image_manager.load_sheet('ship1.bmp','ship', 32, 16, 
+                                           False, -1)
+        self.game.image_manager.load_single('background.bmp', 'background')
+        self.game.image_manager.load_sheet('enemy1.bmp', 'enemy1', 16, 16, 
+                                           False, -1)
+        self.game.image_manager.load_sheet('enemy2.bmp', 'enemy2', 16, 16,
+                                           False, -1)
+        self.game.image_manager.load_sheet('enemy3.bmp', 'enemy3', 24,16, 
+                                           False, -1)
+        self.game.image_manager.load_sheet('enemy4.bmp', 'enemy4', 16,16, 
+                                           False, -1)
+        self.game.image_manager.load_sheet('enemy5.bmp', 'enemy5', 32,32, 
+                                           False, -1)
+        self.game.image_manager.load_sheet('enemy6.bmp', 'enemy6', 16,16,
+                                           False, -1)
+        self.game.image_manager.load_sheet('enemy7.bmp', 'enemy7', 24,16, 
+                                           False, -1)
+        self.game.image_manager.load_single('playershot.bmp', 'pshot',
+                                            (255,0,255))
+        self.game.image_manager.load_single('enemyshot.bmp', 'eshot', -1)
+        self.game.image_manager.load_sheet('explosion.bmp', 'explosion', 16,16, 
+                                           False, -1)
+        self.game.image_manager.load_sheet('shrapnel.bmp', 'shrapnel', 8,8,
+                                           False, -1)
+
+        # load sounds
+        self.game.sound_manager.load_sound('enemy_exp.wav','en_exp',
+                                           volume = 0.4)
+        self.game.sound_manager.load_sound('player_exp.wav', 'pl_exp',
+                                           volume = 0.4)
+        self.game.sound_manager.load_sound('laser.wav', 'laser',
+                                           volume = 0.2)
+        self.game.sound_manager.load_sound('hit.wav', 'hit',
+                                           volume = 0.4)
+    def unload_content(self):
+        print "game unload called"
+        for key in self.game.image_manager.images.keys():
+            print key
+            self.game.image_manager.unload_image(key)
+
+        for key in self.game.sound_manager.sounds.keys():
+            self.game.sound_manager.unload_sound(key)
+
     def activate(self):
+
+        # load all images and sounds for the state
+        self.load_content()
+
         # Clear the input manager
         self.game.input_manager.clear()
 
@@ -106,12 +154,16 @@ class GameState(engine.system.State):
         # play music
         self.game.sound_manager.play_music("gamemusic.wav")
 
+        self.player = player.Player(self.game, 16, 112, 
+                                    self.game.image_manager.get_image('ship'))
+        self.background = self.game.image_manager.get_image('background')
+        self.viewport = engine.graphics.Viewport(self.game, self.background)
+        self.sprite_manager.add_sprite(self.player, 'player_group')
+        self.score_render = self.font.render("SCORE " + str(self.player.score),
+                                             False, self.text_color)
+        self.lives_render = self.font.render("LIVES " + str(self.player.lives),
+                                             False, self.text_color)
         self.game.paused = False
-
-        # Create messages, add to message list
-        #self.level_message = engine.gui.Message(132,116, "LEVEL 1", 3000)
-        #self.get_ready = engine.gui.Message(120,124,"GET READY!", 3000)
-        #self.messages = [self.level_message, self.get_ready]
 
     def reactivate(self):
         self.game.paused = False
