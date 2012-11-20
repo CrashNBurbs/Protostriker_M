@@ -45,6 +45,7 @@ class PauseMenu(engine.gui.Menu):
         if selected == 'RESUME':
             game.input_manager.clear()
             game.menu_manager.pop_menu()
+            game.paused = False
             game.pop_state()
         elif selected == 'OPTIONS':
             options = ['TOGGLE FULLSCREEN/WINDOW', 'CONTROLS', 'BACK']

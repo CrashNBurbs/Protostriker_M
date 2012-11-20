@@ -70,7 +70,7 @@ class TitleScreenState(engine.system.State):
             self.game.menu_manager \
                 .get_current_menu().update(pygame.time.get_ticks())
 
-    def draw(self, screen, alpha):
+    def draw(self, screen):
         # Draw background and all menus
         screen.blit(self.background, (0,0))
         self.game.menu_manager.draw(screen)
@@ -82,7 +82,7 @@ class GameState(engine.system.State):
         self.player = player.Player(game, 16, 112, 
                                     game.image_manager.get_image('ship'))
         self.background = game.image_manager.get_image('background')
-        self.viewport = engine.graphics.Viewport(self.background, self.player)
+        self.viewport = engine.graphics.Viewport(self.game, self.background)
         self.sprite_manager = sprite_manager.SpriteManager()
         self.sprite_manager.add_sprite(self.player, 'player_group')
         self.font = game.image_manager.get_font()
@@ -123,6 +123,7 @@ class GameState(engine.system.State):
 
         # On start button press, push the pause state
         if self.game.input_manager.is_pressed('START'):
+            self.game.paused = True
             self.game.push_state(PauseState(self.game))
 
     def update(self):
@@ -165,10 +166,10 @@ class GameState(engine.system.State):
             self.lives_render = self.font.render("LIVES " + str(self.player.lives),
                                 False, self.text_color)
 
-    def draw(self, screen, alpha):
+    def draw(self, screen):
         # draw the background and all sprites
-        self.viewport.draw(screen, alpha)
-        self.sprite_manager.draw(screen, alpha)
+        self.viewport.draw(screen)
+        self.sprite_manager.draw(screen)
 
         # draw the score and player lives
         screen.blit(self.score_render, (8,8))
@@ -237,7 +238,7 @@ class PauseState(engine.system.State):
             self.game.menu_manager \
                 .get_current_menu().update(pygame.time.get_ticks())
 
-    def draw(self, screen, alpha):
+    def draw(self, screen):
         # draw all menus
         self.game.menu_manager.draw(screen)
 

@@ -99,7 +99,8 @@ class Viewport():
     """ This class creates a viewport that is the size
     of the screen, from a larger background image to
      enable scrolling"""
-    def __init__(self, background, auto_scroll = True):
+    def __init__(self, game, background, auto_scroll = True):
+        self.game = game
         self.background = background
         self.auto_scroll = auto_scroll
         self.width = 320 # width of screen
@@ -114,28 +115,22 @@ class Viewport():
         self.vp = self.background.subsurface((self.coordinate, 0, self.width, self.height))
 
     def update(self):
-        if self.auto_scroll: # background scrolls on its own
-            self.last_coordinate = self.coordinate
-            self.last_level_pos = self.level_pos
+        self.scrolling = False
 
-            self.coordinate += self.advance_velocity * self.timestep
-            self.level_pos += self.advance_velocity * self.timestep
+        self.last_coordinate = self.coordinate
+        self.last_level_pos = self.level_pos
 
-        #else:  # background scrolls as a result of the player passing a point on screen
-            #if self.player.rect.right >= 130 and \
-            #game.input_manager.is_held('RIGHT') and \
-            #not self.player.kicking and not self.player.punching:
-                #self.coordinate += self.advance_velocity * self.timestep
+        self.coordinate += self.advance_velocity * self.timestep
+        self.level_pos += self.advance_velocity * self.timestep
 
         # loop image
         if self.coordinate > self.maxScroll:
                 self.last_coordinate = 0
                 self.coordinate = 0
 
-    def draw(self, screen, alpha):
+    def draw(self, screen):
         # create new subsurface from updated coordinate
         # draw it to the screen
-        drawat = self.coordinate * alpha + self.last_coordinate * ( 1.0 - alpha )
-      
-        self.vp = self.background.subsurface((drawat, 0, self.width, self.height))
+        draw_pos = self.game.interpolate_draw(self.coordinate, self.last_coordinate)
+        self.vp = self.background.subsurface((draw_pos, 0, self.width, self.height))
         screen.blit(self.vp, (0,0))

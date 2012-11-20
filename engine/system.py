@@ -388,6 +388,7 @@ class Game():
     def __init__(self):
         pygame.mixer.pre_init(44100, -16, 2, 2048)
         pygame.init()
+        self.paused = False
         self.display = Display()
         self.image_manager = graphics.ImageManager()
         self.sound_manager = sound.SoundManager()
@@ -431,6 +432,13 @@ class Game():
             self.states.pop()
             self.get_current_state().reactivate()
 
+    def interpolate_draw(self, current, last):
+        if not self.paused:
+           draw_pos = current * self.alpha + last * (1.0 - self.alpha)
+        else:
+           draw_pos = current
+        return draw_pos
+
     def run(self):
         current_state = self.get_current_state()
         while(current_state):
@@ -452,7 +460,7 @@ class Game():
             self.alpha = self.accumulator / self.timestep
             
             for state in self.states:
-                state.draw(self.display.get_screen(), self.alpha)
+                state.draw(self.display.get_screen())
             self.display.update()
 
     def quit(self):
