@@ -379,9 +379,6 @@ class State():
         # here
         pass
 
-
-
-
 class Game():
     """ game class - Contains all managers, initializes pygame
         and runs a game loop """
@@ -405,10 +402,6 @@ class Game():
         # set the window title bar to caption
         pygame.display.set_caption(caption)
 
-    def load_content(self):
-        # load all images and sounds here
-        pass
-
     def get_current_state(self):
         # get state at the top of the stack
         return self.states[-1]
@@ -431,6 +424,11 @@ class Game():
         self.states.append(state)
         state.activate()
 
+    def transition_to(self, state, animation):
+        self.states.append(state)
+        self.states.append(animation)
+
+
     def pop_all(self):
         # This function will pop all states except the
         # first state pushed, which should be the title screen.
@@ -450,6 +448,7 @@ class Game():
         current_state = self.get_current_state()
         while(current_state):
             # check for state change
+            print self.states
             current_state = self.get_current_state()
 
             # get time passed since last frame (in seconds)

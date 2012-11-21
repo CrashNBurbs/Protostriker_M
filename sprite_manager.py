@@ -90,9 +90,11 @@ class SpriteManager(engine.objects.SpriteManager):
                 if bullet.hitbox.colliderect(enemy.hitbox):
                     # Create explosion at enemy loc, kill the bullet
                     bullet.kill()
+                    # check if multi-hit enemy
                     if enemy.hits > 0:
+                        # decrease enemy hits
                         enemy.hit()
-                    else:
+                    else: # enemy destroyed
                         player.score += enemy.points
                         explosion = enemy.explode()
                         for ex in explosion:

@@ -12,7 +12,6 @@
 #!/usr/bin/env python
 import engine
 import states
-import sys
 
 class PsmGame(engine.system.Game):
 
@@ -20,18 +19,12 @@ class PsmGame(engine.system.Game):
         engine.system.Game.__init__(self)
         self.set_caption("Protostriker M")
         self.display.init()
-        self.load_content()
+        self.image_manager.load_font('prstartk.ttf', 8)
+        self.font = self.image_manager.get_font()
+        self.text_color = (252,248,252)
         self.push_state(states.TitleScreenState(self))
 
-    def load_content(self):
-        # load images
         
-        
-
-        #load font
-        self.image_manager.load_font('prstartk.ttf', 8)
-
-        # load sounds and music
         
         
         

@@ -17,7 +17,6 @@ import engine
 import player
 import menus
 import sprite_manager
-import sys
 
 class TitleScreenState(engine.system.State):
     def __init__(self, game):
@@ -69,8 +68,9 @@ class TitleScreenState(engine.system.State):
         current_menu = self.game.menu_manager.get_current_menu()
         start_game = current_menu.handle_input(self.game)
         if start_game:
-            self.game.menu_manager.pop_menu()
-            self.game.change_state(GameState(self.game))
+            self.game.push_state(engine.graphics.FadeAnimation("out"))
+            #self.game.menu_manager.pop_menu()
+            #self.game.change_state(GameState(self.game))
 
     def update(self):
         # update menus only if there is one
@@ -134,7 +134,6 @@ class GameState(engine.system.State):
     def unload_content(self):
         # unload everything not used by future states
         for key in self.game.image_manager.images.keys():
-            print key
             self.game.image_manager.unload_image(key)
 
         for key in self.game.sound_manager.sounds.keys():
@@ -296,5 +295,12 @@ class PauseState(engine.system.State):
         # draw all menus
         self.game.menu_manager.draw(screen)
 
+class Level1Transition(engine.graphics.Transition):
+    def __init__(self, game, text):
+        engine.graphics.Transition.__init__(self, game, text)
 
+    def update(self):
+        engine.graphics.Transition.update(self)
 
+        if self.done:
+            self.game.change_state(GameState(self.game))

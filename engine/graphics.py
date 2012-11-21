@@ -14,6 +14,7 @@
 import pygame
 from pygame.locals import *
 import os
+import system
 
 class ImageManager():
     """ loads all game images and font into a single dictionary
@@ -136,3 +137,74 @@ class Viewport():
         self.vp = self.background.subsurface((draw_pos, 0, self.width,
                                               self.height))
         screen.blit(self.vp, (0,0))
+
+class FadeAnimation(system.State):
+    """ fade in/fade out screen animation """
+
+    def __init__(self, game, fade_type):
+        system.State.__init__(self)
+        self.game = game
+        self.fade_type = fade_type
+        if fade_type == "in":
+            self.alpha = 255
+        else:
+            self.alpha = 0
+        self.fade = pygame.Surface((system.SCREEN_RECT.width, system.SCREEN_RECT.height))
+        self.fade.convert()
+        self.fade.set_alpha(self.alpha)
+        self.timestep = 1 / 60.0
+        self.done = False
+
+    def update(self):
+        if self.fade_type == "out":
+            self.alpha += 200 * self.timestep
+            if self.alpha > 300:
+                self.done = True
+        else:
+            self.alpha -= 200 * self.timestep
+            if self.alpha < -50:
+                self.done = True
+
+        self.fade.set_alpha(self.alpha)
+
+        if self.done:
+            pass
+
+    def draw(self, screen):
+        screen.blit(self.fade, (0,0))
+
+class Transition(system.State):
+    """ A graphical transition state """
+
+    def __init__(self, game, text):
+        system.State.__init__(self)
+        self.game = game
+        self.text = text
+        self.render = game.font.render(text, False, game.text_color).convert()
+        self.render_x = (system.SCREEN_RECT.width - self.render.get_width()) / 2
+        self.render_y = (system.SCREEN_RECT.height - self.render.get_height()) / 2
+        self.text_alpha = 0
+        self.render.set_alpha(self.text_alpha)
+        self.duration = 4000
+        self.started = pygame.time.get_ticks()
+        self.done = False
+        self.timestep = 1 / 60.0
+
+    def update(self):
+        current_time = pygame.time.get_ticks()
+
+        if self.text_alpha < 255:
+            self.text_alpha += 200 * self.timestep
+
+        if current_time - self.started > self.duration:
+            pass
+            
+        if self.alpha > 300:
+            self.done = True
+
+        self.render.set_alpha(self.text_alpha)
+        self.fade.set_alpha(self.alpha)
+            
+    def draw(self, screen):
+        screen.blit(self.render, (self.render_x, self.render_y))
+        
