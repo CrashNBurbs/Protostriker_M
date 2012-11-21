@@ -354,6 +354,14 @@ class State():
         # again
         pass
 
+    def transition_on(self):
+        # play a transition animation
+        pass
+
+    def transition_off(self):
+        # play a transition animation
+        pass
+
     def activate(self):
         # called once when the state is first pushed
         # useful for starting music, sound effects, etc.
