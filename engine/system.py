@@ -354,14 +354,6 @@ class State():
         # again
         pass
 
-    def transition_on(self):
-        # play a transition animation
-        pass
-
-    def transition_off(self):
-        # play a transition animation
-        pass
-
     def activate(self):
         # called once when the state is first pushed
         # useful for starting music, sound effects, etc.
@@ -435,14 +427,6 @@ class Game():
     def transition_to(self, state, animation):
         self.states.append(state)
         self.states.append(animation)
-
-
-    def pop_all(self):
-        # This function will pop all states except the
-        # first state pushed, which should be the title screen.
-        for i in range(len(self.states) - 1):
-            self.states.pop()
-            self.get_current_state().reactivate()
 
     def interpolate_draw(self, current, last):
         # returns an interpolated draw position

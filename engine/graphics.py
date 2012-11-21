@@ -138,12 +138,11 @@ class Viewport():
                                               self.height))
         screen.blit(self.vp, (0,0))
 
-class FadeAnimation(system.State):
+class FadeAnimation():
     """ fade in/fade out screen animation """
 
-    def __init__(self, game, fade_type):
+    def __init__(self, fade_type):
         system.State.__init__(self)
-        self.game = game
         self.fade_type = fade_type
         if fade_type == "in":
             self.alpha = 255
@@ -153,22 +152,18 @@ class FadeAnimation(system.State):
         self.fade.convert()
         self.fade.set_alpha(self.alpha)
         self.timestep = 1 / 60.0
-        self.done = False
+        self.is_active = True
 
     def update(self):
         if self.fade_type == "out":
             self.alpha += 200 * self.timestep
-            if self.alpha > 300:
-                self.done = True
         else:
             self.alpha -= 200 * self.timestep
-            if self.alpha < -50:
-                self.done = True
 
         self.fade.set_alpha(self.alpha)
 
-        if self.done:
-            pass
+        if self.alpha < -50 or self.alpha > 300:
+            self.is_active = False
 
     def draw(self, screen):
         screen.blit(self.fade, (0,0))
