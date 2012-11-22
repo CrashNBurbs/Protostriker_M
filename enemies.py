@@ -14,6 +14,7 @@ import engine
 import math
 import pygame
 import bullets
+from engine.system import TIMESTEP
 
 class Enemy1(engine.objects.AnimatedSprite):
     """ First enemy type, moves in a straight line
@@ -37,7 +38,7 @@ class Enemy1(engine.objects.AnimatedSprite):
         engine.objects.AnimatedSprite.update(self, current_time)
 
         # calculate change in x
-        self.dx -= self.speed * self.timestep
+        self.dx -= self.speed * TIMESTEP
 
         # kill sprite if offscreen
         if self.dx < self.bounds.left:
@@ -142,7 +143,7 @@ class Enemy3(Enemy1):
         self.dy += math.sin(self.angle) * self.radius
 
         # increment the radius by dAngle, scaled by timestep
-        self.angle += self.dAngle * self.timestep
+        self.angle += self.dAngle * TIMESTEP
 
         # update the rect
         self.rect.y = self.dy
@@ -169,12 +170,12 @@ class Enemy4(Enemy2):
         # Move vertically on the screen, reversing direction
         # if screen bounds are hit
         if self.direction == -1: # moving up
-            self.dy -= self.speed * self.timestep
+            self.dy -= self.speed * TIMESTEP
             if self.dy <= self.bounds.top:
                 self.dy = self.bounds.top
                 self.direction = 1
         if self.direction == 1: # moving down
-            self.dy += self.speed * self.timestep
+            self.dy += self.speed * TIMESTEP
             if self.dy + self.image.get_height() >= self.bounds.bottom:
                 self.dy = self.bounds.bottom - self.image.get_height()
                 self.direction = -1
@@ -276,11 +277,11 @@ class Enemy7(Enemy1):
         engine.objects.AnimatedSprite.update(self, current_time)
 
         if self.direction == 0:
-            self.dx -= self.speed * self.timestep
+            self.dx -= self.speed * TIMESTEP
         elif self.direction == 1:
-            self.dy += self.vspeed * self.timestep
+            self.dy += self.vspeed * TIMESTEP
         elif self.direction == -1:
-            self.dy -= self.vspeed * self.timestep
+            self.dy -= self.vspeed * TIMESTEP
 
         if self.rect.x < player_rect.centerx and \
            self.rect.y < player_rect.y and\

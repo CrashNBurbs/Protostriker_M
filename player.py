@@ -11,9 +11,10 @@
 #!/usr/bin/env python
 
 import pygame
-from pygame.locals import *
 import engine
 import bullets
+from pygame.locals import *
+from engine.system import TIMESTEP
 
 class Player(engine.objects.AnimatedSprite):
     """ Class for the player, represented by a
@@ -47,15 +48,15 @@ class Player(engine.objects.AnimatedSprite):
         if not self.respawning:
             # calc change in movement based on direction
             if self.direction[0] > 0: # right
-                self.dx += self.speed * self.timestep
+                self.dx += self.speed * TIMESTEP
             if self.direction[0] < 0: # left
-                self.dx -= self.speed * self.timestep
+                self.dx -= self.speed * TIMESTEP
             if self.direction[1] > 0: # down
                 self.frame = 1 # change image
-                self.dy += self.speed * self.timestep
+                self.dy += self.speed * TIMESTEP
             if self.direction[1] < 0: # up
                 self.frame = 2 # change image
-                self.dy -= self.speed * self.timestep
+                self.dy -= self.speed * TIMESTEP
 
             # if not moving up or down, reset image to frame 1.
             if self.direction[1] == 0:
@@ -75,8 +76,7 @@ class Player(engine.objects.AnimatedSprite):
             # move ship back onscreen and return
             # control to the player
             self.frame = 0
-
-            self.dx += self.speed * self.timestep
+            self.dx += self.speed * TIMESTEP
             if self.dx >= 16:
                 self.respawning = False
 

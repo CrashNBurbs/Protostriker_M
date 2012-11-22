@@ -14,6 +14,7 @@
 import pygame
 import engine
 import math
+from engine.system import TIMESTEP
 
 class Bullet(pygame.sprite.Sprite):
     """ Abstract class for a bullet """
@@ -27,7 +28,6 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.centery = self.dy
         self.speed = 0
         self.bounds = engine.system.SCREEN_RECT
-        self.timestep = 1 / 60.0
         self.hitbox = pygame.Rect(self.dx, self.dy, 0, 0)
         self.hb_offsetx = 0
         self.hb_offsety = 0
@@ -47,7 +47,7 @@ class PlayerBullet(Bullet):
 
     def update(self, current_time):
         # move bullet at self.speed pixels/sec
-        self.dx += self.speed * self.timestep
+        self.dx += self.speed * TIMESTEP
 
         # update the rect and hitbox
         self.rect.x = self.dx
@@ -71,7 +71,7 @@ class EnemyBullet(Bullet):
 
     def update(self, current_time):
         # move bullet at self.speed/sec
-        self.dx -= self.speed * self.timestep
+        self.dx -= self.speed * TIMESTEP
 
         # update the rect and hitbox
         self.rect.x = self.dx
@@ -115,32 +115,32 @@ class Shrapnel(Bullet):
         # update dx, dy based on angle
         if self.angle == 0:
             self.image = self.images[4]
-            self.dx += self.speed * self.timestep
+            self.dx += self.speed * TIMESTEP
         elif self.angle == 45:
             self.image = self.images[3]
-            self.dx += self.diag_speed * self.timestep
-            self.dy -= self.diag_speed * self.timestep
+            self.dx += self.diag_speed * TIMESTEP
+            self.dy -= self.diag_speed * TIMESTEP
         elif self.angle == 90:
             self.image = self.images[2]
-            self.dy -= self.speed * self.timestep
+            self.dy -= self.speed * TIMESTEP
         elif self.angle == 135:
             self.image = self.images[1]
-            self.dx -= self.diag_speed * self.timestep
-            self.dy -= self.diag_speed * self.timestep
+            self.dx -= self.diag_speed * TIMESTEP
+            self.dy -= self.diag_speed * TIMESTEP
         elif self.angle == 180:
             self.image = self.images[0]
-            self.dx -= self.speed * self.timestep
+            self.dx -= self.speed * TIMESTEP
         elif self.angle == 225:
             self.image = self.images[7]
-            self.dx -= self.diag_speed * self.timestep
-            self.dy += self.diag_speed * self.timestep
+            self.dx -= self.diag_speed * TIMESTEP
+            self.dy += self.diag_speed * TIMESTEP
         elif self.angle == 270:
             self.image = self.images[6]
-            self.dy += self.speed * self.timestep
+            self.dy += self.speed * TIMESTEP
         elif self.angle == 315:
             self.image = self.images[5]
-            self.dx += self.diag_speed * self.timestep
-            self.dy += self.diag_speed * self.timestep
+            self.dx += self.diag_speed * TIMESTEP
+            self.dy += self.diag_speed * TIMESTEP
 
         # update the rects
         self.rect.x = self.dx

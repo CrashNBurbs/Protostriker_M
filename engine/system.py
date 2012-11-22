@@ -44,6 +44,7 @@ This keeps things smoother than just checking if the last loop took at
 least 1/60 second.  """
 
 SCREEN_RECT = pygame.rect.Rect(0,0,320,240)
+TIMESTEP = 1 / 60.0
 
 class Display():
     """ This class handles the initialization of pygame, the window,
@@ -78,7 +79,7 @@ class Display():
 
         # display, sets resolution at 2 times the size of the game res
         #self.screen = pygame.display.set_mode((res[0] * 2, res[1] * 2),
-                                               #pygame.FULLSCREEN)
+        #                                       pygame.FULLSCREEN)
         self.screen = pygame.display.set_mode((res[0] * self.window_scale,
                                                res[1] * self.window_scale))
 
@@ -395,7 +396,6 @@ class Game():
         self.initial_state = None
         self.clock = pygame.time.Clock()
         self.accumulator = 0.0
-        self.timestep = 1 / 60.0
         self.alpha = 0.0
 
     def set_caption(self, caption):
@@ -454,15 +454,15 @@ class Game():
             self.input_manager.process_input()
             current_state.handle_input()
 
-            # update the game in self.timestep increments
+            # update the game in TIMESTEP increments
             # if frame time was long, update as many times as needed 
             # to catch up
-            while self.accumulator >= self.timestep:
+            while self.accumulator >= TIMESTEP:
                 current_state.update()
-                self.accumulator -= self.timestep
+                self.accumulator -= TIMESTEP
             
             # store alpha for interpolated draws
-            self.alpha = self.accumulator / self.timestep
+            self.alpha = self.accumulator / TIMESTEP
             
             # draw all states
             for state in self.states:

@@ -112,7 +112,6 @@ class Viewport():
         self.minScroll = 0 # max value for left scrolling
         self.maxScroll = self.background.get_width() - 320 # max for right
         self.advance_velocity = 100  # speed of scroll
-        self.timestep = 1 / 60.0  # target frame rate
         self.vp = self.background.subsurface((self.coordinate, 0,
                                               self.width, self.height))
 
@@ -121,8 +120,8 @@ class Viewport():
         self.last_coordinate = self.coordinate
         self.last_level_pos = self.level_pos
 
-        self.coordinate += self.advance_velocity * self.timestep
-        self.level_pos += self.advance_velocity * self.timestep
+        self.coordinate += self.advance_velocity * system.TIMESTEP
+        self.level_pos += self.advance_velocity * system.TIMESTEP
 
         # loop image
         if self.coordinate > self.maxScroll:
@@ -150,7 +149,6 @@ class FadeAnimation():
         self.fade = pygame.Surface((system.SCREEN_RECT.width, system.SCREEN_RECT.height))
         self.fade.convert()
         self.fade.set_alpha(self.alpha)
-        self.timestep = 1 / 60.0
         self.delay = 400
         self.speed = 300
         self.started = pygame.time.get_ticks()
@@ -159,9 +157,9 @@ class FadeAnimation():
         active = True
         if current_time - self.started > self.delay:
             if self.fade_type == "out":
-                self.alpha += self.speed * self.timestep
+                self.alpha += self.speed * system.TIMESTEP
             else:
-                self.alpha -= self.speed * self.timestep
+                self.alpha -= self.speed * system.TIMESTEP
 
             self.fade.set_alpha(self.alpha)
 
@@ -188,13 +186,12 @@ class Transition(system.State):
         self.duration = 4000
         self.started = pygame.time.get_ticks()
         self.done = False
-        self.timestep = 1 / 60.0
 
     def update(self):
         current_time = pygame.time.get_ticks()
 
         if self.text_alpha < 255:
-            self.text_alpha += 200 * self.timestep
+            self.text_alpha += 200 * system.TIMESTEP
 
         if current_time - self.started > self.duration:
             pass

@@ -12,7 +12,6 @@
 import pygame
 from pygame.locals import *
 
-
 class AnimatedSprite(pygame.sprite.Sprite):
     """ Enhanced version of pygame's sprite class
     sets up some common values for movement and frame animation.
@@ -25,7 +24,6 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.delay = 1000 / fps  # m/s per frame, amount of delay for frame animation
         self.last_update = 0  # keep track of last animation update
         self.frame = 0
-        self.timestep = 1 / 60.0
 
         if rows: # for multirow sprite sheets
             self.image = self.images[0][0]

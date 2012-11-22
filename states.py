@@ -199,7 +199,6 @@ class GameState(engine.system.State):
 
         # On start button press, push the pause state
         if self.game.input_manager.is_pressed('START'):
-            
             self.game.push_state(PauseState(self.game))
 
     def update(self):
