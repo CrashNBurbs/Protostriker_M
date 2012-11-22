@@ -56,7 +56,7 @@ class Display():
         self.buffer = None  # graphics buffer
         self.res = (320,240)  # size of the game and graphics buffer
         self.window_scale = None  # scale for window size
-        self.fullscreen = False
+        self.fullscreen = True
         self.desktop_h = None  # height of desktop, in pixels
         self.caption = None  # window caption
 
@@ -78,10 +78,10 @@ class Display():
             #self.window_scale -= 1
 
         # display, sets resolution at 2 times the size of the game res
-        #self.screen = pygame.display.set_mode((res[0] * 2, res[1] * 2),
-        #                                       pygame.FULLSCREEN)
-        self.screen = pygame.display.set_mode((res[0] * self.window_scale,
-                                               res[1] * self.window_scale))
+        self.screen = pygame.display.set_mode((res[0] * 2, res[1] * 2),
+                                               pygame.FULLSCREEN)
+        #self.screen = pygame.display.set_mode((res[0] * self.window_scale,
+        #                                       res[1] * self.window_scale))
 
         # create a buffer that is the same size as the game resolution
         self.buffer = pygame.Surface((SCREEN_RECT.width, SCREEN_RECT.height))
