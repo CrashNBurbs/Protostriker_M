@@ -149,7 +149,7 @@ class FadeAnimation():
         self.fade = pygame.Surface((system.SCREEN_RECT.width, system.SCREEN_RECT.height))
         self.fade.convert()
         self.fade.set_alpha(self.alpha)
-        self.delay = 400
+        self.delay = 450
         self.speed = 300
         self.started = pygame.time.get_ticks()
 
