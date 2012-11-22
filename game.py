@@ -22,10 +22,7 @@ class PsmGame(engine.system.Game):
         self.image_manager.load_font('prstartk.ttf', 8)
         self.font = self.image_manager.get_font()
         self.text_color = (252,248,252)
-        self.push_state(states.TitleScreenState(self))
-
-        
-        
+        self.push_state(states.TitleScreenState(self, True))
         
         
 

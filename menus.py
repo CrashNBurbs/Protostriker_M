@@ -51,7 +51,7 @@ class PauseMenu(engine.gui.Menu):
             game.menu_manager.push_menu(OptionMenu(game, 52, 16, options))
         elif selected == 'OUIT TO TITLE':
             game.menu_manager.pop_menu()
-            game.change_state(states.TitleScreenState(game))
+            game.change_state(states.TitleScreenState(game, True))
         elif selected == 'QUIT GAME':
             game.quit()
 

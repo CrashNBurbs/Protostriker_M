@@ -142,7 +142,6 @@ class FadeAnimation():
     """ fade in/fade out screen animation """
 
     def __init__(self, fade_type):
-        system.State.__init__(self)
         self.fade_type = fade_type
         if fade_type == "in":
             self.alpha = 255
@@ -152,18 +151,24 @@ class FadeAnimation():
         self.fade.convert()
         self.fade.set_alpha(self.alpha)
         self.timestep = 1 / 60.0
-        self.is_active = True
+        self.delay = 400
+        self.speed = 300
+        self.started = pygame.time.get_ticks()
 
-    def update(self):
-        if self.fade_type == "out":
-            self.alpha += 200 * self.timestep
-        else:
-            self.alpha -= 200 * self.timestep
+    def update(self, current_time):
+        active = True
+        if current_time - self.started > self.delay:
+            if self.fade_type == "out":
+                self.alpha += self.speed * self.timestep
+            else:
+                self.alpha -= self.speed * self.timestep
 
-        self.fade.set_alpha(self.alpha)
+            self.fade.set_alpha(self.alpha)
 
-        if self.alpha < -50 or self.alpha > 300:
-            self.is_active = False
+            if self.alpha < -50 or self.alpha > 300:
+                active = False
+
+        return active
 
     def draw(self, screen):
         screen.blit(self.fade, (0,0))

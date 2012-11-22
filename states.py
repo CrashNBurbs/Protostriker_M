@@ -19,11 +19,12 @@ import menus
 import sprite_manager
 
 class TitleScreenState(engine.system.State):
-    def __init__(self, game):
+    def __init__(self, game, transition):
         engine.system.State.__init__(self)
         self.game = game
+        self.has_transition = transition
+        self.exiting = False
         
-
     def load_content(self):
         # load images
         self.game.image_manager.load_single('titlescreen.bmp', 'title')
@@ -52,6 +53,8 @@ class TitleScreenState(engine.system.State):
             .menu_manager \
             .push_menu(menus.StartMenu(self.game, 120, 144, 
                                        ['START', 'OPTIONS', 'QUIT']))
+        if self.has_transition:
+            self.transition = engine.graphics.FadeAnimation("in")
                          
     def reactivate(self):
         # Re-show the start menu,                                             
@@ -68,9 +71,10 @@ class TitleScreenState(engine.system.State):
         current_menu = self.game.menu_manager.get_current_menu()
         start_game = current_menu.handle_input(self.game)
         if start_game:
-            self.game.push_state(engine.graphics.FadeAnimation("out"))
-            #self.game.menu_manager.pop_menu()
-            #self.game.change_state(GameState(self.game))
+            self.transition = engine.graphics.FadeAnimation("out")
+            self.has_transition = True
+            self.exiting = True
+            
 
     def update(self):
         # update menus only if there is one
@@ -78,22 +82,31 @@ class TitleScreenState(engine.system.State):
             self.game.menu_manager \
                 .get_current_menu().update(pygame.time.get_ticks())
 
+        if self.has_transition:
+            self.has_transition = self.transition.update(pygame.time.get_ticks())
+
+        if not self.has_transition and self.exiting:
+            self.game.menu_manager.pop_menu()
+            self.game.change_state(GameState(self.game, True))
+
     def draw(self, screen):
         # Draw background and all menus
         screen.blit(self.background, (0,0))
         self.game.menu_manager.draw(screen)
 
+        if self.has_transition:
+            self.transition.draw(screen)
+
 class GameState(engine.system.State):
-    def __init__(self, game):
+    def __init__(self, game, transition):
         engine.system.State.__init__(self)
         self.game = game
-        
         self.sprite_manager = sprite_manager.SpriteManager()
-       
         self.font = game.image_manager.get_font()
         self.text_color = (252,248,252)
-        
         self.game_over = False
+        self.has_transition = transition
+        
 
     def load_content(self):
         # load images
@@ -167,6 +180,9 @@ class GameState(engine.system.State):
         # toggle game.paused 
         self.game.paused = False
 
+        if self.has_transition:
+            self.transition = engine.graphics.FadeAnimation("in")
+
     def reactivate(self):
         self.game.paused = False
         self.game.sound_manager.music_control('unpause')
@@ -183,10 +199,13 @@ class GameState(engine.system.State):
 
         # On start button press, push the pause state
         if self.game.input_manager.is_pressed('START'):
-            self.game.paused = True
+            
             self.game.push_state(PauseState(self.game))
 
     def update(self):
+        if self.has_transition:
+            self.has_transition = self.transition.update(pygame.time.get_ticks())
+
         # scroll the background
         self.viewport.update()
 
@@ -206,15 +225,11 @@ class GameState(engine.system.State):
         # if player has lost all lives, create a game over message,
         # set game over to True.
         if self.player.lives == -1:
-            #message = engine.gui.Message(124,116, "GAME OVER", 4000)
-            #self.messages.append(message)
             self.game_over = True
 
         # If player has reached the end of the level, create a
         # level complete message, set game over to True.
         if self.viewport.level_pos > 10400:
-            #message = engine.gui.Message(92,116, "LEVEL 1 COMPLETE!", 4000)
-            #self.messages.append(message)
             self.game_over = True
 
         # update the score display
@@ -236,6 +251,9 @@ class GameState(engine.system.State):
         # draw the score and player lives
         screen.blit(self.score_render, (8,8))
         screen.blit(self.lives_render, (256,8))
+
+        if self.has_transition:
+            self.transition.draw(screen)
 
           # uncomment this code to display all the sprites image rects
           # in green, and their hitboxes (collision region) in red
@@ -266,6 +284,7 @@ class PauseState(engine.system.State):
     def activate(self):
         # On pause state activate, pause music, play sound
         # and push the pause menu on the menu manager
+        self.game.paused = True
         self.game.sound_manager.music_control('pause')
         self.pause_sound.play()
         self.game \

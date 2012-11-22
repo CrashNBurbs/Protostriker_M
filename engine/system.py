@@ -440,7 +440,6 @@ class Game():
         current_state = self.get_current_state()
         while(current_state):
             # check for state change
-            print self.states
             current_state = self.get_current_state()
 
             # get time passed since last frame (in seconds)
