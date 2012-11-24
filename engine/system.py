@@ -146,6 +146,7 @@ class InputManager():
          # dictionary of pressed buttons
         self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}
         self.config_mode = False
+        self.input_enabled = True
         self.set = [(-1, 1), (1, 1), (1, -1), (-1, -1)]
         self.gamepad_name = None
         if pygame.joystick.get_count() > 0: # if gamepad plugged in
@@ -185,39 +186,40 @@ class InputManager():
             self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}
             for event in pygame.event.get():
                 if event.type == QUIT:
-                    pygame.quit()
-                    quit()
-                # keypress event
-                elif event.type == KEYDOWN:  
-                    if event.key == K_ESCAPE:
                         pygame.quit()
                         quit()
-                    self.pressed['keys'].append(event.key)
-                    self.held['keys'].append(event.key)
-                # key release event
-                elif event.type == KEYUP:   
-                    if event.key in self.held['keys']:
-                        self.held['keys'].remove(event.key)
-                # gamepad button press event
-                elif event.type == JOYBUTTONDOWN:
-                    self.pressed['buttons'].append(event.button)
-                    self.held['buttons'].append(event.button)
-                # gamepad button release event
-                elif event.type == JOYBUTTONUP:
-                    if event.button in self.held['buttons']:
-                        self.held['buttons'].remove(event.button)
-                # d-pad
-                elif event.type == JOYHATMOTION:  
-                    dpad_state = []
-                    if event.value[0] < 0:
-                        dpad_state.append('left')
-                    if event.value[0] > 0:
-                        dpad_state.append('right')
-                    if event.value[1] < 0:
-                        dpad_state.append('down')
-                    if event.value[1] > 0:
-                        dpad_state.append('up')
-                    self.update_dpad(dpad_state)
+                if self.input_enabled:
+                    # keypress event
+                    if event.type == KEYDOWN:  
+                        if event.key == K_ESCAPE:
+                            pygame.quit()
+                            quit()
+                        self.pressed['keys'].append(event.key)
+                        self.held['keys'].append(event.key)
+                    # key release event
+                    elif event.type == KEYUP:   
+                        if event.key in self.held['keys']:
+                            self.held['keys'].remove(event.key)
+                    # gamepad button press event
+                    elif event.type == JOYBUTTONDOWN:
+                        self.pressed['buttons'].append(event.button)
+                        self.held['buttons'].append(event.button)
+                    # gamepad button release event
+                    elif event.type == JOYBUTTONUP:
+                        if event.button in self.held['buttons']:
+                            self.held['buttons'].remove(event.button)
+                    # d-pad
+                    elif event.type == JOYHATMOTION:  
+                        dpad_state = []
+                        if event.value[0] < 0:
+                            dpad_state.append('left')
+                        if event.value[0] > 0:
+                            dpad_state.append('right')
+                        if event.value[1] < 0:
+                            dpad_state.append('down')
+                        if event.value[1] > 0:
+                            dpad_state.append('up')
+                        self.update_dpad(dpad_state)
 
     def config_process_input(self):
         # input handling for control reconfiguration
@@ -298,6 +300,12 @@ class InputManager():
             self.set.append(new_value)
             button_changed = True
         return button_changed
+
+    def allow_input(self, allow):
+        if allow:
+            self.input_enabled = True
+        else:
+            self.input_enabled = False
 
     def toggle_default(self):
         # switch to default controls

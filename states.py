@@ -54,6 +54,7 @@ class TitleScreenState(engine.system.State):
             .push_menu(menus.StartMenu(self.game, 120, 144, 
                                        ['START', 'OPTIONS', 'QUIT']))
         if self.has_transition:
+            #self.game.input_manager.allow_input(False)
             self.transition = engine.graphics.FadeAnimation("in")
                          
     def reactivate(self):
@@ -84,6 +85,7 @@ class TitleScreenState(engine.system.State):
 
         if self.has_transition:
             self.has_transition = self.transition.update(pygame.time.get_ticks())
+            #self.game.input_manager.allow_input(not self.has_transition)
 
         if not self.has_transition and self.exiting:
             self.game.menu_manager.pop_menu()
