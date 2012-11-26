@@ -21,9 +21,7 @@ import sprite_manager
 class TitleScreenState(engine.system.State):
     def __init__(self, game, transition):
         engine.system.State.__init__(self, game, transition)
-        self.game = game
-        self.has_transition = transition
-        self.exiting = False
+       
         
     def load_content(self):
         # load images
@@ -53,31 +51,28 @@ class TitleScreenState(engine.system.State):
             .menu_manager \
             .push_menu(menus.StartMenu(self.game, 120, 144, 
                                        ['START', 'OPTIONS', 'QUIT']))
-        if self.has_transition:
-            #self.game.input_manager.allow_input(False)
+        if self.transitioning:
             self.transition = engine.graphics.FadeAnimation("in")
                          
     def handle_input(self):
         # pass input to current menu,
         # push gamestate if user selects START
-        current_menu = self.game.menu_manager.get_current_menu()
-        start_game = current_menu.handle_input(self.game)
-        if start_game:
-            self.transition = engine.graphics.FadeAnimation("out")
-            self.has_transition = True
-            self.exiting = True
+        if not self.transitioning:
+            current_menu = self.game.menu_manager.get_current_menu()
+            start_game = current_menu.handle_input(self.game)
+            if start_game:
+                self.transition = engine.graphics.FadeAnimation("out")
+                self.transitioning = True
+                self.is_exiting = True
             
     def update(self):
+        engine.system.State.update(self)
         # update menus only if there is one
         if self.game.menu_manager.has_menu():
             self.game.menu_manager \
                 .get_current_menu().update(pygame.time.get_ticks())
 
-        if self.has_transition:
-            self.has_transition = self.transition.update(pygame.time.get_ticks())
-            #self.game.input_manager.allow_input(not self.has_transition)
-
-        if not self.has_transition and self.exiting:
+        if self.done_exiting:
             self.game.menu_manager.pop_menu()
             self.game.change_state(GameState(self.game, True))
 
@@ -86,19 +81,16 @@ class TitleScreenState(engine.system.State):
         screen.blit(self.background, (0,0))
         self.game.menu_manager.draw(screen)
 
-        if self.has_transition:
+        if self.transitioning:
             self.transition.draw(screen)
 
 class GameState(engine.system.State):
     def __init__(self, game, transition):
-        engine.system.State.__init__(self)
-        self.game = game
+        engine.system.State.__init__(self, game, transition)
         self.sprite_manager = sprite_manager.SpriteManager()
         self.font = game.image_manager.get_font()
         self.text_color = (252,248,252)
         self.game_over = False
-        self.has_transition = transition
-        
 
     def load_content(self):
         # load images
@@ -172,7 +164,7 @@ class GameState(engine.system.State):
         # toggle game.paused 
         self.game.paused = False
 
-        if self.has_transition:
+        if self.transitioning:
             self.transition = engine.graphics.FadeAnimation("in")
 
     def reactivate(self):
@@ -184,18 +176,18 @@ class GameState(engine.system.State):
         # input passed to the player object
         # player.handle_input() returns a bullet sprite if req's are met,
         # none if not.
-        for player in self.sprite_manager.sprites['player_group']:
-            bullet = player.handle_input(self.game, pygame.time.get_ticks())
-            if bullet is not None:
-                self.sprite_manager.add_sprite(bullet, 'player_shots')
+        if not self.transitioning:
+            for player in self.sprite_manager.sprites['player_group']:
+                bullet = player.handle_input(self.game, pygame.time.get_ticks())
+                if bullet is not None:
+                    self.sprite_manager.add_sprite(bullet, 'player_shots')
 
-        # On start button press, push the pause state
-        if self.game.input_manager.is_pressed('START'):
-            self.game.push_state(PauseState(self.game, False))
+            # On start button press, push the pause state
+            if self.game.input_manager.is_pressed('START'):
+                self.game.push_state(PauseState(self.game, False))
 
     def update(self):
-        if self.has_transition:
-            self.has_transition = self.transition.update(pygame.time.get_ticks())
+        engine.system.State.update(self)
 
         # scroll the background
         self.viewport.update()
@@ -243,7 +235,7 @@ class GameState(engine.system.State):
         screen.blit(self.score_render, (8,8))
         screen.blit(self.lives_render, (256,8))
 
-        if self.has_transition:
+        if self.transitioning:
             self.transition.draw(screen)
 
           # uncomment this code to display all the sprites image rects
@@ -267,11 +259,8 @@ class GameState(engine.system.State):
 class PauseState(engine.system.State):
     """ pause menu state """
     def __init__(self, game, transition):
-        engine.system.State.__init__(self)
-        self.game = game
+        engine.system.State.__init__(self, game, transition)
         self.pause_sound = game.sound_manager.get_sound('pause')
-        self.has_transition = transition
-        self.exiting = False
 
     def activate(self):
         # On pause state activate, pause music, play sound
@@ -286,34 +275,31 @@ class PauseState(engine.system.State):
 
     def handle_input(self):
         # get the current menu and pass input to it
-        current_menu = self.game.menu_manager.get_current_menu()
-        reset_game = current_menu.handle_input(self.game)
-        if reset_game:
-            self.transition = engine.graphics.FadeAnimation("out")
-            self.has_transition = True
-            self.exiting = True
+        if not self.transitioning:
+            current_menu = self.game.menu_manager.get_current_menu()
+            reset_game = current_menu.handle_input(self.game)
+            if reset_game:
+                self.transition = engine.graphics.FadeAnimation("out")
+                self.transitioning = True
+                self.is_exiting = True
 
     def update(self):
+        engine.system.State.update(self)
+
         # update menus only if there is one
         if self.game.menu_manager.has_menu():
             self.game.menu_manager \
                 .get_current_menu().update(pygame.time.get_ticks())
 
-        if self.has_transition:
-            self.has_transition = self.transition.update(pygame.time.get_ticks())
-            #self.game.input_manager.allow_input(not self.has_transition)
-
-        if not self.has_transition and self.exiting:
+        if self.done_exiting:
             self.game.menu_manager.pop_menu()
             self.game.change_state(TitleScreenState(self.game, True))
-
-
 
     def draw(self, screen):
         # draw all menus
         self.game.menu_manager.draw(screen)
 
-        if self.has_transition:
+        if self.transitioning:
             self.transition.draw(screen)
 
 class Level1Transition(engine.graphics.Transition):

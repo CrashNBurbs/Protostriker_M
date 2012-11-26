@@ -351,9 +351,9 @@ class State():
     """ Abstract state class, intended for inheritance
         handle_input, update, and draw all called every frame
         by the state manager """
-    def __init__(self):
+    def __init__(self, game, transition):
         self.game = game
-        self.has_transition = transition
+        self.transitioning = transition
         self.is_exiting = False
         self.done_exiting = False
 
@@ -384,7 +384,11 @@ class State():
     def update(self):
         # All objects that update should have their update() functions
         # called here
-        pass
+         if self.transitioning:
+            self.transitioning = self.transition.update(pygame.time.get_ticks())
+
+         if not self.transitioning and self.is_exiting:
+             self.done_exiting = True
 
     def draw(self):
         # All objects that draw should have their draw() functions called

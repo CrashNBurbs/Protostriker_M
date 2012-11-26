@@ -150,7 +150,7 @@ class FadeAnimation():
         self.fade.convert()
         self.fade.set_alpha(self.alpha)
         self.delay = 475
-        self.speed = 275
+        self.speed = 295
         self.started = pygame.time.get_ticks()
 
     def update(self, current_time):
