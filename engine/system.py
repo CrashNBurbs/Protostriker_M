@@ -188,38 +188,37 @@ class InputManager():
                 if event.type == QUIT:
                         pygame.quit()
                         quit()
-                if self.input_enabled:
-                    # keypress event
-                    if event.type == KEYDOWN:  
-                        if event.key == K_ESCAPE:
-                            pygame.quit()
-                            quit()
-                        self.pressed['keys'].append(event.key)
-                        self.held['keys'].append(event.key)
-                    # key release event
-                    elif event.type == KEYUP:   
-                        if event.key in self.held['keys']:
-                            self.held['keys'].remove(event.key)
-                    # gamepad button press event
-                    elif event.type == JOYBUTTONDOWN:
-                        self.pressed['buttons'].append(event.button)
-                        self.held['buttons'].append(event.button)
-                    # gamepad button release event
-                    elif event.type == JOYBUTTONUP:
-                        if event.button in self.held['buttons']:
-                            self.held['buttons'].remove(event.button)
-                    # d-pad
-                    elif event.type == JOYHATMOTION:  
-                        dpad_state = []
-                        if event.value[0] < 0:
-                            dpad_state.append('left')
-                        if event.value[0] > 0:
-                            dpad_state.append('right')
-                        if event.value[1] < 0:
-                            dpad_state.append('down')
-                        if event.value[1] > 0:
-                            dpad_state.append('up')
-                        self.update_dpad(dpad_state)
+                # keypress event
+                elif event.type == KEYDOWN:  
+                    if event.key == K_ESCAPE:
+                        pygame.quit()
+                        quit()
+                    self.pressed['keys'].append(event.key)
+                    self.held['keys'].append(event.key)
+                # key release event
+                elif event.type == KEYUP:   
+                    if event.key in self.held['keys']:
+                        self.held['keys'].remove(event.key)
+                # gamepad button press event
+                elif event.type == JOYBUTTONDOWN:
+                    self.pressed['buttons'].append(event.button)
+                    self.held['buttons'].append(event.button)
+                # gamepad button release event
+                elif event.type == JOYBUTTONUP:
+                    if event.button in self.held['buttons']:
+                        self.held['buttons'].remove(event.button)
+                # d-pad
+                elif event.type == JOYHATMOTION:  
+                    dpad_state = []
+                    if event.value[0] < 0:
+                        dpad_state.append('left')
+                    if event.value[0] > 0:
+                        dpad_state.append('right')
+                    if event.value[1] < 0:
+                        dpad_state.append('down')
+                    if event.value[1] > 0:
+                        dpad_state.append('up')
+                    self.update_dpad(dpad_state)
 
     def config_process_input(self):
         # input handling for control reconfiguration
@@ -301,12 +300,6 @@ class InputManager():
             button_changed = True
         return button_changed
 
-    def allow_input(self, allow):
-        if allow:
-            self.input_enabled = True
-        else:
-            self.input_enabled = False
-
     def toggle_default(self):
         # switch to default controls
         self.redefined = False
@@ -375,6 +368,11 @@ class State():
         # called once when a previous active state is
         # made active again.
         pass
+
+    def transition_off(self, transition):
+        self.transition = transition
+        self.transitioning = True
+        self.is_exiting = True
 
     def handle_input(self):
         # All objects that process input should have their handle_input()

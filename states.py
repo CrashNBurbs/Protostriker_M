@@ -61,12 +61,11 @@ class TitleScreenState(engine.system.State):
             current_menu = self.game.menu_manager.get_current_menu()
             start_game = current_menu.handle_input(self.game)
             if start_game:
-                self.transition = engine.graphics.FadeAnimation("out")
-                self.transitioning = True
-                self.is_exiting = True
+               self.transition_off(engine.graphics.FadeAnimation("out"))
             
     def update(self):
         engine.system.State.update(self)
+
         # update menus only if there is one
         if self.game.menu_manager.has_menu():
             self.game.menu_manager \
@@ -279,9 +278,7 @@ class PauseState(engine.system.State):
             current_menu = self.game.menu_manager.get_current_menu()
             reset_game = current_menu.handle_input(self.game)
             if reset_game:
-                self.transition = engine.graphics.FadeAnimation("out")
-                self.transitioning = True
-                self.is_exiting = True
+                self.transition_off(engine.graphics.FadeAnimation("out"))
 
     def update(self):
         engine.system.State.update(self)

@@ -220,7 +220,6 @@ class DialogBox(TextBox):
             if self.page < self.pages-1:
                 # go to the next page
                 self.page += 1  
-
             else:  # close the dialog box
                 return True
 
