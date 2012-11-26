@@ -149,8 +149,8 @@ class FadeAnimation():
         self.fade = pygame.Surface((system.SCREEN_RECT.width, system.SCREEN_RECT.height))
         self.fade.convert()
         self.fade.set_alpha(self.alpha)
-        self.delay = 450
-        self.speed = 250
+        self.delay = 475
+        self.speed = 275
         self.started = pygame.time.get_ticks()
 
     def update(self, current_time):
@@ -163,7 +163,7 @@ class FadeAnimation():
 
             self.fade.set_alpha(self.alpha)
 
-            if self.alpha < -50 or self.alpha > 300:
+            if self.alpha < 0 or self.alpha > 255:
                 active = False
 
         return active

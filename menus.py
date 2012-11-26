@@ -50,8 +50,9 @@ class PauseMenu(engine.gui.Menu):
             options = ['TOGGLE FULLSCREEN/WINDOW', 'CONTROLS', 'BACK']
             game.menu_manager.push_menu(OptionMenu(game, 52, 16, options))
         elif selected == 'OUIT TO TITLE':
-            game.menu_manager.pop_menu()
-            game.change_state(states.TitleScreenState(game, True))
+            #game.menu_manager.pop_menu()
+            return True
+            #game.change_state(states.TitleScreenState(game, True))
         elif selected == 'QUIT GAME':
             game.quit()
 

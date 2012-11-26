@@ -20,7 +20,7 @@ import sprite_manager
 
 class TitleScreenState(engine.system.State):
     def __init__(self, game, transition):
-        engine.system.State.__init__(self)
+        engine.system.State.__init__(self, game, transition)
         self.game = game
         self.has_transition = transition
         self.exiting = False
@@ -57,15 +57,6 @@ class TitleScreenState(engine.system.State):
             #self.game.input_manager.allow_input(False)
             self.transition = engine.graphics.FadeAnimation("in")
                          
-    def reactivate(self):
-        # Re-show the start menu,                                             
-        # Create new game state to reset all values
-        self.game.sound_manager.music_control('pause')
-        self.game \
-            .menu_manager \
-            .push_menu(menus.StartMenu(game, 120, 144, 
-                                       ['START', 'OPTIONS', 'QUIT']))
-
     def handle_input(self):
         # pass input to current menu,
         # push gamestate if user selects START
@@ -76,7 +67,6 @@ class TitleScreenState(engine.system.State):
             self.has_transition = True
             self.exiting = True
             
-
     def update(self):
         # update menus only if there is one
         if self.game.menu_manager.has_menu():
@@ -166,7 +156,7 @@ class GameState(engine.system.State):
         self.sprite_manager.load_level(self.game, 'level_1.txt')
 
         # play music
-        self.game.sound_manager.play_music("gamemusic.wav")
+        #self.game.sound_manager.play_music("gamemusic.wav")
 
         # create player, viewport, score and lives render, 
         # add player to sprite manager group
@@ -201,7 +191,7 @@ class GameState(engine.system.State):
 
         # On start button press, push the pause state
         if self.game.input_manager.is_pressed('START'):
-            self.game.push_state(PauseState(self.game))
+            self.game.push_state(PauseState(self.game, False))
 
     def update(self):
         if self.has_transition:
@@ -276,11 +266,12 @@ class GameState(engine.system.State):
 
 class PauseState(engine.system.State):
     """ pause menu state """
-    def __init__(self, game):
+    def __init__(self, game, transition):
         engine.system.State.__init__(self)
         self.game = game
-        self.screen = game.display.get_screen()
         self.pause_sound = game.sound_manager.get_sound('pause')
+        self.has_transition = transition
+        self.exiting = False
 
     def activate(self):
         # On pause state activate, pause music, play sound
@@ -293,17 +284,14 @@ class PauseState(engine.system.State):
             .push_menu(menus.PauseMenu(self.game, 96, 16, ['RESUME','OPTIONS',
                             'OUIT TO TITLE','QUIT GAME']))
 
-    def reactivate(self):
-        # re-show the pause menu
-        self.game \
-            .menu_manager \
-            .push_menu(menus.PauseMenu(self.game, 96, 16, ['RESUME','OPTIONS',
-                            'OUIT TO TITLE','QUIT GAME']))
-
     def handle_input(self):
         # get the current menu and pass input to it
         current_menu = self.game.menu_manager.get_current_menu()
-        current_menu.handle_input(self.game)
+        reset_game = current_menu.handle_input(self.game)
+        if reset_game:
+            self.transition = engine.graphics.FadeAnimation("out")
+            self.has_transition = True
+            self.exiting = True
 
     def update(self):
         # update menus only if there is one
@@ -311,9 +299,22 @@ class PauseState(engine.system.State):
             self.game.menu_manager \
                 .get_current_menu().update(pygame.time.get_ticks())
 
+        if self.has_transition:
+            self.has_transition = self.transition.update(pygame.time.get_ticks())
+            #self.game.input_manager.allow_input(not self.has_transition)
+
+        if not self.has_transition and self.exiting:
+            self.game.menu_manager.pop_menu()
+            self.game.change_state(TitleScreenState(self.game, True))
+
+
+
     def draw(self, screen):
         # draw all menus
         self.game.menu_manager.draw(screen)
+
+        if self.has_transition:
+            self.transition.draw(screen)
 
 class Level1Transition(engine.graphics.Transition):
     def __init__(self, game, text):

@@ -352,7 +352,10 @@ class State():
         handle_input, update, and draw all called every frame
         by the state manager """
     def __init__(self):
-        pass
+        self.game = game
+        self.has_transition = transition
+        self.is_exiting = False
+        self.done_exiting = False
 
     def load_content(self):
         # load images and sounds for the state here
@@ -431,10 +434,6 @@ class Game():
             self.states.pop()
         self.states.append(state)
         state.activate()
-
-    def transition_to(self, state, animation):
-        self.states.append(state)
-        self.states.append(animation)
 
     def interpolate_draw(self, current, last):
         # returns an interpolated draw position
