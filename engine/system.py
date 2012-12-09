@@ -349,6 +349,7 @@ class State():
         self.transitioning = transition
         self.is_exiting = False
         self.done_exiting = False
+        self.show_message = False
 
     def load_content(self):
         # load images and sounds for the state here

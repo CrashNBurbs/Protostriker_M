@@ -12,6 +12,7 @@
 
 import pygame
 from pygame.locals import *
+import system
 
 class TextBox():
     """ Abstract base class for displaying a bordered text box in game.
@@ -266,25 +267,26 @@ class DialogBox(TextBox):
 class Message():
     """ Message class for creating text messages that
     display for an amount of time """
-    def __init__(self, game, x, y, message, lifetime):
-        self.x = x
-        self.y = y
+    def __init__(self, game, message, lifetime):
         self.font = game.image_manager.get_font()
         self.color = (252,248,252)
         self.message = message
         self.lifetime = lifetime
         self.created = pygame.time.get_ticks()
         self.render = self.font.render(self.message, False, self.color)
+        self.x = (system.SCREEN_RECT.width - self.render.get_width()) / 2
+        self.y = (system.SCREEN_RECT.height - self.render.get_height()) / 2
 
-    def show(self, screen, current_time):
+    def show(self, screen):
         # shows the message for the duration of self.lifetime
         # returns true when message is done
-        done = False
+        showing = True
+        current_time = pygame.time.get_ticks()
         if current_time - self.created < self.lifetime:
             screen.blit(self.render, (self.x, self.y))
         else: # lifetime has passed
-            done = True
-        return done
+            showing = False
+        return showing
 
 
 class MenuManager():

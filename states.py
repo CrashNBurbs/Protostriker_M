@@ -166,6 +166,10 @@ class GameState(engine.system.State):
         if self.transitioning:
             self.transition = engine.graphics.FadeAnimation("in")
 
+        self.message = engine.gui.Message(self.game, "LEVEL 1", 4000)
+        self.show_message = True
+
+
     def reactivate(self):
         self.game.paused = False
         self.game.sound_manager.music_control('unpause')
@@ -233,6 +237,9 @@ class GameState(engine.system.State):
         # draw the score and player lives
         screen.blit(self.score_render, (8,8))
         screen.blit(self.lives_render, (256,8))
+
+        if self.show_message:
+            self.show_message = self.message.show(screen)
 
         if self.transitioning:
             self.transition.draw(screen)

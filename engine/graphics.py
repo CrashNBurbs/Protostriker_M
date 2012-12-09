@@ -138,31 +138,37 @@ class Viewport():
         screen.blit(self.vp, (0,0))
 
 class FadeAnimation():
-    """ fade in/fade out screen animation """
+    """ fade in/fade out screen animation
+        pass "in" on creation for fade in, "out" for fade out """
 
     def __init__(self, fade_type):
         self.fade_type = fade_type
         if fade_type == "in":
-            self.alpha = 255
+            self.alpha = 255  # black surface opaque
         else:
-            self.alpha = 0
+            self.alpha = 0 # black surface transparent
         self.fade = pygame.Surface((system.SCREEN_RECT.width, system.SCREEN_RECT.height))
         self.fade.convert()
         self.fade.set_alpha(self.alpha)
-        self.delay = 475
-        self.speed = 295
+        self.delay = 500 # delay before fading starts
+        self.speed = 295 # fade speed
         self.started = pygame.time.get_ticks()
 
     def update(self, current_time):
         active = True
+
+        # after self.delay amount of time, increase or decrease alpha
+        # depending on fade type
         if current_time - self.started > self.delay:
             if self.fade_type == "out":
                 self.alpha += self.speed * system.TIMESTEP
             else:
                 self.alpha -= self.speed * system.TIMESTEP
-
+            
+            # set new alpha
             self.fade.set_alpha(self.alpha)
 
+            # if completely faded in or out, return false
             if self.alpha < 0 or self.alpha > 255:
                 active = False
 
