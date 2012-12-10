@@ -36,7 +36,7 @@ class Bullet(pygame.sprite.Sprite):
     def update(self, current_time):
         pass
 
-class PlayerBullet(Bullet):
+class BasicBullet(Bullet):
     """ Player bullet class, sub-class of Bullet
     Object moves horizontally from left to right for the duration
     it is on screen """
@@ -57,6 +57,16 @@ class PlayerBullet(Bullet):
         # kill if offscreen
         if self.rect.right > self.bounds.right:
             self.kill()
+
+class SpreaderBullet(EnemyBullet):
+    """ bullet for the spreader gun """
+    def __init__(self, x, y, angle, image):
+        EnemyBullet.__init__(self, x, y, image)
+        self.speed = 400
+        self.angle = angle
+
+    def update(self, current_time):
+        pass
 
 class EnemyBullet(Bullet):
     """ Enemy bullet class, sub-class of Bullet.
