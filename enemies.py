@@ -27,6 +27,8 @@ class Enemy1(engine.objects.AnimatedSprite):
         self.hitbox = pygame.Rect(0,0,15,12)
         self.hb_offsetx = 0 # offset for hitbox
         self.hb_offsety = 2
+        self.hitbox.x = self.rect.x + self.hb_offsetx
+        self.hitbox.y = self.rect.y + self.hb_offsety
         self.points = 160 # point value
         self.explosion_sound = game.sound_manager.get_sound('en_exp')
         self.explosion_image = game.image_manager.get_image('explosion')
@@ -132,6 +134,8 @@ class Enemy3(Enemy1):
         self.hitbox = pygame.Rect(0,0,18,13)
         self.hb_offsetx = 4
         self.hb_offsety = 1
+        self.hitbox.x = self.rect.x + self.hb_offsetx
+        self.hitbox.y = self.rect.y + self.hb_offsety
         self.points = 210
 
     def update(self, current_time, player_rect):
@@ -162,6 +166,8 @@ class Enemy4(Enemy2):
         self.hitbox = pygame.Rect(0,0,14,14)
         self.hb_offsetx = 1
         self.hb_offsety = 1
+        self.hitbox.x = self.rect.x + self.hb_offsetx
+        self.hitbox.y = self.rect.y + self.hb_offsety
         self.points = 125
 
     def update(self, current_time, player_rect):
@@ -208,6 +214,8 @@ class Enemy5(Enemy2):
         self.hitbox = pygame.Rect(0,0,25,21)
         self.hb_offsetx = 4
         self.hb_offsety = 4
+        self.hitbox.x = self.rect.x + self.hb_offsetx
+        self.hitbox.y = self.rect.y + self.hb_offsety
         self.hits = 8
         self.hit_sound = game.sound_manager.get_sound('hit')
         self.explosion_image = game.image_manager.get_image('shrapnel')
@@ -271,6 +279,8 @@ class Enemy7(Enemy1):
         self.hitbox = pygame.Rect(0,0,18,13)
         self.hb_offsetx = 4
         self.hb_offsety = 1
+        self.hitbox.x = self.rect.x + self.hb_offsetx
+        self.hitbox.y = self.rect.y + self.hb_offsety
         self.changed_dir = False
 
     def update(self, current_time, player_rect):
