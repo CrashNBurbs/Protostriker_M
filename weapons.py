@@ -12,11 +12,12 @@ class BasicWeapon():
         self.shoot_speed = 200 # delay for creating shots
         self.last_shot = 0 # time of last shot
 
-    def fire(self, current_time):
+    def fire(self, current_time, player_rect):
         if current_time - self.last_shot > self.shoot_speed:
-            shot = bullets.PlayerBullet(self.rect.right - 6,
-                             self.rect.centery + 4, image)
+            shot = bullets.PlayerBullet(player_rect.right - 6,
+                             player_rect.centery + 4, self.bullet_image)
             self.shoot_sound.play()
             self.last_shot = current_time
         else:
             shot = None
+        return shot

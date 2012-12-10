@@ -13,6 +13,7 @@
 import pygame
 import engine
 import bullets
+import weapons
 from pygame.locals import *
 from engine.system import TIMESTEP
 
@@ -26,8 +27,7 @@ class Player(engine.objects.AnimatedSprite):
         self.speed = 90
         self.direction = [0,0] # [x,y]
         self.bounds = engine.system.SCREEN_RECT
-        self.shoot_speed = 200 # delay for creating shots
-        self.last_shot = 0 # time of last shot
+        self.gun = weapons.BasicWeapon(game)
         self.hitbox = pygame.Rect(0,0,28,8) # rect for collsion
         self.hb_offsetx = 1 # x offset of hitbox from self.rect
         self.hb_offsety = 3 # y offset of hitbox from self.rect
@@ -38,7 +38,6 @@ class Player(engine.objects.AnimatedSprite):
         self.score = 0
         self.explosion_image = game.image_manager.get_image('explosion')
         self.explosion_sound = game.sound_manager.get_sound('pl_exp')
-        self.shoot_sound = game.sound_manager.get_sound('laser')
 
     def update(self, current_time):
         # show correct frame
@@ -101,16 +100,6 @@ class Player(engine.objects.AnimatedSprite):
         self.hitbox.x = self.rect.x + self.hb_offsetx
         self.hitbox.y = self.rect.y + self.hb_offsety
 
-    def shoot(self, current_time, image):
-        # shoot a bullet every self.shoot_speed m/s
-        if current_time - self.last_shot > self.shoot_speed:
-            self.shot = bullets.PlayerBullet(self.rect.right - 6,
-                             self.rect.centery + 4, image)
-            self.shoot_sound.play()
-            self.last_shot = current_time
-        else:
-            self.shot = None
-
     def handle_input(self, game, current_time):
         # check input, set direction to appropriate values
         if not self.respawning: # disable input if respawning
@@ -130,8 +119,9 @@ class Player(engine.objects.AnimatedSprite):
 
             # shoot on 'B' button press
             if game.input_manager.is_held('B'):
-                self.shoot(current_time, game.image_manager.get_image('pshot'))
-                return self.shot
+                shot = self.gun.fire(current_time, self.rect)
+                return shot
+             
 
     def explode(self):
         # create explosion sprite

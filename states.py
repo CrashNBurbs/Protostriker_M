@@ -246,8 +246,8 @@ class GameState(engine.system.State):
 
           # uncomment this code to display all the sprites image rects
           # in green, and their hitboxes (collision region) in red
-        pygame.draw.rect(screen, (0,255,0), self.player.rect, 1)
-        pygame.draw.rect(screen, (255,0,0), self.player.hitbox, 1)
+        #pygame.draw.rect(screen, (0,255,0), self.player.rect, 1)
+        #pygame.draw.rect(screen, (255,0,0), self.player.hitbox, 1)
 
         #for enemy in self.sprite_manager.sprites['enemy_group']:
         #    pygame.draw.rect(screen, (0,255,0), enemy.rect, 1)
