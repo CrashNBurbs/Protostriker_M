@@ -154,6 +154,7 @@ class Player(engine.objects.AnimatedSprite):
 
         else: # no lives remain, kill ship sprite
             self.kill()
+            self.hitbox.y = -10
 
         # return explosion sprite
         return ex

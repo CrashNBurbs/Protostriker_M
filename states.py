@@ -249,18 +249,18 @@ class GameState(engine.system.State):
         pygame.draw.rect(screen, (0,255,0), self.player.rect, 1)
         pygame.draw.rect(screen, (255,0,0), self.player.hitbox, 1)
 
-        for enemy in self.sprite_manager.sprites['enemy_group']:
-            pygame.draw.rect(screen, (0,255,0), enemy.rect, 1)
-            pygame.draw.rect(screen, (255,0,0), enemy.hitbox, 1)
+        #for enemy in self.sprite_manager.sprites['enemy_group']:
+        #    pygame.draw.rect(screen, (0,255,0), enemy.rect, 1)
+        #    pygame.draw.rect(screen, (255,0,0), enemy.hitbox, 1)
 
 
-        for bullet in self.sprite_manager.sprites['player_shots']:
-            pygame.draw.rect(screen, (0,255,0), bullet.rect, 1)
-            pygame.draw.rect(screen, (255,0,0), bullet.hitbox, 1)
+        #for bullet in self.sprite_manager.sprites['player_shots']:
+        #    pygame.draw.rect(screen, (0,255,0), bullet.rect, 1)
+        #    pygame.draw.rect(screen, (255,0,0), bullet.hitbox, 1)
 
-        for shot in self.sprite_manager.sprites['enemy_shots']:
-            pygame.draw.rect(screen, (0,255,0), shot.rect, 1)
-            pygame.draw.rect(screen, (255,0,0), shot.hitbox, 1)
+        #for shot in self.sprite_manager.sprites['enemy_shots']:
+        #    pygame.draw.rect(screen, (0,255,0), shot.rect, 1)
+        #    pygame.draw.rect(screen, (255,0,0), shot.hitbox, 1)
 
 class PauseState(engine.system.State):
     """ pause menu state """
