@@ -58,15 +58,7 @@ class BasicBullet(Bullet):
         if self.rect.right > self.bounds.right:
             self.kill()
 
-class SpreaderBullet(EnemyBullet):
-    """ bullet for the spreader gun """
-    def __init__(self, x, y, angle, image):
-        EnemyBullet.__init__(self, x, y, image)
-        self.speed = 400
-        self.angle = angle
 
-    def update(self, current_time):
-        pass
 
 class EnemyBullet(Bullet):
     """ Enemy bullet class, sub-class of Bullet.
@@ -91,6 +83,16 @@ class EnemyBullet(Bullet):
         # kill if offscreen
         if self.rect.left < self.bounds.left:
             self.kill()
+
+class SpreaderBullet(EnemyBullet):
+    """ bullet for the spreader gun """
+    def __init__(self, x, y, angle, image):
+        EnemyBullet.__init__(self, x, y, image)
+        self.speed = 400
+        self.angle = angle
+
+    def update(self, current_time):
+        pass
 
 class Explosion(engine.objects.AnimatedSprite):
     """ Explosion animation """

@@ -112,7 +112,7 @@ class ControlsMenu(engine.gui.Menu):
             game.input_manager.toggle_default()
         elif selected == 'CHECK GAMEPAD':
             if game.input_manager.has_gamepad():
-                text = [self.game.input_manager.gamepad_name + '\nDetected']
+                text = [game.input_manager.gamepad_name + '\nDetected']
             else:
                 text = ['Gamepad not detected\nPlease plug in a gamepad ' \
                        + 'and\nrestart the game']
