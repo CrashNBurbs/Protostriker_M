@@ -188,7 +188,7 @@ class DialogBox(TextBox):
         self.rect = self.background.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.delay = 40  # text display speed
+        self.delay = 20  # text display speed
         self.last_update = 0
         self.sound = game.sound_manager.get_sound('blip')
         self.arrow = game.image_manager.get_image('arrow')
@@ -241,9 +241,10 @@ class DialogBox(TextBox):
                 if letter != '\n': # consume newline char
                     self.render = self.font.render(letter, False, self.text_color)
                     self.background.blit(self.render, (self.text_x, self.text_y))
+                    
                     self.text_x += 8  # next char position
+                    self.sound.play()  # blip, blip, blip...
                 self.char += 1  # next letter
-                self.sound.play()  # blip, blip, blip...
                 self.last_update = current_time
         else:  # self.char index >= len(current_page)
             if self.page < self.pages - 1:  # if there are more pages
