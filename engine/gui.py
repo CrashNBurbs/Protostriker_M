@@ -241,7 +241,6 @@ class DialogBox(TextBox):
                 if letter != '\n': # consume newline char
                     self.render = self.font.render(letter, False, self.text_color)
                     self.background.blit(self.render, (self.text_x, self.text_y))
-                    
                     self.text_x += 8  # next char position
                     self.sound.play()  # blip, blip, blip...
                 self.char += 1  # next letter
