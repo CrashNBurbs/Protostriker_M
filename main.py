@@ -9,17 +9,12 @@
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
-
 import game
 import states
 
 def main():
-    game.init() # create managers, load all assets
-
-    titlescreen = states.TitleScreenState() # create initial state
-
-    game.state_manager.push_state(titlescreen) # push it
-    game.state_manager.run() # run it
+    new_game = game.PsmGame()
+    new_game.run()
 
 if __name__ == '__main__':
     main()

@@ -11,24 +11,23 @@
 #!/usr/bin/env python
 
 import pygame
-from pygame.locals import *
 import engine
-import game
 import bullets
+import weapons
+from pygame.locals import *
+from engine.system import TIMESTEP
 
 class Player(engine.objects.AnimatedSprite):
     """ Class for the player, represented by a
         spaceship. Note: intermediate values for x,y coords
         are used(dx,dy) to assign floating point values to
         rect attributes """
-    def __init__(self, x, y, images):
+    def __init__(self, game, x, y, images):
         engine.objects.AnimatedSprite.__init__(self,x,y,images, 20)
         self.speed = 90
         self.direction = [0,0] # [x,y]
-        self.bounds = game.display.get_screen_bounds()
-        self.bullet_image = game.image_manager.get_image('pshot')
-        self.shoot_speed = 200 # delay for creating shots
-        self.last_shot = 0 # time of last shot
+        self.bounds = engine.system.SCREEN_RECT
+        self.gun = weapons.BasicWeapon(game)
         self.hitbox = pygame.Rect(0,0,28,8) # rect for collsion
         self.hb_offsetx = 1 # x offset of hitbox from self.rect
         self.hb_offsety = 3 # y offset of hitbox from self.rect
@@ -37,8 +36,8 @@ class Player(engine.objects.AnimatedSprite):
         self.respawning = False
         self.protected = False
         self.score = 0
+        self.explosion_image = game.image_manager.get_image('explosion')
         self.explosion_sound = game.sound_manager.get_sound('pl_exp')
-        self.shoot_sound = game.sound_manager.get_sound('laser')
 
     def update(self, current_time):
         # show correct frame
@@ -48,15 +47,15 @@ class Player(engine.objects.AnimatedSprite):
         if not self.respawning:
             # calc change in movement based on direction
             if self.direction[0] > 0: # right
-                self.dx += self.speed * self.timestep
+                self.dx += self.speed * TIMESTEP
             if self.direction[0] < 0: # left
-                self.dx -= self.speed * self.timestep
+                self.dx -= self.speed * TIMESTEP
             if self.direction[1] > 0: # down
                 self.frame = 1 # change image
-                self.dy += self.speed * self.timestep
+                self.dy += self.speed * TIMESTEP
             if self.direction[1] < 0: # up
                 self.frame = 2 # change image
-                self.dy -= self.speed * self.timestep
+                self.dy -= self.speed * TIMESTEP
 
             # if not moving up or down, reset image to frame 1.
             if self.direction[1] == 0:
@@ -76,8 +75,7 @@ class Player(engine.objects.AnimatedSprite):
             # move ship back onscreen and return
             # control to the player
             self.frame = 0
-
-            self.dx += self.speed * self.timestep
+            self.dx += self.speed * TIMESTEP
             if self.dx >= 16:
                 self.respawning = False
 
@@ -102,17 +100,7 @@ class Player(engine.objects.AnimatedSprite):
         self.hitbox.x = self.rect.x + self.hb_offsetx
         self.hitbox.y = self.rect.y + self.hb_offsety
 
-    def shoot(self, current_time):
-        # shoot a bullet every self.shoot_speed m/s
-        if current_time - self.last_shot > self.shoot_speed:
-            self.shot = bullets.PlayerBullet(self.rect.right - 6,
-                             self.rect.centery + 4, self.bullet_image)
-            self.shoot_sound.play()
-            self.last_shot = current_time
-        else:
-            self.shot = None
-
-    def handle_input(self, current_time):
+    def handle_input(self, game, current_time):
         # check input, set direction to appropriate values
         if not self.respawning: # disable input if respawning
             if game.input_manager.is_held('UP'):
@@ -131,13 +119,13 @@ class Player(engine.objects.AnimatedSprite):
 
             # shoot on 'B' button press
             if game.input_manager.is_held('B'):
-                self.shoot(current_time)
-                return self.shot
+                shot = self.gun.fire(current_time, self.rect)
+                return shot
+             
 
     def explode(self):
         # create explosion sprite
-        ex = bullets.Explosion(self.rect.x, self.rect.y,
-                game.image_manager.get_image('explosion'))
+        ex = bullets.Explosion(self.rect.x, self.rect.y, self.explosion_image)
 
         # play sound
         self.explosion_sound.play()
@@ -156,6 +144,7 @@ class Player(engine.objects.AnimatedSprite):
 
         else: # no lives remain, kill ship sprite
             self.kill()
+            self.hitbox.y = -10
 
         # return explosion sprite
         return ex

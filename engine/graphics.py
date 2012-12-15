@@ -14,7 +14,7 @@
 import pygame
 from pygame.locals import *
 import os
-import game
+import system
 
 class ImageManager():
     """ loads all game images and font into a single dictionary
@@ -29,11 +29,12 @@ class ImageManager():
 
     def __init__(self):
         self.images = dict()  # dictionary of all images loaded
-        self.font = self.load_font('prstartk.ttf', 8)
 
     def load_image(self, filename, colorkey = None):
         # call pygame image load function
-        fullname = os.path.join('data', filename) # create platform independent path
+
+        # create platform independent path
+        fullname = os.path.join('res', 'images', filename)
         try:
             image = pygame.image.load(fullname)
         except pygame.error, message:
@@ -56,7 +57,8 @@ class ImageManager():
             for j in range(int(master_height/h)):
                 images.append([])  # add a new row to the list
                 for i in range(int(master_width/w)):  # number of frames wide
-                    images[j].append(master_image.subsurface((i*w,j*h,w,h)))  # add each frame, from left to right
+                     # add each frame, from left to right
+                    images[j].append(master_image.subsurface((i*w,j*h,w,h))) 
         else: # for single row image sheets
             for i in range(int(master_width/w)):
                 images.append(master_image.subsurface((i*w,0,w,h)))
@@ -73,14 +75,14 @@ class ImageManager():
         images = self.load_sliced_images(filename, w, h, rows, colorkey)
         self.images[key] = images
 
-    def load_font(self, name, size):
-        fullname = os.path.join('Data', name)
+    def load_font(self, filename, size):
+        fullname = os.path.join('res', 'fonts', filename)
         try:
             font = pygame.font.Font(fullname, size)
         except pygame.error, message:
             print 'Cannot load font:', name
             raise SystemExit, message
-        return font
+        self.font = font
 
     def get_image(self, key):
         # accessor method for images
@@ -90,41 +92,87 @@ class ImageManager():
     def get_font(self):
         return self.font
 
+    def unload_image(self, key):
+        # unload an image from the image manager
+        del self.images[key]
+
 class Viewport():
     """ This class creates a viewport that is the size
     of the screen, from a larger background image to
      enable scrolling"""
-    def __init__(self, background, player, auto_scroll = True):
-        self.screen = game.display.get_screen()
+    def __init__(self, game, background, auto_scroll = True):
+        self.game = game
         self.background = background
-        self.player = player
         self.auto_scroll = auto_scroll
         self.width = 320 # width of screen
         self.height = 240 # height of screen
         self.coordinate = 0  # left edge of viewport
+        self.last_coordinate = 0
         self.level_pos = 0
         self.minScroll = 0 # max value for left scrolling
         self.maxScroll = self.background.get_width() - 320 # max for right
         self.advance_velocity = 100  # speed of scroll
-        self.timestep = 1 / 60.0  # target frame rate
-        self.vp = self.background.subsurface((self.coordinate, 0, self.width, self.height))
+        self.vp = self.background.subsurface((self.coordinate, 0,
+                                              self.width, self.height))
 
     def update(self):
-        if self.auto_scroll: # background scrolls on its own
-            self.coordinate += self.advance_velocity * self.timestep
-            self.level_pos += self.advance_velocity * self.timestep
-        else:  # background scrolls as a result of the player passing a point on screen
-            if self.player.rect.right >= 130 and \
-            game.input_manager.is_held('RIGHT') and \
-            not self.player.kicking and not self.player.punching:
-                self.coordinate += self.advance_velocity * self.timestep
+
+        self.last_coordinate = self.coordinate
+        self.last_level_pos = self.level_pos
+
+        self.coordinate += self.advance_velocity * system.TIMESTEP
+        self.level_pos += self.advance_velocity * system.TIMESTEP
 
         # loop image
         if self.coordinate > self.maxScroll:
+                self.last_coordinate = 0
                 self.coordinate = 0
 
-    def draw(self):
+    def draw(self, screen):
         # create new subsurface from updated coordinate
         # draw it to the screen
-        self.vp = self.background.subsurface((self.coordinate, 0, self.width, self.height))
-        self.screen.blit(self.vp, (0,0))
+        draw_pos = self.game.interpolate_draw(self.coordinate, 
+                                              self.last_coordinate)
+        self.vp = self.background.subsurface((draw_pos, 0, self.width,
+                                              self.height))
+        screen.blit(self.vp, (0,0))
+
+class FadeAnimation():
+    """ fade in/fade out screen animation
+        pass "in" on creation for fade in, "out" for fade out """
+
+    def __init__(self, fade_type):
+        self.fade_type = fade_type
+        if fade_type == "in":
+            self.alpha = 255  # black surface opaque
+        else:
+            self.alpha = 0 # black surface transparent
+        self.fade = pygame.Surface((system.SCREEN_RECT.width, system.SCREEN_RECT.height))
+        self.fade.convert()
+        self.fade.set_alpha(self.alpha)
+        self.delay = 800 # delay before fading starts
+        self.speed = 295 # fade speed
+        self.started = pygame.time.get_ticks()
+
+    def update(self, current_time):
+        active = True
+
+        # after self.delay amount of time, increase or decrease alpha
+        # depending on fade type
+        if current_time - self.started > self.delay:
+            if self.fade_type == "out":
+                self.alpha += self.speed * system.TIMESTEP
+            else:
+                self.alpha -= self.speed * system.TIMESTEP
+            
+            # set new alpha
+            self.fade.set_alpha(self.alpha)
+
+            # if completely faded in or out, return false
+            if self.alpha < 0 or self.alpha > 255:
+                active = False
+
+        return active
+
+    def draw(self, screen):
+        screen.blit(self.fade, (0,0))

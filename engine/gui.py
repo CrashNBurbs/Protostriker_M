@@ -12,17 +12,15 @@
 
 import pygame
 from pygame.locals import *
-import game
-
+import system
 
 class TextBox():
     """ Abstract base class for displaying a bordered text box in game.
         Menus, dialog boxes, etc. """
-    def __init__(self, x, y):
-        self.screen = game.display.get_screen()
+    def __init__(self, game, x, y):
         # create font
-        self.font = game.image_manager.get_font()
-        self.text_color = (252,248,252)
+        self.font = game.font
+        self.text_color = game.text_color
         # load border images
         self.border_tiles= game.image_manager.get_image('textborder')
 
@@ -30,18 +28,28 @@ class TextBox():
         # This function blits all menu elements to the menu background
 
         # add border tiles based on the size of the menu
+        # top left corner
         self.background.blit(self.border_tiles[0], (0,0))
-        self.background.blit(self.border_tiles[1], (0, self.background.get_height() - 8))
-        self.background.blit(self.border_tiles[2], (self.background.get_width() - 8, 0))
-        self.background.blit(self.border_tiles[3], (self.background.get_width() - 8, self.background.get_height() - 8))
-
+        # bottom left corner
+        self.background.blit(self.border_tiles[1], 
+                             (0, self.background.get_height() - 8))
+        # top right corner
+        self.background.blit(self.border_tiles[2], 
+                             (self.background.get_width() - 8, 0))
+        # bottom right corner
+        self.background.blit(self.border_tiles[3], 
+                             (self.background.get_width() - 8, 
+                             self.background.get_height() - 8))
+        # tile horizontal border
         for i in range(1, self.background.get_width() / 8 - 1):
             self.background.blit(self.border_tiles[4], (i * 8, 0))
-            self.background.blit(self.border_tiles[5], (i * 8, self.background.get_height() - 8))
-
+            self.background.blit(self.border_tiles[5], 
+                                 (i * 8, self.background.get_height() - 8))
+        # tile vertical border
         for i in range(1, self.background.get_height() / 8 - 1):
             self.background.blit(self.border_tiles[6], (0, i * 8))
-            self.background.blit(self.border_tiles[7], (self.background.get_width() - 8, i * 8))
+            self.background.blit(self.border_tiles[7], 
+                                 (self.background.get_width() - 8, i * 8))
 
     def draw(self):
         pass
@@ -54,16 +62,14 @@ class Menu(TextBox):
     sizes depending on the number of options in the menu.  Inherit from
     this class to create specific menus and handle input
     options - a list of desired options in string form """
-    def __init__(self, x, y,options):
-        TextBox.__init__(self, x, y)
-        self.type = 'menu'
+    def __init__(self, game, x, y,options):
+        TextBox.__init__(self, game, x, y)
         self.options = options
         self.current_option = 0  # option currently selected
         # load cursor and set rect
         self.width = self.calc_width()
         self.height = self.calc_height()
-        self.background = pygame.Surface((self.width, self.height))
-        self.background.convert()
+        self.background = pygame.Surface((self.width, self.height)).convert()
         self.rect = self.background.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -88,8 +94,9 @@ class Menu(TextBox):
             render = self.font.render(option, False, self.text_color)
             self.background.blit(render, (16, opt_pos))
             opt_pos += 16 # leave a space between options
-
-        self.background.blit(self.cursor, (8, self.cursor_rect.y))  # add the cursor
+        
+        # add the cursor
+        self.background.blit(self.cursor, (8, self.cursor_rect.y))  
 
     def update(self, time):
         # menus do not need to update every cycle
@@ -98,11 +105,11 @@ class Menu(TextBox):
         # menu manager updates)
         pass
 
-    def draw(self):
+    def draw(self, screen):
         # draws the menu to the screen
         self.background.blit(self.cursor, (8, self.cursor_rect.y))
-        self.screen.blit(self.background, (self.rect.x, self.rect.y))
-
+        screen.blit(self.background, (self.rect.x, self.rect.y))
+       
     def calc_width(self):
         # steps throught options, sets width to the
         # longest option + border
@@ -132,57 +139,56 @@ class Menu(TextBox):
         # play cursor sound
         self.cursor_sound.play()
         # move cursor down (1) and up (-1)
-        self.background.fill((0,0,0), self.cursor_rect)  # erase previous cursor pos
+        # erase previous cursor pos
+        self.background.fill((0,0,0), self.cursor_rect)  
         if direction == 1:   # down
-            self.current_option += 1  # increase the option index
-            if self.current_option > len(self.options) - 1:  # wrap to the top
+            # increase the option index
+            self.current_option += 1 
+            # wrap to the top if went past last option
+            if self.current_option > len(self.options) - 1:  
                 self.current_option = 0
                 self.cursor_rect.y = 8
             else:
                 self.cursor_rect.y += 16
         if direction == -1:  # up
-            self.current_option -= 1 # decrease the option index
-            if self.current_option < 0:  # wrap to the bottom
+            # decrease the option index
+            self.current_option -= 1 
+            # wrap to the bottom if went past first option
+            if self.current_option < 0: 
                 self.current_option = len(self.options) - 1
                 self.cursor_rect.y = self.background.get_height() - 16
             else:
                 self.cursor_rect.y -= 16
 
     def get_selected_option(self):
-        self.select_sound.play()  # option was selected, play sound
-        return self.options[self.current_option] # return option string at current index
+        # option was selected, play sound
+        self.select_sound.play()  
+        # return option string at current index
+        return self.options[self.current_option] 
 
-    def handle_input(self):
+    def handle_input(self, game):
         # moves cursor up and down
         # returns selected option on B or START button press
         if game.input_manager.is_pressed('DOWN'):
             self.move_cursor(1)
         elif game.input_manager.is_pressed('UP'):
             self.move_cursor(-1)
-        elif game.input_manager.is_pressed('B') or game.input_manager.is_pressed('START'):
-            self.selected = self.get_selected_option()
-            return self.selected
-
-
-    def reset(self):
-        # Reset the cursor and current option back to the first option
-        self.background.fill((0,0,0), self.cursor_rect)
-        self.current_option = 0
-        self.cursor_rect.y = 8
+        elif game.input_manager.is_pressed('B') or \
+             game.input_manager.is_pressed('START'):
+                self.selected = self.get_selected_option()
+                return self.selected
 
 class DialogBox(TextBox):
     """ A class for displaying dialog or text in-game """
-    def __init__(self, x, y):
-        TextBox.__init__(self, x, y)
-        self.type = 'dialogbox'
+    def __init__(self, game, x, y, text):
+        TextBox.__init__(self, game, x, y)
         self.width = 288  # w,h of dialog boxes are always 288x72
         self.height = 72
-        self.background = pygame.Surface((self.width, self.height))
-        self.background.convert()
+        self.background = pygame.Surface((self.width, self.height)).convert()
         self.rect = self.background.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.delay = 40  # text display speed
+        self.delay = 20  # text display speed
         self.last_update = 0
         self.sound = game.sound_manager.get_sound('blip')
         self.arrow = game.image_manager.get_image('arrow')
@@ -193,34 +199,31 @@ class DialogBox(TextBox):
         self.page_done = False # false when still blitting text
         self.build_text_box()
         self.render = None
-
-    def set_text(self, text):
-        # sets dialog box text.
-        # text is a list of strings, each string is a page.
         self.text = text
         self.page = 0
         self.pages = len(text)
-
-    def reset(self):
-        # if dialog box is called again
-        # it needs to be reset.
-        self.page = 0
-        self.page_done = False
 
     def progress(self):
         # called when input from the player is given
         # either goes to the next page, or pops the
         # dialog box
-        if self.page_done:  #only allow if text is done blitting
-            self.background.fill((0,0,0), self.inner_rect)  # erase inside the border
-            self.text_x = 8  # reset text blit coords
-            self.text_y = 8
-            self.char = 0  # reset character index
-            if self.page < self.pages-1: # if there are more pages
-                self.page += 1  # go to the next page
 
+        #only allow if text is done blitting
+        if self.page_done:  
+            # erase inside the border
+            self.background.fill((0,0,0), self.inner_rect)  
+            # reset text blit coords
+            self.text_x = 8  
+            self.text_y = 8
+            # reset character index
+            self.char = 0  
+            # if there are more pages
+            if self.page < self.pages-1:
+                # go to the next page
+                self.page += 1  
             else:  # close the dialog box
-                game.menu_manager.pop_menu()
+                return True
+
 
     def update(self, current_time):
         # draws the text one page at a time and
@@ -239,8 +242,8 @@ class DialogBox(TextBox):
                     self.render = self.font.render(letter, False, self.text_color)
                     self.background.blit(self.render, (self.text_x, self.text_y))
                     self.text_x += 8  # next char position
+                    self.sound.play()  # blip, blip, blip...
                 self.char += 1  # next letter
-                self.sound.play()  # blip, blip, blip...
                 self.last_update = current_time
         else:  # self.char index >= len(current_page)
             if self.page < self.pages - 1:  # if there are more pages
@@ -249,40 +252,39 @@ class DialogBox(TextBox):
             else:  # this is the last page
                 self.page_done = True # allow input
 
-    def draw(self):
+    def draw(self, screen):
         # draw the dialog box to the screen, in it's current state
-        self.screen.blit(self.background, (self.rect.x, self.rect.y))
+        screen.blit(self.background, (self.rect.x, self.rect.y))
 
-    def handle_input(self):
+    def handle_input(self, game):
         # go to next page or close dialog box
         # on B button press
         if game.input_manager.is_pressed('B'):
-            self.progress()
+            done = self.progress()
+            if done:
+                game.menu_manager.pop_menu()
 
 class Message():
-    """ Message class for creating text messages that
+    """ Message class for creating centered text messages that
     display for an amount of time """
-    def __init__(self, x, y, message, lifetime):
-        self.x = x
-        self.y = y
-        self.screen = game.display.get_screen()
-        self.font = game.image_manager.get_font()
-        self.color = (252,248,252)
+    def __init__(self, game, message, lifetime):
         self.message = message
         self.lifetime = lifetime
         self.created = pygame.time.get_ticks()
-        self.render = self.font.render(self.message, False, self.color)
+        self.render = game.font.render(self.message, False, game.text_color)
+        self.x = (system.SCREEN_RECT.width - self.render.get_width()) / 2
+        self.y = (system.SCREEN_RECT.height - self.render.get_height()) / 2
 
-    def show(self, current_time):
+    def show(self, screen):
         # shows the message for the duration of self.lifetime
         # returns true when message is done
-        done = False
+        showing = True
+        current_time = pygame.time.get_ticks()
         if current_time - self.created < self.lifetime:
-            self.screen.blit(self.render, (self.x, self.y))
+            screen.blit(self.render, (self.x, self.y))
         else: # lifetime has passed
-            done = True
-        return done
-
+            showing = False
+        return showing
 
 class MenuManager():
     """ Menu manager class is a stack for menu objects with the ability
@@ -291,25 +293,19 @@ class MenuManager():
     restore the current menu to the previous menu """
     def __init__(self):
         self.menus = []
-        self.screen = game.display.get_screen()
-        self.background = game.image_manager.get_image('background')
 
     def push_menu(self, menu):
         # Adds a menu to the top of the stack
         self.menus.append(menu)
 
     def pop_menu(self):
-        # pop the menu and reset for future calls
-        # blit a the portion of the background image that is
-        # under the menu, over the menu to erase it.
-        popped = self.menus.pop()
-        popped.reset()  # set the cursor back at the top
-        self.screen.blit(self.background, popped.rect, popped.rect)  # 'erase' menu
+        # remove a menu from the stack
+        self.menus.pop()
 
-    def draw(self):
+    def draw(self, screen):
         # draw all menus in the stack
         for menu in self.menus:
-            menu.draw()
+            menu.draw(screen)
 
     def get_current_menu(self):
         # returns the menu at the top

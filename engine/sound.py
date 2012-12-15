@@ -21,13 +21,13 @@ class SoundManager():
     def __init__(self):
         self.sounds = dict()  # dictionary of all sound effects loaded
 
-    def load(self, name, volume = 0.5):
+    def load(self, filename, volume = 0.5):
         # load a sound for playback
-        fullname = os.path.join('data', name)
+        fullname = os.path.join('res', 'sound_effects', filename)
         try:
             sound = pygame.mixer.Sound(fullname)
         except pygame.error, message:
-            print 'Cannot load sound:', name
+            print 'Cannot load sound:', filename
             raise SystemExit, message
         sound.set_volume(volume)
         return sound
@@ -40,17 +40,26 @@ class SoundManager():
     def get_sound(self, key):
         return self.sounds[key]
 
-    def play_music(self, name, loops = -1):
+    def unload_sound(self, key):
+        # remove a sound from the sound manager
+        del self.sounds[key]
+
+    def play_music(self, filename, loops = -1):
         # play selected music, if already playing, stop current song, play new one
         # loops song infinitely by default
-        song = os.path.join('data', name)
-        if pygame.mixer.music.get_busy == False:
-            pygame.mixer.music.load(song)
-            pygame.mixer.music.play(loops)
-        else:
-            pygame.mixer.music.stop()
-            pygame.mixer.music.load(song)
-            pygame.mixer.music.play(loops)
+        try:
+            song = os.path.join('res', 'music', filename)
+        except pygame.error, message:
+            print 'Cannot play music: ', filename
+            raise SystemExit, message
+        if song:
+            if pygame.mixer.music.get_busy == False:
+                pygame.mixer.music.load(song)
+                pygame.mixer.music.play(loops)
+            else:
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load(song)
+                pygame.mixer.music.play(loops)
 
     def music_control(self, control, fade_time = 1000):
         # various music controls

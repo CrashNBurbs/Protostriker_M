@@ -14,6 +14,9 @@ import pygame
 from pygame.locals import *
 import os
 import game
+import graphics
+import sound
+import gui
 
 """ Some notes about Framerate Independent game Updates:
 This engine uses framerate independent game updates at a fixed timestep.
@@ -40,6 +43,8 @@ Factor the time leftover in the accumulator into the next check for game updates
 This keeps things smoother than just checking if the last loop took at
 least 1/60 second.  """
 
+SCREEN_RECT = pygame.rect.Rect(0,0,320,240)
+TIMESTEP = 1 / 60.0
 
 class Display():
     """ This class handles the initialization of pygame, the window,
@@ -55,29 +60,34 @@ class Display():
         self.desktop_h = None  # height of desktop, in pixels
         self.caption = None  # window caption
 
-
     def init(self):
         res = self.res
-        os.environ["SDL_VIDEO_CENTERED"] = "1"  # center for window mode
-        pygame.mixer.pre_init(44100, -16, 2, 2048)  # pre-initialize mixer to fix audio lag
-        pygame.init()
-        desktop_h = pygame.display.Info().current_h  # save the desktop res before setting mode
-        self.window_scale = desktop_h / res[1] # calculate scale for window mode
 
-        # if scaled height is the same as desktop height, window will be cut off
-        # and aspect ratio will be distorted, use one scale smaller
-        if res[1] * self.window_scale == desktop_h:
-            self.window_scale -= 1
+        # center for window mode
+        os.environ["SDL_VIDEO_CENTERED"] = "1"
+
+        # save the desktop res before setting mode
+        desktop_h = pygame.display.Info().current_h
+
+        # calculate scale for window mode
+        self.window_scale = desktop_h / res[1]
+
+        # if scaled height is the same as desktop height, window will be cut
+        # off and aspect ratio will be distorted, use one scale smaller
+        #if res[1] * self.window_scale == desktop_h:
+            #self.window_scale -= 1
 
         # display, sets resolution at 2 times the size of the game res
-        #self.screen = pygame.display.set_mode((res[0] * 2, res[1] * 2), pygame.FULLSCREEN)
-        self.screen = pygame.display.set_mode((res[0] * self.window_scale, res[1] * self.window_scale))
+        #self.screen = pygame.display.set_mode((res[0] * 2, res[1] * 2),
+        #                                       pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((res[0] * self.window_scale,
+                                               res[1] * self.window_scale))
+
         # create a buffer that is the same size as the game resolution
-        self.buffer = pygame.Surface(res)
+        self.buffer = pygame.Surface((SCREEN_RECT.width, SCREEN_RECT.height))
         pygame.mouse.set_visible(False)  # turn off the mouse pointer display
 
         self.update()
-
 
     def update(self):
         #updates the display
@@ -85,9 +95,12 @@ class Display():
         res = self.res
         window_scale = self.window_scale
         if self.fullscreen:  # scale settings for fullscreen
-            scaled_buffer = pygame.transform.scale(self.buffer, (res[0] * 2, res[1] * 2))
+            scaled_buffer = pygame.transform.scale(self.buffer,
+                                                  (res[0] * 2, res[1] * 2))
         else:  # scale settings for windowed mode
-            scaled_buffer = pygame.transform.scale(self.buffer, ((res[0] * window_scale, res[1] * window_scale)))
+            scaled_buffer = pygame.transform.scale(self.buffer,
+                                                   ((res[0] * window_scale,
+                                                     res[1] * window_scale)))
 
         self.screen.blit(scaled_buffer, (0,0))
         pygame.display.flip()
@@ -98,12 +111,12 @@ class Display():
         window_scale = self.window_scale
         if self.fullscreen:
             pygame.display.set_caption(self.caption)
-            self.screen = pygame.display.set_mode((res[0] * window_scale, res[1] * window_scale))
+            self.screen = pygame.display.set_mode((res[0] * window_scale,
+                                                   res[1] * window_scale))
             self.fullscreen = False
         else:
             self.screen = pygame.display.set_mode((640, 480), pygame.FULLSCREEN)
             self.fullscreen = True
-
 
     def get_screen(self):
         # get game size offscreen buffer, always draw to this surface
@@ -114,8 +127,8 @@ class Display():
         return self.buffer.get_rect()
 
     def set_caption(self, caption):
+        pygame.display.set_caption(caption)
         self.caption = caption
-        pygame.display.set_caption(self.caption)
 
 
 class InputManager():
@@ -128,14 +141,13 @@ class InputManager():
     def __init__(self):
         pygame.joystick.init()
         self.redefined = False  # Start with default controls
-        self.held = {'keys' : [], 'buttons' : [], 'dpad' : []}  # dictionary of held buttons
-        self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}  # dictionary of pressed buttons
+        # dictionary of held buttons
+        self.held = {'keys' : [], 'buttons' : [], 'dpad' : []}
+         # dictionary of pressed buttons
+        self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}
         self.config_mode = False
-
-        # block the d-pad diagonal and neutral JOTHATMOTION events
-        # from from being bound to a button
-        self.set = [(-1, 1), (1, 1), (1, -1), (-1, -1), (0, 0)]
-
+        self.input_enabled = True
+        self.set = [(-1, 1), (1, 1), (1, -1), (-1, -1)]
         self.gamepad_name = None
         if pygame.joystick.get_count() > 0: # if gamepad plugged in
             self.gamepad = pygame.joystick.Joystick(0)
@@ -168,55 +180,50 @@ class InputManager():
                            'Y' : [],
                            'X' : []}
 
-
-
-    def handle_input(self):
-        if self.config_mode:
-            pass # do not use this event loop if user is currently defining new controls
-        else:
-            self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}  #reset pressed buttons every call
+    def process_input(self):
+        if not self.config_mode:
+            #reset pressed buttons every call
+            self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}
             for event in pygame.event.get():
                 if event.type == QUIT:
-                    pygame.quit()
-                    quit()
-                elif event.type == KEYDOWN:  # keypress event
+                        pygame.quit()
+                        quit()
+                # keypress event
+                elif event.type == KEYDOWN:  
                     if event.key == K_ESCAPE:
                         pygame.quit()
                         quit()
                     self.pressed['keys'].append(event.key)
                     self.held['keys'].append(event.key)
-                elif event.type == KEYUP:   # key release event
+                # key release event
+                elif event.type == KEYUP:   
                     if event.key in self.held['keys']:
                         self.held['keys'].remove(event.key)
+                # gamepad button press event
                 elif event.type == JOYBUTTONDOWN:
                     self.pressed['buttons'].append(event.button)
                     self.held['buttons'].append(event.button)
+                # gamepad button release event
                 elif event.type == JOYBUTTONUP:
                     if event.button in self.held['buttons']:
                         self.held['buttons'].remove(event.button)
-                elif event.type == JOYHATMOTION:  # d-pad
-                    if event.value == (-1, 0):
-                        self.update_dpad('left')  # append a str representation
-                    elif event.value == (1, 0):
-                        self.update_dpad('right')
-                    elif event.value == (0, 1):
-                        self.update_dpad('up')
-                    elif event.value == (0, -1):
-                        self.update_dpad('down')
-                    elif event.value == (-1, 1):
-                        self.update_dpad('up', 'left')  # for diagonals, append two str
-                    elif event.value == (1, 1):
-                        self.update_dpad('up', 'right')
-                    elif event.value == (1, -1):
-                        self.update_dpad('down', 'right')
-                    elif event.value == (-1, -1):
-                        self.update_dpad('down', 'left')
-                    elif event.value == (0, 0):  # empty held if d-pad in neutral position
-                        self.held['dpad'] = []
+                # d-pad
+                elif event.type == JOYHATMOTION:  
+                    dpad_state = []
+                    if event.value[0] < 0:
+                        dpad_state.append('left')
+                    if event.value[0] > 0:
+                        dpad_state.append('right')
+                    if event.value[1] < 0:
+                        dpad_state.append('down')
+                    if event.value[1] > 0:
+                        dpad_state.append('up')
+                    self.update_dpad(dpad_state)
 
-    def config_handle_input(self):
+    def config_process_input(self):
         # input handling for control reconfiguration
         # checks for key/button down events and returns their value
+        new_button = None
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -225,12 +232,19 @@ class InputManager():
                 if event.key == K_ESCAPE:
                     pygame.quit()
                     quit()
-                return event.key
+                new_button = event.key
             elif event.type == JOYBUTTONDOWN:
-                return event.button
+                new_button = event.button
             elif event.type == JOYHATMOTION:
-                return event.value
-
+                if event.value[0] < 0:
+                    new_button = 'left'
+                if event.value[0] > 0:
+                    new_button = 'right'
+                if event.value[1] < 0:
+                    new_button = 'down'
+                if event.value[1] > 0:
+                    new_button = 'up'
+        return new_button
 
     def is_pressed(self, button):
         # returns true if button is pressed
@@ -238,15 +252,22 @@ class InputManager():
             if button in self.user_bound.iterkeys():
                 values = self.user_bound[button]
         else:
-            if button in self.default_bound.iterkeys():  # if button is a bound button
-                values = self.default_bound[button]  # get the list of bindings
+            # if button is a bound button
+            if button in self.default_bound.iterkeys():
+                # get the list of bindings
+                values = self.default_bound[button]
 
-        for key in self.pressed.iterkeys():  # for each type (keyboard and gamepad)
-            for pressed in self.pressed[key]: # for each value in pressed
-                if pressed in values:    # if pressed is found in the bindings
+        # for each type (keyboard and gamepad)
+        for key in self.pressed.iterkeys():
+            # for each value in pressed
+            for pressed in self.pressed[key]:
+                # if pressed is found in the bindings
+                if pressed in values:
                     return True
-        return False   # return false if the button passed in is not a bound button
-                        # or is not found in the list of pressed buttons
+        # return false if the button passed in is not a bound button
+        # or is not found in the list of pressed buttons
+        return False
+
     def is_held(self, button):
         # returns true if a button is being held
         if self.redefined:
@@ -262,23 +283,22 @@ class InputManager():
                     return True
         return False
 
-    def update_dpad(self, button, combo = None):
+    def update_dpad(self, state):
         # append string representations of gamepad hat (d-pad)
         # movements. can pass two strings in for diagonals
         self.held['dpad'] = []
-        self.pressed['dpad'].append(button)
-        self.held['dpad'].append(button)
-
-        if combo is not None:
-            self.pressed['dpad'].append(combo)
-            self.held['dpad'].append(combo)
+        for button in state:
+            self.pressed['dpad'].append(button)
+            self.held['dpad'].append(button)
 
     def redefine_button(self, button, new_value):
         # adds new values to user made button configuration
-
+        button_changed = False
         if new_value not in self.set:
             self.user_bound[button].append(new_value)
             self.set.append(new_value)
+            button_changed = True
+        return button_changed
 
     def toggle_default(self):
         # switch to default controls
@@ -292,8 +312,8 @@ class InputManager():
         if self.config_mode == False:
             self.config_mode = True # switch to config event loop
 
-            # block diagonal d-pad movements
-            self.set = [(-1, 1), (1, 1), (1, -1), (-1, -1), (0, 0)]
+            # reset bound buttons and block diagonal d-pad movements
+            self.set = [(-1, 1), (1, 1), (1, -1), (-1, -1)]
 
             # empty out all user bound controls
             self.user_bound =  {'RIGHT' : [],
@@ -309,101 +329,194 @@ class InputManager():
         else: # returning from config mode
             self.config_mode = False
 
-
-    def convert_dpad(self, value):
-        # converts d-pad values returned from pygame.JOYHATMOTION
-        # to strings. Called from the menu that is getting values
-        # from config_handle_input
-        if value == (-1, 0):
-            value = 'left'
-        elif value == (1, 0):
-            value = 'right'
-        elif value == (0, 1):
-            value = 'up'
-        elif value == (0, -1):
-            value = 'down'
-        return value
-
-
     def clear(self):
+        # clear everything in input manager states
+        # useful for state transitions
         self.held = {'keys' : [], 'buttons' : [], 'dpad' : []}
         self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}
 
-
+    def has_gamepad(self):
+        # returns true if a gamepad is connected
+        if self.gamepad_name is not None:
+            return True
 
 class State():
     """ Abstract state class, intended for inheritance
         handle_input, update, and draw all called every frame
         by the state manager """
-    def __init__(self):
+    def __init__(self, game):
+        self.game = game
+        self.is_exiting = False
+        self.done_exiting = False
+        self.show_message = False
+        self.transitioning = False
+
+    def load_content(self):
+        # load images and sounds for the state here
         pass
+
+    def unload_content(self):
+        # unload images and sounds that will not be used
+        # again
+        pass
+
+    def activate(self, transition):
+        # called once when the state is first pushed
+        # useful for starting music, sound effects, etc.
+        # transition is either a transition object passed from game, or None
+        
+        # if state is a transitioning state, set transitioning flag,
+        # create transition
+        if transition is not None:
+            self.transitioning = True
+            self.transition = transition
+        else:  # no transition
+            self.transitioning = False
+
+    def reactivate(self, transition):
+        # called once when a previous active state is
+        # made active again.
+        # transition is either a transition object passed from game, or None
+        
+        # if state has an animation on reactivation, set transitioning flag,
+        # create transition
+        if transition is not None:
+            self.transitioning = True
+            self.transition = transition
+        else: # no transition
+            self.transitioning = False
+
+    def transition_off(self, transition):
+        # start the transition off process
+        self.transition = transition
+        self.transitioning = True
+        self.is_exiting = True
 
     def handle_input(self):
-        pass
-
-    def draw(self):
+        # All objects that process input should have their handle_input()
+        # functions called here
         pass
 
     def update(self):
+        # All objects that update should have their update() functions
+        # called here
+
+        # handle transition animations 
+        if self.transitioning:
+            self.transitioning = self.transition.update(pygame.time.get_ticks())
+
+        # transition is done or non-existant and state is set to exit,
+        # indicate the state has finished exiting and new state can begin
+        if not self.transitioning and self.is_exiting:
+            self.done_exiting = True
+
+    def draw(self):
+        # All objects that draw should have their draw() functions called
+        # here
         pass
 
-    def activate(self):
-        # called once when the state is first pushed
-        # useful for starting music, sound effects, etc.
-        pass
-
-    def reactivate(self):
-        # called once when a previous active state is
-        # made active again.
-        pass
-
-class StateManager():
-    """ Manager of states. Push a state onto the stack to
-    make it active, pop it to return to the previous state
-    call run to start the game loop """
+class Game():
+    """ game class - Contains all managers, initializes pygame
+        and runs a game loop """
     def __init__(self):
+        pygame.mixer.pre_init(44100, -16, 2, 2048)
+        pygame.init()
+        self.paused = False
+        self.display = Display()
+        self.image_manager = graphics.ImageManager()
+        self.sound_manager = sound.SoundManager()
+        self.menu_manager = gui.MenuManager()
+        self.input_manager = InputManager()
         self.states = []
+        self.initial_state = None
         self.clock = pygame.time.Clock()
         self.accumulator = 0.0
-        self.timestep = 1 / 60.0
+        self.alpha = 0.0
+
+    def set_caption(self, caption):
+        # set the window title bar to caption
+        pygame.display.set_caption(caption)
+
+    def load_content(self):
+        # load content for the entire game
+        pass
+
+    def load_content(self):
+        # unlead content for the entire game
+        pass
+
+    def get_current_state(self):
+        # get state at the top of the stack
+        return self.states[-1]
+
+    def push_state(self, state, transition = None):
+        # push a new state onto the stack
+        self.states.append(state)
+        state.activate(transition)
+
+    def pop_state(self, transition = None):
+        # remove and return state on the top of the stack
+        self.states.pop()
+        self.get_current_state().reactivate(transition)
+
+    def change_state(self, state, transition = None):
+        # replace the current top state with state
+        while self.states:
+            self.get_current_state().unload_content()
+            self.states.pop()
+        self.states.append(state)
+        state.activate(transition)
+
+    def interpolate_draw(self, current, last):
+        # returns an interpolated draw position
+        if not self.paused:
+           draw_pos = current * self.alpha + last * (1.0 - self.alpha)
+        else:
+           draw_pos = current
+        return draw_pos
+
+    def run(self):
+        current_state = self.get_current_state()
+        while(current_state):
+            # check for state change
+            current_state = self.get_current_state()
+
+            # get time passed since last frame (in seconds)
+            tick = self.clock.tick() / 1000.0
+            # cap the max frame time
+            if tick > 0.25:
+                tick = 0.25
+            # add frame time to accumulator
+            self.accumulator += tick
+
+            # process input events
+            self.input_manager.process_input()
+
+            # pass input to state if not transitioning
+            if not current_state.transitioning:
+                current_state.handle_input()
+
+            # update the game in TIMESTEP increments
+            # if frame time was long, update as many times as needed 
+            # to catch up
+            while self.accumulator >= TIMESTEP:
+                current_state.update()
+                self.accumulator -= TIMESTEP
+            
+            # store alpha for interpolated draws
+            self.alpha = self.accumulator / TIMESTEP
+            
+            # draw all states
+            for state in self.states:
+                state.draw(self.display.get_screen())
+
+            # scale and flip the buffer
+            self.display.update()
 
     def quit(self):
+        # close the game
         pygame.quit()
         quit()
 
-    def get_current_state(self):
-        return self.states[-1]
-
-    def push_state(self, state):
-        self.states.append(state)
-        state.activate()
-
-    def pop_state(self):
-        self.states.pop()
-        self.get_current_state().reactivate()
 
 
-    def pop_all(self):
-        # This function will pop all states except the
-        # first state pushed, which should be the title screen.
-        for i in range(len(self.states) - 1):
-            self.states.pop()
-            self.get_current_state().reactivate()
-
-    def run(self):
-
-        current_state = self.get_current_state()
-        while(current_state):
-            current_state = self.get_current_state() # check for state change
-
-            self.accumulator += self.clock.tick() / 1000.0
-
-            game.input_manager.handle_input()
-            current_state.handle_input()
-
-            while self.accumulator >= self.timestep:
-                current_state.update()
-                self.accumulator -= self.timestep
-
-            current_state.draw()
-            game.display.update()
