@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#----------------------------------------------------------------------------
 # Name:        States.py
 # Purpose:     Contains all the game states. Update, draw, and
 #              input handling routines.
@@ -8,7 +8,7 @@
 # Created:     30/11/2011
 # Copyright:   (c) Owner 2011
 # Licence:     <your licence>
-#-------------------------------------------------------------------------------
+#----------------------------------------------------------------------------
 #!/usr/bin/env python
 
 import pygame
@@ -19,10 +19,9 @@ import menus
 import sprite_manager
 
 class TitleScreenState(engine.system.State):
-    def __init__(self, game, transition):
-        engine.system.State.__init__(self, game, transition)
+    def __init__(self, game):
+        engine.system.State.__init__(self, game)
        
-        
     def load_content(self):
         # load images
         self.game.image_manager.load_single('titlescreen.bmp', 'title')
@@ -43,7 +42,8 @@ class TitleScreenState(engine.system.State):
         # unload everything not used by future states
         self.game.image_manager.unload_image('title')
 
-    def activate(self):
+    def activate(self, transition):
+        engine.system.State.activate(self, transition)
         # Play music, Show the start menu
         self.load_content()
         self.background = self.game.image_manager.get_image('title')
@@ -51,9 +51,7 @@ class TitleScreenState(engine.system.State):
             .menu_manager \
             .push_menu(menus.StartMenu(self.game, 120, 144, 
                                        ['START', 'OPTIONS', 'QUIT']))
-        if self.transitioning:
-            self.transition = engine.graphics.FadeAnimation("in")
-                         
+        
     def handle_input(self):
         # pass input to current menu,
         # push gamestate if user selects START
@@ -73,7 +71,8 @@ class TitleScreenState(engine.system.State):
 
         if self.done_exiting:
             self.game.menu_manager.pop_menu()
-            self.game.change_state(GameState(self.game, True))
+            self.game.change_state(GameState(self.game),
+                                   engine.graphics.FadeAnimation("in"))
 
     def draw(self, screen):
         # Draw background and all menus
@@ -84,8 +83,8 @@ class TitleScreenState(engine.system.State):
             self.transition.draw(screen)
 
 class GameState(engine.system.State):
-    def __init__(self, game, transition):
-        engine.system.State.__init__(self, game, transition)
+    def __init__(self, game):
+        engine.system.State.__init__(self, game)
         self.sprite_manager = sprite_manager.SpriteManager()
         self.font = game.image_manager.get_font()
         self.text_color = (252,248,252)
@@ -135,7 +134,8 @@ class GameState(engine.system.State):
         for key in self.game.sound_manager.sounds.keys():
             self.game.sound_manager.unload_sound(key)
 
-    def activate(self):
+    def activate(self, transition):
+        engine.system.State.activate(self, transition)
 
         # load all images and sounds for the state
         self.load_content()
@@ -163,17 +163,13 @@ class GameState(engine.system.State):
         # toggle game.paused 
         self.game.paused = False
 
-        if self.transitioning:
-            self.transition = engine.graphics.FadeAnimation("in")
-
         self.message = engine.gui.Message(self.game, "LEVEL 1", 4000)
         self.show_message = True
 
-
-    def reactivate(self):
+    def reactivate(self, transition):
+        engine.system.State.reactivate(self, transition)
         self.game.paused = False
         self.game.sound_manager.music_control('unpause')
-
 
     def handle_input(self):
         # input passed to the player object
@@ -187,7 +183,7 @@ class GameState(engine.system.State):
 
             # On start button press, push the pause state
             if self.game.input_manager.is_pressed('START'):
-                self.game.push_state(PauseState(self.game, False))
+                self.game.push_state(PauseState(self.game))
 
     def update(self):
         engine.system.State.update(self)
@@ -264,11 +260,13 @@ class GameState(engine.system.State):
 
 class PauseState(engine.system.State):
     """ pause menu state """
-    def __init__(self, game, transition):
-        engine.system.State.__init__(self, game, transition)
+    def __init__(self, game):
+        engine.system.State.__init__(self, game)
         self.pause_sound = game.sound_manager.get_sound('pause')
 
-    def activate(self):
+    def activate(self, transition):
+        engine.system.State.activate(self, transition)
+
         # On pause state activate, pause music, play sound
         # and push the pause menu on the menu manager
         self.game.paused = True
@@ -297,7 +295,8 @@ class PauseState(engine.system.State):
 
         if self.done_exiting:
             self.game.menu_manager.pop_menu()
-            self.game.change_state(TitleScreenState(self.game, True))
+            self.game.change_state(TitleScreenState(self.game), 
+                                   engine.graphics.FadeAnimation("in"))
 
     def draw(self, screen):
         # draw all menus
@@ -306,12 +305,3 @@ class PauseState(engine.system.State):
         if self.transitioning:
             self.transition.draw(screen)
 
-class Level1Transition(engine.graphics.Transition):
-    def __init__(self, game, text):
-        engine.graphics.Transition.__init__(self, game, text)
-
-    def update(self):
-        engine.graphics.Transition.update(self)
-
-        if self.done:
-            self.game.change_state(GameState(self.game))

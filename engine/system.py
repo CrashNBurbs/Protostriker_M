@@ -344,9 +344,8 @@ class State():
     """ Abstract state class, intended for inheritance
         handle_input, update, and draw all called every frame
         by the state manager """
-    def __init__(self, game, transition):
+    def __init__(self, game):
         self.game = game
-        self.transitioning = transition
         self.is_exiting = False
         self.done_exiting = False
         self.show_message = False
@@ -360,17 +359,34 @@ class State():
         # again
         pass
 
-    def activate(self):
+    def activate(self, transition):
         # called once when the state is first pushed
         # useful for starting music, sound effects, etc.
-        pass
+        # transition is either a transition object passed from game, or None
+        
+        # if state is a transitioning state, set transitioning flag,
+        # create transition
+        if transition is not None:
+            self.transitioning = True
+            self.transition = transition
+        else:  # no transition
+            self.transitioning = False
 
-    def reactivate(self):
+    def reactivate(self, transition):
         # called once when a previous active state is
         # made active again.
-        pass
+        # transition is either a transition object passed from game, or None
+        
+        # if state has an animation on reactivation, set transitioning flag,
+        # create transition
+        if transition is not None:
+            self.transitioning = True
+            self.transition = transition
+        else: # no transition
+            self.transitioning = False
 
     def transition_off(self, transition):
+        # start the transition off process
         self.transition = transition
         self.transitioning = True
         self.is_exiting = True
@@ -383,11 +399,15 @@ class State():
     def update(self):
         # All objects that update should have their update() functions
         # called here
-         if self.transitioning:
+
+        # handle transition animations 
+        if self.transitioning:
             self.transitioning = self.transition.update(pygame.time.get_ticks())
 
-         if not self.transitioning and self.is_exiting:
-             self.done_exiting = True
+        # transition is done or non-existant and state is set to exit,
+        # indicate the state has finished exiting and new state can begin
+        if not self.transitioning and self.is_exiting:
+            self.done_exiting = True
 
     def draw(self):
         # All objects that draw should have their draw() functions called
@@ -420,23 +440,23 @@ class Game():
         # get state at the top of the stack
         return self.states[-1]
 
-    def push_state(self, state):
+    def push_state(self, state, transition = None):
         # push a new state onto the stack
         self.states.append(state)
-        state.activate()
+        state.activate(transition)
 
-    def pop_state(self):
+    def pop_state(self, transition = None):
         # remove and return state on the top of the stack
         self.states.pop()
-        self.get_current_state().reactivate()
+        self.get_current_state().reactivate(transition)
 
-    def change_state(self, state):
+    def change_state(self, state, transition = None):
         # replace the current top state with state
         while self.states:
             self.get_current_state().unload_content()
             self.states.pop()
         self.states.append(state)
-        state.activate()
+        state.activate(transition)
 
     def interpolate_draw(self, current, last):
         # returns an interpolated draw position
