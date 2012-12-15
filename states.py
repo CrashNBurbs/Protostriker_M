@@ -177,7 +177,6 @@ class GameState(engine.system.State):
                                             "levelwin.wav",
                                             TitleScreenState(self.game)))
            
-
     def draw(self, screen):
         # draw the background and all sprites
         self.viewport.draw(screen)
@@ -244,7 +243,8 @@ class PauseState(engine.system.State):
         if self.game.menu_manager.has_menu():
             self.game.menu_manager \
                 .get_current_menu().update(pygame.time.get_ticks())
-
+        
+        # user has quit to title
         if self.done_exiting:
             self.game.menu_manager.pop_menu()
             self.game.change_state(TitleScreenState(self.game), 
@@ -258,6 +258,10 @@ class PauseState(engine.system.State):
             self.transition.draw(screen)
 
 class EventState(engine.system.State):
+    """ A multipurpose state that will display centered text for duration,
+        play optional music, fade out, and change state
+        to to_state after fade """
+
     def __init__(self, game, text, music, to_state):
         engine.system.State.__init__(self, game)
         self.duration = 5000
@@ -267,6 +271,8 @@ class EventState(engine.system.State):
         self.last_update = pygame.time.get_ticks()
     
     def activate(self, transition):
+        # pause interpolated draw, stop music create render from text, 
+        # centered
         self.game.paused = True
         self.game.sound_manager.music_control('stop')
         self.render = self.game.font.render(self.text, False, 
@@ -278,10 +284,13 @@ class EventState(engine.system.State):
         engine.system.State.update(self)
 
         current_time = pygame.time.get_ticks()
+
+        # after duration start transitioning off
         if current_time - self.last_update > self.duration:
             self.transition_off(engine.graphics.FadeAnimation("out"))
             self.last_update = current_time
 
+        # after transition change state to self.to_state
         if self.done_exiting:
             self.game.change_state(self.to_state,
                                    engine.graphics.FadeAnimation("in"))
