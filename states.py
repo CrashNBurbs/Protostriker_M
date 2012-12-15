@@ -55,11 +55,10 @@ class TitleScreenState(engine.system.State):
     def handle_input(self):
         # pass input to current menu,
         # push gamestate if user selects START
-        if not self.transitioning:
-            current_menu = self.game.menu_manager.get_current_menu()
-            start_game = current_menu.handle_input(self.game)
-            if start_game:
-               self.transition_off(engine.graphics.FadeAnimation("out"))
+        current_menu = self.game.menu_manager.get_current_menu()
+        start_game = current_menu.handle_input(self.game)
+        if start_game:
+            self.transition_off(engine.graphics.FadeAnimation("out"))
             
     def update(self):
         engine.system.State.update(self)
@@ -175,15 +174,14 @@ class GameState(engine.system.State):
         # input passed to the player object
         # player.handle_input() returns a bullet sprite if req's are met,
         # none if not.
-        if not self.transitioning:
-            for player in self.sprite_manager.sprites['player_group']:
-                bullet = player.handle_input(self.game, pygame.time.get_ticks())
-                if bullet is not None:
-                    self.sprite_manager.add_sprite(bullet, 'player_shots')
+        for player in self.sprite_manager.sprites['player_group']:
+            bullet = player.handle_input(self.game, pygame.time.get_ticks())
+            if bullet is not None:
+                self.sprite_manager.add_sprite(bullet, 'player_shots')
 
-            # On start button press, push the pause state
-            if self.game.input_manager.is_pressed('START'):
-                self.game.push_state(PauseState(self.game))
+        # On start button press, push the pause state
+        if self.game.input_manager.is_pressed('START'):
+            self.game.push_state(PauseState(self.game))
 
     def update(self):
         engine.system.State.update(self)
@@ -279,11 +277,10 @@ class PauseState(engine.system.State):
 
     def handle_input(self):
         # get the current menu and pass input to it
-        if not self.transitioning:
-            current_menu = self.game.menu_manager.get_current_menu()
-            reset_game = current_menu.handle_input(self.game)
-            if reset_game:
-                self.transition_off(engine.graphics.FadeAnimation("out"))
+        current_menu = self.game.menu_manager.get_current_menu()
+        reset_game = current_menu.handle_input(self.game)
+        if reset_game:
+            self.transition_off(engine.graphics.FadeAnimation("out"))
 
     def update(self):
         engine.system.State.update(self)

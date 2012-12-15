@@ -480,9 +480,12 @@ class Game():
             # add frame time to accumulator
             self.accumulator += tick
 
-            # handle input
+            # process input events
             self.input_manager.process_input()
-            current_state.handle_input()
+
+            # pass input to state if not transitioning
+            if not current_state.transitioning:
+                current_state.handle_input()
 
             # update the game in TIMESTEP increments
             # if frame time was long, update as many times as needed 
