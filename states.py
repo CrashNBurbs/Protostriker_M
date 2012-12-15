@@ -166,14 +166,14 @@ class GameState(engine.system.State):
             # if player has lost all lives, push a game over event state
             # set game over to True.
             if self.player.lives == -1:
-                self.game.push_state(EventState(self.game, "GAME OVER", 
+                self.game.push_state(engine.objects.EventState(self.game, "GAME OVER", 
                                                 "gameovermusic.wav", 
                                                 GameState(self.game)))
         
         # If player has reached the end of the level, create a
         # level complete message, set game over to True.
         if self.viewport.level_pos > 10400:
-            self.game.push_state(EventState(self.game, "LEVEL 1 COMPLETE!",
+            self.game.push_state(engine.objects.EventState(self.game, "LEVEL 1 COMPLETE!",
                                             "levelwin.wav",
                                             TitleScreenState(self.game)))
            
@@ -257,46 +257,4 @@ class PauseState(engine.system.State):
         if self.transitioning:
             self.transition.draw(screen)
 
-class EventState(engine.system.State):
-    """ A multipurpose state that will display centered text for duration,
-        play optional music, fade out, and change state
-        to to_state after fade """
 
-    def __init__(self, game, text, music, to_state, duration = 5000):
-        engine.system.State.__init__(self, game)
-        self.duration = duration
-        self.text = text
-        self.music = music
-        self.to_state = to_state
-        self.last_update = pygame.time.get_ticks()
-    
-    def activate(self, transition):
-        # pause interpolated draw, stop music create render from text, 
-        # centered
-        self.game.paused = True
-        self.game.sound_manager.music_control('stop')
-        self.render = self.game.font.render(self.text, False, 
-                                          self.game.text_color)
-        self.render_x = (SCREEN_RECT.width - self.render.get_width()) / 2
-        self.render_y = (SCREEN_RECT.height - self.render.get_height()) / 2
-
-    def update(self):
-        engine.system.State.update(self)
-
-        current_time = pygame.time.get_ticks()
-
-        # after duration start transitioning off
-        if current_time - self.last_update > self.duration:
-            self.transition_off(engine.graphics.FadeAnimation("out"))
-            self.last_update = current_time
-
-        # after transition change state to self.to_state
-        if self.done_exiting:
-            self.game.change_state(self.to_state,
-                                   engine.graphics.FadeAnimation("in"))
-
-    def draw(self, screen):
-        screen.blit(self.render, (self.render_x, self.render_y))
-
-        if self.transitioning:
-            self.transition.draw(screen)
