@@ -163,14 +163,12 @@ class GameState(engine.system.State):
         # multiple lives lost)
         if player_die:
             self.player.lives -= 1
-
-        # if player has lost all lives, create a game over message,
-        # set game over to True.
-        if self.player.lives == -1:
-            self.player.lives = 0
-            self.game.push_state(EventState(self.game, "GAME OVER", 
-                                            "gameovermusic.wav", 
-                                            GameState(self.game)))
+            # if player has lost all lives, push a game over event state
+            # set game over to True.
+            if self.player.lives == -1:
+                self.game.push_state(EventState(self.game, "GAME OVER", 
+                                                "gameovermusic.wav", 
+                                                GameState(self.game)))
         
         # If player has reached the end of the level, create a
         # level complete message, set game over to True.
