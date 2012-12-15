@@ -262,9 +262,9 @@ class EventState(engine.system.State):
         play optional music, fade out, and change state
         to to_state after fade """
 
-    def __init__(self, game, text, music, to_state):
+    def __init__(self, game, text, music, to_state, duration = 5000):
         engine.system.State.__init__(self, game)
-        self.duration = 5000
+        self.duration = duration
         self.text = text
         self.music = music
         self.to_state = to_state
