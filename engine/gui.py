@@ -19,8 +19,8 @@ class TextBox():
         Menus, dialog boxes, etc. """
     def __init__(self, game, x, y):
         # create font
-        self.font = game.image_manager.get_font()
-        self.text_color = (252,248,252)
+        self.font = game.font
+        self.text_color = game.text_color
         # load border images
         self.border_tiles= game.image_manager.get_image('textborder')
 
@@ -268,8 +268,8 @@ class Message():
     """ Message class for creating text messages that
     display for an amount of time """
     def __init__(self, game, message, lifetime):
-        self.font = game.image_manager.get_font()
-        self.color = (252,248,252)
+        self.font = game.font
+        self.color = game.text_color
         self.message = message
         self.lifetime = lifetime
         self.created = pygame.time.get_ticks()

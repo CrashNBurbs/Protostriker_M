@@ -85,8 +85,8 @@ class GameState(engine.system.State):
     def __init__(self, game):
         engine.system.State.__init__(self, game)
         self.sprite_manager = sprite_manager.SpriteManager()
-        self.font = game.image_manager.get_font()
-        self.text_color = (252,248,252)
+        self.font = game.font
+        self.text_color = game.text_color
         self.game_over = False
 
     def load_content(self):
