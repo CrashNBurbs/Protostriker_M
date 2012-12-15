@@ -274,21 +274,17 @@ class Message():
         self.render = game.font.render(self.message, False, game.text_color)
         self.x = (system.SCREEN_RECT.width - self.render.get_width()) / 2
         self.y = (system.SCREEN_RECT.height - self.render.get_height()) / 2
-        self.showing = True
 
     def show(self, screen):
         # shows the message for the duration of self.lifetime
         # returns true when message is done
+        showing = True
         current_time = pygame.time.get_ticks()
         if current_time - self.created < self.lifetime:
             screen.blit(self.render, (self.x, self.y))
         else: # lifetime has passed
-            self.showing = False
-        return self.showing
-
-    def is_done(self):
-        return not self.showing
-
+            showing = False
+        return showing
 
 class MenuManager():
     """ Menu manager class is a stack for menu objects with the ability
