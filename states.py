@@ -18,6 +18,8 @@ import player
 import menus
 import sprite_manager
 
+from engine.system import SCREEN_RECT
+
 class TitleScreenState(engine.system.State):
     def __init__(self, game):
         engine.system.State.__init__(self, game)
@@ -25,18 +27,6 @@ class TitleScreenState(engine.system.State):
     def load_content(self):
         # load images
         self.game.image_manager.load_single('titlescreen.bmp', 'title')
-        self.game.image_manager.load_sheet('textborder.bmp', 'textborder',
-                                           8, 8, False)
-        self.game.image_manager.load_single('menuarrow.bmp', 'cursor', -1)
-        self.game.image_manager.load_single('dialogarrow.bmp', 'arrow', -1)
-
-        # load sounds
-        self.game.sound_manager.load_sound('pause.wav', 'pause')
-        self.game.sound_manager.load_sound('cursor.wav', 'cursor',
-                                           volume = 0.2)
-        self.game.sound_manager.load_sound('select.wav', 'select',
-                                           volume = 0.2)
-        self.game.sound_manager.load_sound('blip.wav', 'blip', volume = 0.1)
 
     def unload_content(self):
         # unload everything not used by future states
@@ -87,51 +77,15 @@ class GameState(engine.system.State):
         self.sprite_manager = sprite_manager.SpriteManager()
         self.font = game.font
         self.text_color = game.text_color
-        self.game_over = False
+        self.game_over_triggered = False
+        self.level_complete = False
 
     def load_content(self):
         # load images
-        self.game.image_manager.load_sheet('ship1.bmp','ship', 32, 16, 
-                                           False, -1)
         self.game.image_manager.load_single('background.bmp', 'background')
-        self.game.image_manager.load_sheet('enemy1.bmp', 'enemy1', 16, 16, 
-                                           False, -1)
-        self.game.image_manager.load_sheet('enemy2.bmp', 'enemy2', 16, 16,
-                                           False, -1)
-        self.game.image_manager.load_sheet('enemy3.bmp', 'enemy3', 24,16, 
-                                           False, -1)
-        self.game.image_manager.load_sheet('enemy4.bmp', 'enemy4', 16,16, 
-                                           False, -1)
-        self.game.image_manager.load_sheet('enemy5.bmp', 'enemy5', 32,32, 
-                                           False, -1)
-        self.game.image_manager.load_sheet('enemy6.bmp', 'enemy6', 16,16,
-                                           False, -1)
-        self.game.image_manager.load_sheet('enemy7.bmp', 'enemy7', 24,16, 
-                                           False, -1)
-        self.game.image_manager.load_single('playershot.bmp', 'pshot',
-                                            (255,0,255))
-        self.game.image_manager.load_single('enemyshot.bmp', 'eshot', -1)
-        self.game.image_manager.load_sheet('explosion.bmp', 'explosion', 16,16, 
-                                           False, -1)
-        self.game.image_manager.load_sheet('shrapnel.bmp', 'shrapnel', 8,8,
-                                           False, -1)
 
-        # load sounds
-        self.game.sound_manager.load_sound('enemy_exp.wav','en_exp',
-                                           volume = 0.4)
-        self.game.sound_manager.load_sound('player_exp.wav', 'pl_exp',
-                                           volume = 0.4)
-        self.game.sound_manager.load_sound('laser.wav', 'laser',
-                                           volume = 0.2)
-        self.game.sound_manager.load_sound('hit.wav', 'hit',
-                                           volume = 0.4)
     def unload_content(self):
-        # unload everything not used by future states
-        for key in self.game.image_manager.images.keys():
-            self.game.image_manager.unload_image(key)
-
-        for key in self.game.sound_manager.sounds.keys():
-            self.game.sound_manager.unload_sound(key)
+        self.game.image_manager.unload_image('background')
 
     def activate(self, transition):
         engine.system.State.activate(self, transition)
@@ -146,7 +100,7 @@ class GameState(engine.system.State):
         self.sprite_manager.load_level(self.game, 'level_1.txt')
 
         # play music
-        #self.game.sound_manager.play_music("gamemusic.wav")
+        self.game.sound_manager.play_music("gamemusic.wav")
 
         # create player, viewport, score and lives render, 
         # add player to sprite manager group
@@ -193,6 +147,15 @@ class GameState(engine.system.State):
         self.sprite_manager.update(pygame.time.get_ticks(), self.viewport,
                                    self.player.rect)
 
+        # update the score display
+        self.score_render = self.font.render("SCORE " + str(self.player.score),
+                                False, self.text_color)
+
+        # update lives display
+        self.lives_render = self.font.render("LIVES " + 
+                                                str(self.player.lives),
+                                                False, self.text_color)
+
         # check for all collsions, get player death
         player_die = self.sprite_manager.check_collisions(self.player)
 
@@ -205,23 +168,18 @@ class GameState(engine.system.State):
         # if player has lost all lives, create a game over message,
         # set game over to True.
         if self.player.lives == -1:
-            self.game_over = True
-
+            self.player.lives = 0
+            self.game.push_state(EventState(self.game, "GAME OVER", 
+                                            "gameovermusic.wav", 
+                                            GameState(self.game)))
+        
         # If player has reached the end of the level, create a
         # level complete message, set game over to True.
         if self.viewport.level_pos > 10400:
-            self.game_over = True
-
-        # update the score display
-        self.score_render = self.font.render("SCORE " + str(self.player.score),
-                                False, self.text_color)
-
-        # update lives display if not game over
-        # (not checking if game over results in -1 being displayed)
-        if not self.game_over:
-            self.lives_render = self.font.render("LIVES " + 
-                                                 str(self.player.lives),
-                                                 False, self.text_color)
+            self.game.push_state(EventState(self.game, "LEVEL 1 COMPLETE!",
+                                            "levelwin.wav",
+                                            TitleScreenState(self.game)))
+           
 
     def draw(self, screen):
         # draw the background and all sprites
@@ -302,3 +260,37 @@ class PauseState(engine.system.State):
         if self.transitioning:
             self.transition.draw(screen)
 
+class EventState(engine.system.State):
+    def __init__(self, game, text, music, to_state):
+        engine.system.State.__init__(self, game)
+        self.duration = 5000
+        self.text = text
+        self.music = music
+        self.to_state = to_state
+        self.last_update = pygame.time.get_ticks()
+    
+    def activate(self, transition):
+        self.game.paused = True
+        self.game.sound_manager.music_control('stop')
+        self.render = self.game.font.render(self.text, False, 
+                                          self.game.text_color)
+        self.render_x = (SCREEN_RECT.width - self.render.get_width()) / 2
+        self.render_y = (SCREEN_RECT.height - self.render.get_height()) / 2
+
+    def update(self):
+        engine.system.State.update(self)
+
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_update > self.duration:
+            self.transition_off(engine.graphics.FadeAnimation("out"))
+            self.last_update = current_time
+
+        if self.done_exiting:
+            self.game.change_state(self.to_state,
+                                   engine.graphics.FadeAnimation("in"))
+
+    def draw(self, screen):
+        screen.blit(self.render, (self.render_x, self.render_y))
+
+        if self.transitioning:
+            self.transition.draw(screen)

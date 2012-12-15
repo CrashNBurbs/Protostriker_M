@@ -349,6 +349,7 @@ class State():
         self.is_exiting = False
         self.done_exiting = False
         self.show_message = False
+        self.transitioning = False
 
     def load_content(self):
         # load images and sounds for the state here
@@ -435,6 +436,14 @@ class Game():
     def set_caption(self, caption):
         # set the window title bar to caption
         pygame.display.set_caption(caption)
+
+    def load_content(self):
+        # load content for the entire game
+        pass
+
+    def load_content(self):
+        # unlead content for the entire game
+        pass
 
     def get_current_state(self):
         # get state at the top of the stack

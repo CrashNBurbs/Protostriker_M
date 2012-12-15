@@ -176,38 +176,3 @@ class FadeAnimation():
 
     def draw(self, screen):
         screen.blit(self.fade, (0,0))
-
-class Transition(system.State):
-    """ A graphical transition state """
-
-    def __init__(self, game, text):
-        system.State.__init__(self)
-        self.game = game
-        self.text = text
-        self.render = game.font.render(text, False, game.text_color).convert()
-        self.render_x = (system.SCREEN_RECT.width - self.render.get_width()) / 2
-        self.render_y = (system.SCREEN_RECT.height - self.render.get_height()) / 2
-        self.text_alpha = 0
-        self.render.set_alpha(self.text_alpha)
-        self.duration = 4000
-        self.started = pygame.time.get_ticks()
-        self.done = False
-
-    def update(self):
-        current_time = pygame.time.get_ticks()
-
-        if self.text_alpha < 255:
-            self.text_alpha += 200 * system.TIMESTEP
-
-        if current_time - self.started > self.duration:
-            pass
-            
-        if self.alpha > 300:
-            self.done = True
-
-        self.render.set_alpha(self.text_alpha)
-        self.fade.set_alpha(self.alpha)
-            
-    def draw(self, screen):
-        screen.blit(self.render, (self.render_x, self.render_y))
-        

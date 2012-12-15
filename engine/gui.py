@@ -265,28 +265,29 @@ class DialogBox(TextBox):
                 game.menu_manager.pop_menu()
 
 class Message():
-    """ Message class for creating text messages that
+    """ Message class for creating centered text messages that
     display for an amount of time """
     def __init__(self, game, message, lifetime):
-        self.font = game.font
-        self.color = game.text_color
         self.message = message
         self.lifetime = lifetime
         self.created = pygame.time.get_ticks()
-        self.render = self.font.render(self.message, False, self.color)
+        self.render = game.font.render(self.message, False, game.text_color)
         self.x = (system.SCREEN_RECT.width - self.render.get_width()) / 2
         self.y = (system.SCREEN_RECT.height - self.render.get_height()) / 2
+        self.showing = True
 
     def show(self, screen):
         # shows the message for the duration of self.lifetime
         # returns true when message is done
-        showing = True
         current_time = pygame.time.get_ticks()
         if current_time - self.created < self.lifetime:
             screen.blit(self.render, (self.x, self.y))
         else: # lifetime has passed
-            showing = False
-        return showing
+            self.showing = False
+        return self.showing
+
+    def is_done(self):
+        return not self.showing
 
 
 class MenuManager():
