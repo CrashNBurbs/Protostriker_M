@@ -128,10 +128,9 @@ class GameState(engine.system.State):
         # input passed to the player object
         # player.handle_input() returns a bullet sprite if req's are met,
         # none if not.
-        for player in self.sprite_manager.sprites['player_group']:
-            bullet = player.handle_input(self.game, pygame.time.get_ticks())
-            if bullet is not None:
-                self.sprite_manager.add_sprite(bullet, 'player_shots')
+        bullet = self.player.handle_input(self.game, pygame.time.get_ticks())
+        if bullet is not None:
+            self.sprite_manager.add_sprite(bullet, 'player_shots')
 
         # On start button press, push the pause state
         if self.game.input_manager.is_pressed('START'):
