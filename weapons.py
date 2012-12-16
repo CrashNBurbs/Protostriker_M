@@ -31,7 +31,7 @@ class Spreader():
         self.bullet_image = game.image_manager.get_image('spreadshot')
         self.speed = 400
         self.last_shot = 0
-        self.angles = [0, 15, 345]
+        self.angles = [0, 10, 350]
 
     def fire(self, current_time, player_rect):
         # set shots to empty list if not shooting
