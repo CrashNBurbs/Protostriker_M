@@ -27,7 +27,7 @@ class Player(engine.objects.AnimatedSprite):
         self.speed = 90
         self.direction = [0,0] # [x,y]
         self.bounds = engine.system.SCREEN_RECT
-        self.gun = weapons.BasicWeapon(game)
+        self.gun = weapons.Spreader(game)
         self.hitbox = pygame.Rect(0,0,28,8) # rect for collsion
         self.hb_offsetx = 1 # x offset of hitbox from self.rect
         self.hb_offsety = 3 # y offset of hitbox from self.rect
@@ -119,10 +119,9 @@ class Player(engine.objects.AnimatedSprite):
 
             # shoot on 'B' button press
             if game.input_manager.is_held('B'):
-                shot = self.gun.fire(current_time, self.rect)
-                return shot
+                shots = self.gun.fire(current_time, self.rect)
+                return shots
              
-
     def explode(self):
         # create explosion sprite
         ex = bullets.Explosion(self.rect.x, self.rect.y, self.explosion_image)

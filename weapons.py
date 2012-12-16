@@ -6,35 +6,45 @@ import bullets
 
 class BasicWeapon():
     """ The players basic weapon - fires a single shot at a time """
+
     def __init__(self, game):
         self.sound = game.sound_manager.get_sound('laser')
         self.bullet_image = game.image_manager.get_image('pshot')
         self.speed = 200 # delay for creating shots
         self.last_shot = 0 # time of last shot
-
+        
     def fire(self, current_time, player_rect):
+        shots = []
         if current_time - self.last_shot > self.speed:
             shot = bullets.BasicBullet(player_rect.right - 6,
                              player_rect.centery + 4, self.bullet_image)
+            shots.append(shot)
             self.sound.play()
             self.last_shot = current_time
-        else:
-            shot = None
-        return shot
+        return shots
 
-#class Spreader():
-#    def __init__(self, game):
-#        self.sound = game.sound_manager.get_sound('laser')
-#        self.bullet_image = game.image_manager.get_image('pshot')
-#        self.speed = 200
-#        self.last_shot = 0
+class Spreader():
+    """ Spreader weapon - Fire three shots simultaneously """
 
-#    def fire(self, current_time, player_rect):
-#        if current_time - self.last_shot > self.speed:
-#            shot = bullets.BasicBullet(player_rect.right - 6,
-#                             player_rect.centery + 4, self.bullet_image)
-#            self.sound.play()
-#            self.last_shot = current_time
-#        else:
-#            shot = None
-#        return shot
+    def __init__(self, game):
+        self.sound = game.sound_manager.get_sound('laser')
+        self.bullet_image = game.image_manager.get_image('spreadshot')
+        self.speed = 400
+        self.last_shot = 0
+        self.angles = [0, 15, 345]
+
+    def fire(self, current_time, player_rect):
+        # set shots to empty list if not shooting
+        shots = []
+
+        # shoot at a delay of self.speed
+        if current_time - self.last_shot > self.speed:
+            # create a spreader bullet at angle, append it to shots
+            for angle in self.angles:
+                shot = bullets.SpreaderBullet(player_rect.right - 6,
+                                      player_rect.centery, angle, 
+                                      self.bullet_image)
+                shots.append(shot)
+            self.sound.play()
+            self.last_shot = current_time
+        return shots

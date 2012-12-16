@@ -49,6 +49,7 @@ class PsmGame(engine.system.Game):
         self.image_manager.load_single('playershot.bmp', 'pshot',
                                             (255,0,255))
         self.image_manager.load_single('enemyshot.bmp', 'eshot', -1)
+        self.image_manager.load_single('spreadershot.bmp', 'spreadshot', -1)
         self.image_manager.load_sheet('explosion.bmp', 'explosion', 16,16, 
                                            False, -1)
         self.image_manager.load_sheet('shrapnel.bmp', 'shrapnel', 8,8,

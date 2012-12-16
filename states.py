@@ -100,7 +100,7 @@ class GameState(engine.system.State):
         self.sprite_manager.load_level(self.game, 'level_1.txt')
 
         # play music
-        self.game.sound_manager.play_music("gamemusic.wav")
+        #self.game.sound_manager.play_music("gamemusic.wav")
 
         # create player, viewport, score and lives render, 
         # add player to sprite manager group
@@ -128,9 +128,10 @@ class GameState(engine.system.State):
         # input passed to the player object
         # player.handle_input() returns a bullet sprite if req's are met,
         # none if not.
-        bullet = self.player.handle_input(self.game, pygame.time.get_ticks())
-        if bullet is not None:
-            self.sprite_manager.add_sprite(bullet, 'player_shots')
+        bullets = self.player.handle_input(self.game, pygame.time.get_ticks())
+        if bullets:
+            for bullet in bullets:
+                self.sprite_manager.add_sprite(bullet, 'player_shots')
 
         # On start button press, push the pause state
         if self.game.input_manager.is_pressed('START'):

@@ -58,8 +58,6 @@ class BasicBullet(Bullet):
         if self.rect.right > self.bounds.right:
             self.kill()
 
-
-
 class EnemyBullet(Bullet):
     """ Enemy bullet class, sub-class of Bullet.
     Object moves horizontally from right to left for the duration
@@ -88,11 +86,45 @@ class SpreaderBullet(EnemyBullet):
     """ bullet for the spreader gun """
     def __init__(self, x, y, angle, image):
         EnemyBullet.__init__(self, x, y, image)
-        self.speed = 400
+        self.speed = 300
+        self.diag_speed = self.speed / math.sqrt(2)
         self.angle = angle
+        self.hitbox = pygame.Rect(self.dx,self.dy,6,6)
+        self.hb_offsetx = 1
+        self.hb_offsety = 1
+        self.ddx = self.dx
+        self.ddy = self.dy
 
     def update(self, current_time):
-        pass
+        
+        # convert degrees to radians
+        radians = self.angle * math.pi / 180
+
+        # calculate path for diagonal up
+        if self.angle <= 90:
+            self.ddx = (math.cos(radians))
+            self.ddy = -(math.sin(radians))
+        # calculate path for diagonal down
+        elif self.angle >= 270:
+            self.ddx = (math.cos(radians))
+            self.ddy = -(math.sin(radians))
+        else: # self.angle == 0
+            self.ddx = (math.cos(radians))
+            self.ddy = (math.sin(radians))
+        
+        # calculate change in x,y
+        self.dx += (self.ddx * self.speed) * TIMESTEP
+        self.dy += (self.ddy * self.speed) * TIMESTEP
+
+        # update the rects
+        self.rect.x = self.dx
+        self.rect.y = self.dy
+        self.hitbox.x = self.rect.x + self.hb_offsetx
+        self.hitbox.y = self.rect.y + self.hb_offsety
+
+        # check for screen bounds, kill if offscreen
+        if not self.bounds.contains(self.rect):
+            self.kill()
 
 class Explosion(engine.objects.AnimatedSprite):
     """ Explosion animation """
