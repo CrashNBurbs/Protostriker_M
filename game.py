@@ -67,9 +67,11 @@ class PsmGame(engine.system.Game):
         self.sound_manager.load_sound('player_exp.wav', 'pl_exp',
                                            volume = 0.4)
         self.sound_manager.load_sound('laser.wav', 'laser',
-                                           volume = 0.2)
+                                           volume = 0.1)
         self.sound_manager.load_sound('hit.wav', 'hit',
                                            volume = 0.4)
+        self.sound_manager.load_sound('spreader.wav', 'spreader',
+                                      volume = 0.4)
 
         
         

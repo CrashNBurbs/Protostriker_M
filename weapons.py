@@ -27,7 +27,7 @@ class Spreader():
     """ Spreader weapon - Fire three shots simultaneously """
 
     def __init__(self, game):
-        self.sound = game.sound_manager.get_sound('laser')
+        self.sound = game.sound_manager.get_sound('spreader')
         self.bullet_image = game.image_manager.get_image('spreadshot')
         self.speed = 400
         self.last_shot = 0
