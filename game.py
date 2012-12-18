@@ -46,7 +46,7 @@ class PsmGame(engine.system.Game):
                                            False, -1)
         self.image_manager.load_sheet('enemy7.bmp', 'enemy7', 24,16, 
                                            False, -1)
-        self.image_manager.load_single('playershot.bmp', 'pshot',
+        self.image_manager.load_single('laser.bmp', 'pshot',
                                             (255,0,255))
         self.image_manager.load_single('enemyshot.bmp', 'eshot', -1)
         self.image_manager.load_single('spreadershot.bmp', 'spreadshot', -1)
