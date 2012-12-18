@@ -17,7 +17,7 @@ class BasicWeapon():
         shots = []
         if current_time - self.last_shot > self.speed:
             shot = bullets.BasicBullet(player_rect.right - 6,
-                             player_rect.centery + 4, self.bullet_image)
+                             player_rect.centery, self.bullet_image)
             shots.append(shot)
             self.sound.play()
             self.last_shot = current_time
@@ -41,10 +41,33 @@ class Spreader():
         if current_time - self.last_shot > self.speed:
             # create a spreader bullet at angle, append it to shots
             for angle in self.angles:
-                shot = bullets.SpreaderBullet(player_rect.right - 6,
+                shot = bullets.SpreaderBullet(player_rect.centerx,
                                       player_rect.centery, angle, 
                                       self.bullet_image)
                 shots.append(shot)
             self.sound.play()
             self.last_shot = current_time
+        return shots
+
+class ReverseFire(Spreader):
+    """ fires a single straight shot and two reverse shots at an angle """
+
+    def __init__(self, game):
+        Spreader.__init__(self, game)
+        self.sound = game.sound_manager.get_sound('laser')
+        self.bullet_image = game.image_manager.get_image('pshot')
+        self.speed = 200
+        self.angles = [0, 140, 220]
+
+    def fire(self, current_time, player_rect):
+        shots = []
+
+        if current_time - self.last_shot > self.speed:
+            for angle in self.angles:
+                shot = bullets.ReverseFireBullet(player_rect.right - 6, 
+                                                 player_rect.centery, angle,
+                                                 self.bullet_image)
+                shots.append(shot)
+                self.sound.play()
+                self.last_shot = current_time
         return shots

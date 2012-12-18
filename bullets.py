@@ -43,8 +43,9 @@ class BasicBullet(Bullet):
     def __init__(self, x, y, image):
         Bullet.__init__(self, x, y, image)
         self.speed = 400
-        self.hitbox = pygame.Rect(self.dx,self.dy,8,3)
-
+        self.hitbox = pygame.Rect(self.dx,self.dy,8,4)
+        self.hb_offsety = 2
+        
     def update(self, current_time):
         # move bullet at self.speed pixels/sec
         self.dx += self.speed * TIMESTEP
@@ -83,38 +84,23 @@ class EnemyBullet(Bullet):
             self.kill()
 
 class SpreaderBullet(EnemyBullet):
-    """ bullet for the spreader gun """
+    """ bullet for the spreader gun, can travel at an angle """
     def __init__(self, x, y, angle, image):
         EnemyBullet.__init__(self, x, y, image)
         self.speed = 300
-        self.diag_speed = self.speed / math.sqrt(2)
         self.angle = angle
         self.hitbox = pygame.Rect(self.dx,self.dy,6,6)
         self.hb_offsetx = 1
         self.hb_offsety = 1
-        self.ddx = self.dx
-        self.ddy = self.dy
 
     def update(self, current_time):
         
         # convert degrees to radians
-        radians = self.angle * math.pi / 180
-
-        # calculate path for diagonal up
-        if self.angle <= 90:
-            self.ddx = (math.cos(radians))
-            self.ddy = -(math.sin(radians))
-        # calculate path for diagonal down
-        elif self.angle >= 270:
-            self.ddx = (math.cos(radians))
-            self.ddy = -(math.sin(radians))
-        else: # self.angle == 0
-            self.ddx = (math.cos(radians))
-            self.ddy = (math.sin(radians))
+        radians = -self.angle * math.pi / 180
         
         # calculate change in x,y
-        self.dx += (self.ddx * self.speed) * TIMESTEP
-        self.dy += (self.ddy * self.speed) * TIMESTEP
+        self.dx += (math.cos(radians) * self.speed) * TIMESTEP
+        self.dy += (math.sin(radians) * self.speed) * TIMESTEP
 
         # update the rects
         self.rect.x = self.dx
@@ -125,6 +111,29 @@ class SpreaderBullet(EnemyBullet):
         # check for screen bounds, kill if offscreen
         if not self.bounds.contains(self.rect):
             self.kill()
+
+class ReverseFireBullet(SpreaderBullet):
+    """ Bullet for reverse shot gun, can travel at an angle """
+
+    def __init__(self, x, y, angle, image):
+        SpreaderBullet.__init__(self, x, y, angle, image)
+        self.speed = 300
+        self.angle = angle
+        self.hitbox = pygame.Rect(self.dx,self.dy,8,4)
+        self.hb_offsetx = 0
+        self.hb_offsety = 2
+        self.center = self.rect.center
+        self.image = pygame.transform.rotate(self.image, angle)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.center
+
+    def update(self, current_time):
+        SpreaderBullet.update(self, current_time)
+
+        if self.angle == 220:
+            self.hitbox.y += 3
+
+
 
 class Explosion(engine.objects.AnimatedSprite):
     """ Explosion animation """
