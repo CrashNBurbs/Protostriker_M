@@ -36,13 +36,12 @@ class Spreader():
     def fire(self, current_time, player_rect):
         # set shots to empty list if not shooting
         shots = []
-
         # shoot at a delay of self.speed
         if current_time - self.last_shot > self.speed:
             # create a spreader bullet at angle, append it to shots
             for angle in self.angles:
-                shot = bullets.SpreaderBullet(player_rect.centerx,
-                                      player_rect.centery, angle, 
+                shot = bullets.SpreaderBullet(player_rect.right - 6,
+                                      player_rect.centery, angle,
                                       self.bullet_image)
                 shots.append(shot)
             self.sound.play()
@@ -68,6 +67,6 @@ class ReverseFire(Spreader):
                                                  player_rect.centery, angle,
                                                  self.bullet_image)
                 shots.append(shot)
-                self.sound.play()
-                self.last_shot = current_time
+            self.sound.play()
+            self.last_shot = current_time
         return shots
