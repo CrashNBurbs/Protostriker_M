@@ -100,7 +100,7 @@ class GameState(engine.system.State):
         self.sprite_manager.load_level(self.game, 'empty.txt')
 
         # play music
-        #self.game.sound_manager.play_music("gamemusic.wav")
+        self.game.sound_manager.play_music("gamemusic.wav")
 
         # create player, viewport, score and lives render, 
         # add player to sprite manager group
