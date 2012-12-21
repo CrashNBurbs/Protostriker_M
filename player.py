@@ -24,10 +24,14 @@ class Player(engine.objects.AnimatedSprite):
         rect attributes """
     def __init__(self, game, x, y, images):
         engine.objects.AnimatedSprite.__init__(self,x,y,images, 20)
+        self.game = game
         self.speed = 90
         self.direction = [0,0] # [x,y]
         self.bounds = engine.system.SCREEN_RECT
-        self.gun = weapons.ReverseFire(game)
+        self.weapons = [weapons.BasicWeapon(game), weapons.Spreader(game),
+                        weapons.ReverseFire(game)]
+        self.current_weapon_index = 0
+        self.current_weapon = self.weapons[self.current_weapon_index]
         self.hitbox = pygame.Rect(0,0,28,8) # rect for collsion
         self.hb_offsetx = 1 # x offset of hitbox from self.rect
         self.hb_offsety = 3 # y offset of hitbox from self.rect
@@ -41,6 +45,7 @@ class Player(engine.objects.AnimatedSprite):
     def update(self, current_time):
         # show correct frame
         self.image = self.images[self.frame]
+        self.current_weapon = self.weapons[self.current_weapon_index]
 
         # if not respawing, move ship, check bounds
         if not self.respawning:
@@ -116,10 +121,19 @@ class Player(engine.objects.AnimatedSprite):
             else: # not moving left or right
                 self.direction[0] = 0
 
+            # cycle through weapons on 'Y' button press
+            if game.input_manager.is_pressed('Y'):
+                self.current_weapon_index += 1
+                if self.current_weapon_index > 2:
+                    self.current_weapon_index = 0
+
             # shoot on 'B' button press
             if game.input_manager.is_held('B'):
-                shots = self.gun.fire(current_time, self.rect)
+                shots = self.current_weapon.fire(current_time, self.rect)
                 return shots
+
+                
+
              
     def explode(self):
         # create explosion sprite
