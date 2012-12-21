@@ -22,6 +22,7 @@ class Player(engine.objects.AnimatedSprite):
         spaceship. Note: intermediate values for x,y coords
         are used(dx,dy) to assign floating point values to
         rect attributes """
+
     def __init__(self, game, x, y, images):
         engine.objects.AnimatedSprite.__init__(self,x,y,images, 20)
         self.game = game
@@ -52,12 +53,12 @@ class Player(engine.objects.AnimatedSprite):
             # calc change in movement based on direction
             if self.direction[0] > 0: # right
                 self.dx += self.speed * TIMESTEP
-            if self.direction[0] < 0: # left
+            elif self.direction[0] < 0: # left
                 self.dx -= self.speed * TIMESTEP
             if self.direction[1] > 0: # down
                 self.frame = 1 # change image
                 self.dy += self.speed * TIMESTEP
-            if self.direction[1] < 0: # up
+            elif self.direction[1] < 0: # up
                 self.frame = 2 # change image
                 self.dy -= self.speed * TIMESTEP
 
@@ -131,9 +132,6 @@ class Player(engine.objects.AnimatedSprite):
             if game.input_manager.is_held('B'):
                 shots = self.current_weapon.fire(current_time, self.rect)
                 return shots
-
-                
-
              
     def explode(self):
         # create explosion sprite

@@ -97,7 +97,8 @@ class SpriteManager(engine.objects.SpriteManager):
                     else: # enemy destroyed
                         player.score += enemy.points
                         ex = enemy.explode()
-                        self.add_sprite(ex,'explosions')
+                        for sprite in ex:
+                            self.add_sprite(sprite,'explosions')
 
 
         # check for shrapnel explosion collision with player

@@ -57,12 +57,15 @@ class Enemy1(engine.objects.AnimatedSprite):
         self.dx = self.bounds.right
 
     def explode(self):
-        # create explosion sprite
-        ex = bullets.Explosion(self.rect.x, self.rect.y,
-                               self.game.image_manager.get_image('explosion'))
         # play sound
         self.explosion_sound.play()
 
+        # create explosion sprite
+        ex = []
+        anim = bullets.Explosion(self.rect.x, self.rect.y,
+                               self.game.image_manager.get_image('explosion'))
+        ex.append(anim)
+        
         # die
         self.kill()
 
