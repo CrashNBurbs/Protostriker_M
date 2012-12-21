@@ -36,7 +36,6 @@ class Player(engine.objects.AnimatedSprite):
         self.respawning = False
         self.protected = False
         self.score = 0
-        self.explosion_image = game.image_manager.get_image('explosion')
         self.explosion_sound = game.sound_manager.get_sound('pl_exp')
 
     def update(self, current_time):
@@ -124,7 +123,8 @@ class Player(engine.objects.AnimatedSprite):
              
     def explode(self):
         # create explosion sprite
-        ex = bullets.Explosion(self.rect.x, self.rect.y, self.explosion_image)
+        ex = bullets.Explosion(self.rect.x, self.rect.y, 
+                               self.game.image_manager.get_image('explosion'))
 
         # play sound
         self.explosion_sound.play()
