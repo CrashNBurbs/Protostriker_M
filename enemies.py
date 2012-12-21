@@ -116,7 +116,7 @@ class Enemy2(Enemy1):
         # self.shoot_speed m/s, keep track of shots fired
         if current_time - self.last_shot > self.shoot_speed:
             self.shot = bullets.EnemyBullet(self.rect.left,
-                             self.rect.centery, self.bullet_image)
+                             self.rect.centery, 0, self.bullet_image)
             self.shots += 1
             self.last_shot = current_time
         else:
@@ -232,7 +232,7 @@ class Enemy5(Enemy2):
         # self.shoot_speed m/s, keep track of shots fired
         if current_time - self.last_shot > self.shoot_speed:
             self.shot = bullets.EnemyBullet(self.game, self.rect.left + 2,
-                             self.rect.centery + 5, self.bullet_image)
+                             self.rect.centery + 5, 0, self.bullet_image)
             self.last_shot = current_time
         else:
             self.shot = None

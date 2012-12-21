@@ -18,7 +18,7 @@ from engine.system import TIMESTEP
 
 class Bullet(pygame.sprite.Sprite):
     """ Abstract class for a bullet """
-    def __init__(self, x, y, image):
+    def __init__(self, x, y, angle, image):
         pygame.sprite.Sprite.__init__(self)
         self.image = image
         self.rect = self.image.get_rect()
@@ -27,6 +27,7 @@ class Bullet(pygame.sprite.Sprite):
         self.dx = self.rect.x
         self.dy = self.rect.y
         self.speed = 0
+        self.angle = angle
         self.bounds = engine.system.SCREEN_RECT
         self.hitbox = pygame.Rect(self.dx, self.dy, 0, 0)
         self.hb_offsetx = 0
@@ -40,8 +41,8 @@ class BasicBullet(Bullet):
     """ Player bullet class, sub-class of Bullet
     Object moves horizontally from left to right for the duration
     it is on screen """
-    def __init__(self, x, y, image):
-        Bullet.__init__(self, x, y, image)
+    def __init__(self, x, y, angle, image):
+        Bullet.__init__(self, x, y, angle, image)
         self.speed = 400
         self.hitbox = pygame.Rect(self.dx,self.dy,8,4)
         self.hb_offsety = 2
@@ -63,8 +64,8 @@ class EnemyBullet(Bullet):
     """ Enemy bullet class, sub-class of Bullet.
     Object moves horizontally from right to left for the duration
     it is on screen """
-    def __init__(self, x, y, image):
-        Bullet.__init__(self, x, y, image)
+    def __init__(self, x, y, angle, image):
+        Bullet.__init__(self, x, y, angle, image)
         self.speed = 135
         self.hitbox = pygame.Rect(self.dx,self.dy,6,6)
         self.hb_offsetx = 1
@@ -86,9 +87,8 @@ class EnemyBullet(Bullet):
 class SpreaderBullet(Bullet):
     """ bullet for the spreader gun, can travel at an angle """
     def __init__(self, x, y, angle, image):
-        Bullet.__init__(self, x, y, image)
+        Bullet.__init__(self, x, y, angle, image)
         self.speed = 300
-        self.angle = angle
         self.hitbox = pygame.Rect(self.dx,self.dy,6,6)
         self.hb_offsetx = 1
         self.hb_offsety = 1
@@ -117,7 +117,6 @@ class ReverseFireBullet(SpreaderBullet):
     def __init__(self, x, y, angle, image):
         SpreaderBullet.__init__(self, x, y, angle, image)
         self.speed = 400
-        self.angle = angle
         self.hitbox = pygame.Rect(self.dx,self.dy,8,4)
         self.hb_offsetx = 0
         self.hb_offsety = 2
