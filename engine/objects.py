@@ -34,10 +34,11 @@ class AnimatedSprite(pygame.sprite.Sprite):
             self.image = self.images[0]
 
         self.rect = self.image.get_rect()
-        self.dx = x  # used to assign floating point values
-        self.dy = y  # to rect x,y
         self.rect.x = x
         self.rect.y = y
+        self.dx = self.rect.x # used to assign floating point values
+        self.dy = self.rect.y  # to rect x,y
+
 
     def update(self, current_time):
         # Animate the sprite by stepping through it's images

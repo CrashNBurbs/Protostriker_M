@@ -63,7 +63,7 @@ class ReverseFire(Spreader):
 
         if current_time - self.last_shot > self.speed:
             for angle in self.angles:
-                shot = bullets.ReverseFireBullet(player_rect.right - 6, 
+                shot = bullets.ReverseFireBullet(player_rect.right - 24, 
                                                  player_rect.centery, angle,
                                                  self.bullet_image)
                 shots.append(shot)
