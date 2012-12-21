@@ -31,7 +31,6 @@ class Enemy1(engine.objects.AnimatedSprite):
         self.hitbox.y = self.rect.y + self.hb_offsety
         self.points = 160 # point value
         self.explosion_sound = game.sound_manager.get_sound('en_exp')
-        self.explosion_image = game.image_manager.get_image('explosion')
         self.hits = 0 # number of hits enemy takes, 0 is a one-shot kill
 
     def update(self, current_time, player_rect):
@@ -58,9 +57,9 @@ class Enemy1(engine.objects.AnimatedSprite):
         self.dx = self.bounds.right
 
     def explode(self):
-        ex = []
         # create explosion sprite
-        ex.append(bullets.Explosion(self.rect.x, self.rect.y, self.explosion_image))
+        ex = bullets.Explosion(self.rect.x, self.rect.y,
+                               self.game.image_manager.get_image('explosion'))
         # play sound
         self.explosion_sound.play()
 
