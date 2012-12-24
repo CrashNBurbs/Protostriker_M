@@ -15,6 +15,7 @@ import pygame
 import engine
 import math
 from engine.system import TIMESTEP
+from engine.system import SCREEN_RECT
 
 class Bullet(pygame.sprite.Sprite):
     """ Abstract class for a bullet """
@@ -28,13 +29,13 @@ class Bullet(pygame.sprite.Sprite):
         self.dy = self.rect.y
         self.speed = 0
         self.angle = angle
-        self.bounds = engine.system.SCREEN_RECT
+        self.bounds = SCREEN_RECT
         self.hitbox = pygame.Rect(self.dx, self.dy, 0, 0)
         self.hb_offsetx = 0
         self.hb_offsety = 0
 
 
-    def update(self, current_time):
+    def update(self, current_time, player_rect):
         pass
 
 class BasicBullet(Bullet):
@@ -47,7 +48,7 @@ class BasicBullet(Bullet):
         self.hitbox = pygame.Rect(self.dx,self.dy,8,4)
         self.hb_offsety = 2
         
-    def update(self, current_time):
+    def update(self, current_time, player_rect):
         # move bullet at self.speed pixels/sec
         self.dx += self.speed * TIMESTEP
 
@@ -71,7 +72,7 @@ class EnemyBullet(Bullet):
         self.hb_offsetx = 1
         self.hb_offsety = 1
 
-    def update(self, current_time):
+    def update(self, current_time, player_rect):
         # move bullet at self.speed/sec
         self.dx -= self.speed * TIMESTEP
 
@@ -89,17 +90,15 @@ class SpreaderBullet(Bullet):
     def __init__(self, x, y, angle, image):
         Bullet.__init__(self, x, y, angle, image)
         self.speed = 300
+        self.radians = -self.angle * math.pi / 180
         self.hitbox = pygame.Rect(self.dx,self.dy,6,6)
         self.hb_offsetx = 1
         self.hb_offsety = 1
 
-    def update(self, current_time):
-        # convert degrees to radians
-        radians = -self.angle * math.pi / 180
-        
+    def update(self, current_time, player_rect):
         # calculate change in x,y
-        self.dx += (math.cos(radians) * self.speed) * TIMESTEP
-        self.dy += (math.sin(radians) * self.speed) * TIMESTEP
+        self.dx += (math.cos(self.radians) * self.speed) * TIMESTEP
+        self.dy += (math.sin(self.radians) * self.speed) * TIMESTEP
 
         # update the rects
         self.rect.x = self.dx
@@ -125,14 +124,57 @@ class ReverseFireBullet(SpreaderBullet):
         self.rect = self.image.get_rect()
         self.rect.center = self.center
 
-    def update(self, current_time):
-        SpreaderBullet.update(self, current_time)
+    def update(self, current_time, player_rect):
+        SpreaderBullet.update(self, current_time, player_rect)
 
         if self.angle == 220:
             self.hitbox.y += 3
 
+class LaserBeam(pygame.sprite.Sprite):
+    """ Laser Beam bullet - an expanding shot that stays attached to the
+        player and lasts for self.duration before disapearing """
+
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.width = 1
+        self.image = pygame.Surface((self.width, 4))
+        self.image.fill((0,136,148))
+        pygame.draw.line(self.image, (0,64,88), (0,0),(self.width,0))
+        pygame.draw.line(self.image, (0,64,88), (0,3),(self.width,3)) 
+        self.rect = self.image.get_rect()
+        self.speed = 1000
+        self.duration = 650
+        self.shot_time = pygame.time.get_ticks()
+
+    def update(self, current_time, player_rect):
+        
+        # increase the length of the beam while it has not hit the edge of
+        # the screen
+        if self.rect.right < SCREEN_RECT.width:
+            self.width += self.speed * TIMESTEP
+        else:  # beam has hit the edge of the screen, shorten if necessary
+            self.width = SCREEN_RECT.width - self.rect.x
+            # keep width at least 1
+            if self.width < 1:
+                self.width = 1
+
+        # scale the image
+        self.image = pygame.transform.scale(self.image, (int(self.width), 4))
+
+        # get new rect, set x and y
+        self.rect = self.image.get_rect()
+        self.rect.x = player_rect.right - 6
+        self.rect.y = player_rect.centery - 1 
+
+        # kill beam after self.duration
+        if current_time - self.shot_time > self.duration:
+            self.kill()
+
+        print self.rect.width
+
 class Explosion(engine.objects.AnimatedSprite):
     """ Explosion animation """
+
     def __init__(self, x, y, images):
         engine.objects.AnimatedSprite.__init__(self,x,y,images)
         self.hitbox = None
@@ -151,21 +193,20 @@ class Shrapnel(Bullet):
     """ Shrapnel object """
     def __init__(self, x, y, angle, images):
         Bullet.__init__(self, x, y, angle, images[0])
-        self.image = images[angle / 45]  
+        self.image = images[angle / 45]
+        self.radians = -self.angle * math.pi / 180  
         self.hitbox = pygame.Rect(self.dx,self.dy,6,6)
         self.hb_offsetx = 1
         self.hb_offsety = 1
         self.speed = 35
-        self.diag_speed = self.speed / math.sqrt(2)
-        self.angle = angle
 
     def update(self, current_time):
         # convert degrees to radians
-        radians = -self.angle * math.pi / 180
+        
         
         # calculate change in x,y
-        self.dx += (math.cos(radians) * self.speed) * TIMESTEP
-        self.dy += (math.sin(radians) * self.speed) * TIMESTEP
+        self.dx += (math.cos(self.radians) * self.speed) * TIMESTEP
+        self.dy += (math.sin(self.radians) * self.speed) * TIMESTEP
 
         # update the rects
         self.rect.x = self.dx

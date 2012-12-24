@@ -46,7 +46,6 @@ class Spreader(BasicWeapon):
                                       self.bullet_image)
         return bullet
 
-
 class ReverseFire(BasicWeapon):
     """ fires a single straight shot and two reverse shots at an angle """
 
@@ -61,4 +60,18 @@ class ReverseFire(BasicWeapon):
         bullet= bullets.ReverseFireBullet(player_rect.right - 24, 
                                           player_rect.centery, angle,
                                           self.bullet_image)
+        return bullet
+
+class Laser(BasicWeapon):
+    """ Fires a straight laser beam that expands and 
+        is attached to the player """
+
+    def __init__(self, game):
+        BasicWeapon.__init__(self, game)
+        self.sound = game.sound_manager.get_sound('laser')
+        self.speed = 950
+
+    def get_bullet(self, player_rect, angle):
+        bullet = bullets.LaserBeam(player_rect.right - 6,
+                                   player_rect.centery)
         return bullet

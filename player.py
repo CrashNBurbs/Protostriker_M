@@ -30,7 +30,7 @@ class Player(engine.objects.AnimatedSprite):
         self.direction = [0,0] # [x,y]
         self.bounds = engine.system.SCREEN_RECT
         self.weapons = [weapons.BasicWeapon(game), weapons.Spreader(game),
-                        weapons.ReverseFire(game)]
+                        weapons.ReverseFire(game), weapons.Laser(game)]
         self.current_weapon_index = 0
         self.current_weapon = self.weapons[self.current_weapon_index]
         self.hitbox = pygame.Rect(0,0,28,8) # rect for collsion
@@ -125,7 +125,7 @@ class Player(engine.objects.AnimatedSprite):
             # cycle through weapons on 'Y' button press
             if game.input_manager.is_pressed('Y'):
                 self.current_weapon_index += 1
-                if self.current_weapon_index > 2:
+                if self.current_weapon_index > len(self.weapons) - 1:
                     self.current_weapon_index = 0
 
             # shoot on 'B' button press

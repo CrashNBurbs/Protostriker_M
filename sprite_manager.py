@@ -50,7 +50,9 @@ class SpriteManager(engine.objects.SpriteManager):
                     # if enemy is shooting 
                     if enemy_bullet is not None: 
                         # add a bullet 
-                        self.add_sprite(enemy_bullet, 'enemy_shots') 
+                        self.add_sprite(enemy_bullet, 'enemy_shots')
+            elif key == 'player_shots':
+                self.sprites[key].update(current_time, player_rect) 
             else: # update all other sprites
                 self.sprites[key].update(current_time)
 
