@@ -53,7 +53,7 @@ class PsmGame(engine.system.Game):
         self.image_manager.load_sheet('explosion.bmp', 'explosion', 16,16, 
                                            False, -1)
         self.image_manager.load_sheet('shrapnel.bmp', 'shrapnel', 8,8,
-                                           False, -1)
+                                           False, (255,0,255))
 
         # load sounds
         self.sound_manager.load_sound('cursor.wav', 'cursor',

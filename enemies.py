@@ -208,6 +208,7 @@ class Enemy4(Enemy2):
 
 class Enemy5(Enemy2):
     """ Large, multi-hit taking, enemy that creats shrapnel on explode """
+
     def __init__(self, game, x, y, images):
         Enemy2.__init__(self, game, x, y, images)
         self.speed = 15
@@ -233,7 +234,7 @@ class Enemy5(Enemy2):
         # fire a shot at current pos, every
         # self.shoot_speed m/s, keep track of shots fired
         if current_time - self.last_shot > self.shoot_speed:
-            self.shot = bullets.EnemyBullet(self.game, self.rect.left + 2,
+            self.shot = bullets.EnemyBullet(self.rect.left + 2,
                              self.rect.centery + 5, 0, self.bullet_image)
             self.last_shot = current_time
         else:
@@ -249,9 +250,8 @@ class Enemy5(Enemy2):
         # create explosion sprite
 
         for angle in range(0,360,45):
-            ex.append(bullets.Shrapnel(self.game, self.rect.centerx,
-                                       self.rect.centery,self.explosion_image,
-                                       angle))
+            ex.append(bullets.Shrapnel(self.rect.centerx, self.rect.centery,
+                                       angle, self.explosion_image))
 
         # play sound
         self.explosion_sound.play()

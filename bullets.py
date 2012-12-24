@@ -149,9 +149,9 @@ class Explosion(engine.objects.AnimatedSprite):
 
 class Shrapnel(Bullet):
     """ Shrapnel object """
-    def __init__(self, game, x, y, images, angle):
-        Bullet.__init__(self, game, x, y, images[0])
-        self.images = images
+    def __init__(self, x, y, angle, images):
+        Bullet.__init__(self, x, y, angle, images[0])
+        self.image = images[angle / 45]  
         self.hitbox = pygame.Rect(self.dx,self.dy,6,6)
         self.hb_offsetx = 1
         self.hb_offsety = 1
@@ -160,36 +160,12 @@ class Shrapnel(Bullet):
         self.angle = angle
 
     def update(self, current_time):
-
-        # update dx, dy based on angle
-        if self.angle == 0:
-            self.image = self.images[4]
-            self.dx += self.speed * TIMESTEP
-        elif self.angle == 45:
-            self.image = self.images[3]
-            self.dx += self.diag_speed * TIMESTEP
-            self.dy -= self.diag_speed * TIMESTEP
-        elif self.angle == 90:
-            self.image = self.images[2]
-            self.dy -= self.speed * TIMESTEP
-        elif self.angle == 135:
-            self.image = self.images[1]
-            self.dx -= self.diag_speed * TIMESTEP
-            self.dy -= self.diag_speed * TIMESTEP
-        elif self.angle == 180:
-            self.image = self.images[0]
-            self.dx -= self.speed * TIMESTEP
-        elif self.angle == 225:
-            self.image = self.images[7]
-            self.dx -= self.diag_speed * TIMESTEP
-            self.dy += self.diag_speed * TIMESTEP
-        elif self.angle == 270:
-            self.image = self.images[6]
-            self.dy += self.speed * TIMESTEP
-        elif self.angle == 315:
-            self.image = self.images[5]
-            self.dx += self.diag_speed * TIMESTEP
-            self.dy += self.diag_speed * TIMESTEP
+        # convert degrees to radians
+        radians = -self.angle * math.pi / 180
+        
+        # calculate change in x,y
+        self.dx += (math.cos(radians) * self.speed) * TIMESTEP
+        self.dy += (math.sin(radians) * self.speed) * TIMESTEP
 
         # update the rects
         self.rect.x = self.dx

@@ -97,7 +97,7 @@ class GameState(engine.system.State):
         self.game.input_manager.clear()
 
         # load the level on state activation
-        self.sprite_manager.load_level(self.game, 'level_1.txt')
+        self.sprite_manager.load_level(self.game, 'test3.txt')
 
         # play music
         #self.game.sound_manager.play_music("gamemusic.wav")
