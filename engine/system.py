@@ -13,7 +13,6 @@
 import pygame
 from pygame.locals import *
 import os
-import game
 import graphics
 import sound
 import gui
@@ -435,7 +434,7 @@ class Game():
 
     def set_caption(self, caption):
         # set the window title bar to caption
-        pygame.display.set_caption(caption)
+        self.display.set_caption(caption)
 
     def load_content(self):
         # load content for the entire game
