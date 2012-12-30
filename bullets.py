@@ -35,7 +35,7 @@ class Bullet(pygame.sprite.Sprite):
         self.hb_offsety = 0
 
 
-    def update(self, current_time, player_rect):
+    def update(self):
         pass
 
 class BasicBullet(Bullet):
@@ -48,7 +48,7 @@ class BasicBullet(Bullet):
         self.hitbox = pygame.Rect(self.dx,self.dy,8,4)
         self.hb_offsety = 2
         
-    def update(self, current_time, player_rect):
+    def update(self, *args):
         # move bullet at self.speed pixels/sec
         self.dx += self.speed * TIMESTEP
 
@@ -72,7 +72,7 @@ class EnemyBullet(Bullet):
         self.hb_offsetx = 1
         self.hb_offsety = 1
 
-    def update(self, current_time, player_rect):
+    def update(self, *args):
         # move bullet at self.speed/sec
         self.dx -= self.speed * TIMESTEP
 
@@ -95,7 +95,7 @@ class SpreaderBullet(Bullet):
         self.hb_offsetx = 1
         self.hb_offsety = 1
 
-    def update(self, current_time, player_rect):
+    def update(self, *args):
         # calculate change in x,y
         self.dx += (math.cos(self.radians) * self.speed) * TIMESTEP
         self.dy += (math.sin(self.radians) * self.speed) * TIMESTEP
@@ -124,8 +124,8 @@ class ReverseFireBullet(SpreaderBullet):
         self.rect = self.image.get_rect()
         self.rect.center = self.center
 
-    def update(self, current_time, player_rect):
-        SpreaderBullet.update(self, current_time, player_rect)
+    def update(self, *args):
+        SpreaderBullet.update(self, *args)
 
         if self.angle == 220:
             self.hitbox.y += 3
@@ -146,7 +146,9 @@ class LaserBeam(pygame.sprite.Sprite):
         self.duration = 650
         self.shot_time = pygame.time.get_ticks()
 
-    def update(self, current_time, player_rect):
+    def update(self, *args):
+        current_time = args[0]
+        player_rect = args[1]
         
         # increase the length of the beam while it has not hit the edge of
         # the screen
@@ -177,7 +179,8 @@ class Explosion(engine.objects.AnimatedSprite):
         engine.objects.AnimatedSprite.__init__(self,x,y,images)
         self.hitbox = None
 
-    def update(self, current_time):
+    def update(self, *args):
+        current_time = args[0]
         # Animate through all frames once, then kill sprite
         if current_time - self.last_update > self.delay:
             self.frame += 1
@@ -198,7 +201,7 @@ class Shrapnel(Bullet):
         self.hb_offsety = 1
         self.speed = 35
 
-    def update(self, current_time):
+    def update(self, *args):
         # calculate change in x,y
         self.dx += (math.cos(self.radians) * self.speed) * TIMESTEP
         self.dy += (math.sin(self.radians) * self.speed) * TIMESTEP

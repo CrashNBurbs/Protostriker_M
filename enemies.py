@@ -34,7 +34,9 @@ class Enemy1(engine.objects.AnimatedSprite):
         self.explosion_sound = game.sound_manager.get_sound('en_exp')
         self.hits = 0 # number of hits enemy takes, 0 is a one-shot kill
 
-    def update(self, current_time, player_rect):
+    def update(self, *args):
+        current_time = args[0]
+
         # call parent class update function for frame
         # animation
         engine.objects.AnimatedSprite.update(self, current_time)
@@ -89,10 +91,11 @@ class Enemy2(Enemy1):
         self.points = 90
 
 
-    def update(self, current_time, player_rect):
+    def update(self, *args):
+        current_time = args[0]
         # call parent class update for frame
         # animation and movement
-        Enemy1.update(self, current_time, player_rect)
+        Enemy1.update(self, current_time)
 
         # set shooting to true every self.volley_speed m/s
         # if enemy has passed the start shooting pos
@@ -104,7 +107,7 @@ class Enemy2(Enemy1):
 
         # fire three shots per volley
         if self.shooting:
-            self.shoot(pygame.time.get_ticks())
+            self.shoot(current_time)
             if self.shots == 3: # reset values
                 self.last_volley = current_time
                 self.shooting = False
@@ -141,9 +144,9 @@ class Enemy3(Enemy1):
         self.hitbox.y = self.rect.y + self.hb_offsety
         self.points = 210
 
-    def update(self, current_time, player_rect):
+    def update(self, *args):
         # call parent classes update method
-        Enemy1.update(self, current_time, player_rect)
+        Enemy1.update(self, *args)
 
         # calculate change in y, sin of current angle
         # scaled by radius
@@ -173,7 +176,8 @@ class Enemy4(Enemy2):
         self.hitbox.y = self.rect.y + self.hb_offsety
         self.points = 125
 
-    def update(self, current_time, player_rect):
+    def update(self, *args):
+        current_time = args[0]
         engine.objects.AnimatedSprite.update(self, current_time)
 
         # Move vertically on the screen, reversing direction
@@ -224,8 +228,9 @@ class Enemy5(Enemy2):
         self.hit_sound = game.sound_manager.get_sound('hit')
         self.explosion_image = game.image_manager.get_image('shrapnel')
 
-    def update(self, current_time, player_rect):
-        Enemy1.update(self, current_time, player_rect)
+    def update(self, *args):
+        current_time = args[0]
+        Enemy1.update(self, current_time)
 
         self.shoot(current_time)
         return self.shot
@@ -286,7 +291,9 @@ class Enemy7(Enemy1):
         self.hitbox.y = self.rect.y + self.hb_offsety
         self.changed_dir = False
 
-    def update(self, current_time, player_rect):
+    def update(self, *args):
+        current_time = args[0]
+        player_rect = args[1]
         engine.objects.AnimatedSprite.update(self, current_time)
 
         if self.direction == 0:

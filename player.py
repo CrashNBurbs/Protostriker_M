@@ -44,7 +44,9 @@ class Player(engine.objects.AnimatedSprite):
         self.score = 0
         self.explosion_sound = game.sound_manager.get_sound('pl_exp')
 
-    def update(self, current_time):
+    def update(self, *args):
+        current_time = args[0]
+
         # show correct frame
         self.image = self.images[self.frame]
         self.current_weapon = self.weapons[self.current_weapon_index]

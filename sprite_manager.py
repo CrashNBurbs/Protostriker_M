@@ -39,22 +39,14 @@ class SpriteManager(engine.objects.SpriteManager):
 
     def update(self, current_time, viewport, player_rect):
         # update all sprites in the game
-
         # step through self.objects and call
         # each groups update method
+
         for key in self.sprites.iterkeys():
-            # update enemies, get return value
-            if key == 'enemy_group': 
-                for sprite in self.sprites['enemy_group']:
-                    enemy_bullet = sprite.update(current_time, player_rect)
-                    # if enemy is shooting 
-                    if enemy_bullet is not None: 
-                        # add a bullet 
-                        self.add_sprite(enemy_bullet, 'enemy_shots')
-            elif key == 'player_shots':
-                self.sprites[key].update(current_time, player_rect) 
-            else: # update all other sprites
-                self.sprites[key].update(current_time)
+            for sprite in self.sprites[key]:
+                enemy_bullet = sprite.update(current_time, player_rect)
+                if enemy_bullet is not None:
+                    self.add_sprite(enemy_bullet, 'enemy_shots')
 
         # spawn enemies
         # check each enenmy's dx against level_pos
