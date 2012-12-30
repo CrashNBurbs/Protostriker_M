@@ -15,6 +15,7 @@ import math
 import pygame
 import bullets
 from engine.system import TIMESTEP
+from engine.system import SCREEN_RECT
 
 class Enemy1(engine.objects.AnimatedSprite):
     """ First enemy type, moves in a straight line
@@ -23,7 +24,7 @@ class Enemy1(engine.objects.AnimatedSprite):
         engine.objects.AnimatedSprite.__init__(self, x, y, images, fps)
         self.game = game
         self.speed = 145
-        self.bounds = game.display.get_screen_bounds()
+        self.bounds = SCREEN_RECT
         self.hitbox = pygame.Rect(0,0,15,12)
         self.hb_offsetx = 0 # offset for hitbox
         self.hb_offsety = 2
@@ -162,7 +163,7 @@ class Enemy4(Enemy2):
         Enemy2.__init__(self, game, x, y, images)
         self.speed = 50
         self.direction = -1
-        self.bounds = game.display.get_screen_bounds()
+        self.bounds = SCREEN_RECT
         self.shoot_speed = 1000
         self.spawn_point = 240 # x pos where enemy will be placed
         self.hitbox = pygame.Rect(0,0,14,14)

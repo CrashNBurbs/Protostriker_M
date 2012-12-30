@@ -16,6 +16,7 @@ import bullets
 import weapons
 from pygame.locals import *
 from engine.system import TIMESTEP
+from engine.system import SCREEN_RECT
 
 class Player(engine.objects.AnimatedSprite):
     """ Class for the player, represented by a
@@ -28,7 +29,7 @@ class Player(engine.objects.AnimatedSprite):
         self.game = game
         self.speed = 90
         self.direction = [0,0] # [x,y]
-        self.bounds = engine.system.SCREEN_RECT
+        self.bounds = SCREEN_RECT
         self.weapons = [weapons.BasicWeapon(game), weapons.Spreader(game),
                         weapons.ReverseFire(game), weapons.Laser(game)]
         self.current_weapon_index = 0

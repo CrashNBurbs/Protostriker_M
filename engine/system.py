@@ -56,6 +56,7 @@ class Display():
         self.res = (320,240)  # size of the game and graphics buffer
         self.window_scale = None  # scale for window size
         self.fullscreen = False
+        self.fullscreen_res = (640, 480)
         self.desktop_h = None  # height of desktop, in pixels
         self.caption = None  # window caption
 
@@ -69,7 +70,9 @@ class Display():
         desktop_h = pygame.display.Info().current_h
 
         # calculate scale for window mode
-        self.window_scale = desktop_h / res[1]
+        window_scale_factor = desktop_h / res[1]
+        self.window_res = (res[0] * window_scale_factor,
+                             res[1] * window_scale_factor)
 
         # if scaled height is the same as desktop height, window will be cut
         # off and aspect ratio will be distorted, use one scale smaller
@@ -79,11 +82,18 @@ class Display():
         # display, sets resolution at 2 times the size of the game res
         #self.screen = pygame.display.set_mode((res[0] * 2, res[1] * 2),
         #                                       pygame.FULLSCREEN)
-        self.screen = pygame.display.set_mode((res[0] * self.window_scale,
-                                               res[1] * self.window_scale))
+        self.screen = pygame.display.set_mode((self.window_res[0],
+                                               self.window_res[1]))
 
         # create a buffer that is the same size as the game resolution
-        self.buffer = pygame.Surface((SCREEN_RECT.width, SCREEN_RECT.height))
+        self.buffer = pygame.Surface((SCREEN_RECT.width,
+                                      SCREEN_RECT.height)).convert()
+        if self.fullscreen:
+            self.scaled_buffer = pygame.Surface((self.fullscreen_res[0],
+                                                 self.fullscreen_res[1])).convert()
+        else:
+            self.scaled_buffer = pygame.Surface((self.window_res[0], 
+                                                 self.window_res[1])).convert()
         pygame.mouse.set_visible(False)  # turn off the mouse pointer display
 
         self.update()
@@ -91,30 +101,35 @@ class Display():
     def update(self):
         #updates the display
         # scales the game size buffer, draws it to the screen
-        res = self.res
-        window_scale = self.window_scale
         if self.fullscreen:  # scale settings for fullscreen
-            scaled_buffer = pygame.transform.scale(self.buffer,
-                                                  (res[0] * 2, res[1] * 2))
+            pygame.transform.scale(self.buffer, 
+                                   (self.fullscreen_res[0],
+                                    self.fullscreen_res[1]),
+                                    self.scaled_buffer)
         else:  # scale settings for windowed mode
-            scaled_buffer = pygame.transform.scale(self.buffer,
-                                                   ((res[0] * window_scale,
-                                                     res[1] * window_scale)))
+            pygame.transform.scale(self.buffer, 
+                                   (self.window_res[0],
+                                    self.window_res[1]),
+                                    self.scaled_buffer)
 
-        self.screen.blit(scaled_buffer, (0,0))
+        self.screen.blit(self.scaled_buffer, (0,0))
         pygame.display.flip()
 
     def change_mode(self):
         # toggles between fullscreen and windowed modes
-        res = self.res
-        window_scale = self.window_scale
         if self.fullscreen:
             pygame.display.set_caption(self.caption)
-            self.screen = pygame.display.set_mode((res[0] * window_scale,
-                                                   res[1] * window_scale))
+            self.screen = pygame.display.set_mode((self.window_res[0],
+                                                   self.window_res[1]))
+            self.scaled_buffer = pygame.Surface((self.window_res[0],
+                                                 self.window_res[1])).convert()
             self.fullscreen = False
         else:
-            self.screen = pygame.display.set_mode((640, 480), pygame.FULLSCREEN)
+            self.screen = pygame.display.set_mode((self.fullscreen_res[0],
+                                                   self.fullscreen_res[1]), 
+                                                   pygame.FULLSCREEN)
+            self.scaled_buffer = pygame.Surface((self.fullscreen_res[0],
+                                                 self.fullscreen_res[1])).convert()
             self.fullscreen = True
 
     def get_screen(self):

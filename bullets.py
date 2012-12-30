@@ -170,8 +170,6 @@ class LaserBeam(pygame.sprite.Sprite):
         if current_time - self.shot_time > self.duration:
             self.kill()
 
-        print self.rect.width
-
 class Explosion(engine.objects.AnimatedSprite):
     """ Explosion animation """
 
