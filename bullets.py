@@ -199,9 +199,6 @@ class Shrapnel(Bullet):
         self.speed = 35
 
     def update(self, current_time):
-        # convert degrees to radians
-        
-        
         # calculate change in x,y
         self.dx += (math.cos(self.radians) * self.speed) * TIMESTEP
         self.dy += (math.sin(self.radians) * self.speed) * TIMESTEP

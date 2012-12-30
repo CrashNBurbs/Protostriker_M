@@ -107,6 +107,9 @@ class Player(engine.objects.AnimatedSprite):
         self.hitbox.y = self.rect.y + self.hb_offsety
 
     def handle_input(self, game, current_time):
+        # assume no shots fired
+        shots = []
+
         # check input, set direction to appropriate values
         if not self.respawning: # disable input if respawning
             if game.input_manager.is_held('UP'):
@@ -132,7 +135,8 @@ class Player(engine.objects.AnimatedSprite):
             # shoot on 'B' button press
             if game.input_manager.is_held('B'):
                 shots = self.current_weapon.fire(current_time, self.rect)
-                return shots
+        # return shot list   
+        return shots
              
     def explode(self):
         # create explosion sprite
