@@ -78,22 +78,25 @@ class SpriteManager(engine.objects.SpriteManager):
                 enemy_ex = enemy.explode()
                 self.add_sprite(player_ex, 'explosions')
                 self.add_sprite(enemy_ex, 'explosions')
+                self.sprites['player_shots'].empty()
                 player_die = True
             for bullet in self.sprites['player_shots']:
                 # check player shot collision with enemy
                 if bullet.hitbox.colliderect(enemy.hitbox):
-                    # Create explosion at enemy loc, kill the bullet
-                    bullet.kill()
-                    # check if multi-hit enemy
+                    # decrement enemy.hits if multi-hit enemy
                     if enemy.hits > 0:
-                        # decrease enemy hits
+                        # kill player shot to avoid one bullet registering 
+                        # multiple hits
+                        bullet.kill()
                         enemy.hit()
                     else: # enemy destroyed
+                        # let the laser beam pass through enemies
+                        if bullet.destroyable:
+                            bullet.kill()
                         player.score += enemy.points
                         ex = enemy.explode()
                         for sprite in ex:
                             self.add_sprite(sprite,'explosions')
-
 
         # check for shrapnel explosion collision with player
         for shrapnel in self.sprites['explosions']:

@@ -73,5 +73,5 @@ class Laser(BasicWeapon):
 
     def get_bullet(self, player_rect, angle):
         bullet = bullets.LaserBeam(player_rect.right - 6,
-                                   player_rect.centery)
+                                   player_rect.centery - 2)
         return bullet

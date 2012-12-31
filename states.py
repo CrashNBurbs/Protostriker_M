@@ -193,7 +193,7 @@ class GameState(engine.system.State):
             self.transition.draw(screen)
 
           # uncomment this code to display all the sprites image rects
-          # in green, and their hitboxes (collision region) in red
+        #  # in green, and their hitboxes (collision region) in red
         #pygame.draw.rect(screen, (0,255,0), self.player.rect, 1)
         #pygame.draw.rect(screen, (255,0,0), self.player.hitbox, 1)
 

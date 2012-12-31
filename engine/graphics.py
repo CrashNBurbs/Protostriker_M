@@ -118,7 +118,6 @@ class Viewport():
     def update(self):
 
         self.last_coordinate = self.coordinate
-        self.last_level_pos = self.level_pos
 
         self.coordinate += self.advance_velocity * system.TIMESTEP
         self.level_pos += self.advance_velocity * system.TIMESTEP

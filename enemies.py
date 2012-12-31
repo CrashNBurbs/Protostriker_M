@@ -224,7 +224,7 @@ class Enemy5(Enemy2):
         self.hb_offsety = 4
         self.hitbox.x = self.rect.x + self.hb_offsetx
         self.hitbox.y = self.rect.y + self.hb_offsety
-        self.hits = 8
+        self.hits = 4
         self.hit_sound = game.sound_manager.get_sound('hit')
         self.explosion_image = game.image_manager.get_image('shrapnel')
 

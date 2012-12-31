@@ -33,6 +33,7 @@ class Bullet(pygame.sprite.Sprite):
         self.hitbox = pygame.Rect(self.dx, self.dy, 0, 0)
         self.hb_offsetx = 0
         self.hb_offsety = 0
+        self.destroyable = True
 
 
     def update(self):
@@ -142,9 +143,12 @@ class LaserBeam(pygame.sprite.Sprite):
         pygame.draw.line(self.image, (0,64,88), (0,0),(self.width,0))
         pygame.draw.line(self.image, (0,64,88), (0,3),(self.width,3)) 
         self.rect = self.image.get_rect()
+        self.hitbox = self.rect
         self.speed = 1000
         self.duration = 650
+        self.destroyable = False
         self.shot_time = pygame.time.get_ticks()
+        
 
     def update(self, *args):
         current_time = args[0]
@@ -165,8 +169,9 @@ class LaserBeam(pygame.sprite.Sprite):
 
         # get new rect, set x and y
         self.rect = self.image.get_rect()
+        self.hitbox = self.rect
         self.rect.x = player_rect.right - 6
-        self.rect.y = player_rect.centery - 1 
+        self.rect.y = player_rect.centery - 2
 
         # kill beam after self.duration
         if current_time - self.shot_time > self.duration:
