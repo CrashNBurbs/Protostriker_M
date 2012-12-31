@@ -68,7 +68,7 @@ class Laser(BasicWeapon):
 
     def __init__(self, game):
         BasicWeapon.__init__(self, game)
-        self.sound = game.sound_manager.get_sound('laser')
+        self.sound = game.sound_manager.get_sound('laserbeam')
         self.speed = 950
 
     def get_bullet(self, player_rect, angle):
