@@ -11,16 +11,17 @@ class PowerUp(pygame.sprite.Sprite):
     """ PowerUp Class - A power up sprite that can be collected by 
         the player.  Power up types: 0 -  Spreader Gun, 1 - Reverse Fire Gun,
         2 - Laser Beam, 3 - Move Speed, 4 - Fire Speed """
-    def __init__(self, x, y, type, image):
+    def __init__(self, game, x, y, type, image):
         pygame.sprite.Sprite.__init__(self)
         self.type = type 
-        self.image = image[self.type]
+        self.image = image
+        self.sound = game.sound_manager.get_sound('powerup')
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.dx = self.rect.x
         self.dy = self.rect.y
-        self.speed = 100
+        self.speed = 50
         self.bounds = SCREEN_RECT
         self.hitbox = pygame.Rect(self.dx, self.dy, 14, 12)
         self.hb_offsetx = 1
@@ -39,6 +40,8 @@ class PowerUp(pygame.sprite.Sprite):
 
     def collect(self):
         # returns an integer id for power up type
+        self.sound.play()
+        self.kill()
         return self.type
 
             

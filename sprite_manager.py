@@ -39,7 +39,6 @@ class SpriteManager(engine.objects.SpriteManager):
         self.add_group(powerups_group, 'a_powerups')
         self.add_group(player_group, 'b_player_group')
         self.enemy_queue = [] # list of offscreen enemies
-        print self.sprites
 
     def update(self, current_time, viewport, player_rect):
         # update all sprites in the game
@@ -79,7 +78,7 @@ class SpriteManager(engine.objects.SpriteManager):
                 # at their positions.
                 enemy.kill()
                 player_ex = player.explode()
-                enemy_ex = enemy.explode()
+                enemy_ex, powerup = enemy.explode()
                 self.add_sprite(player_ex, 'a_explosions')
                 self.add_sprite(enemy_ex, 'a_explosions')
                 self.sprites['a_player_shots'].empty()
@@ -125,6 +124,11 @@ class SpriteManager(engine.objects.SpriteManager):
                 player_ex = player.explode()
                 self.add_sprite(player_ex, 'a_explosions')
                 player_die = True
+
+        for powerup in self.sprites['a_powerups']:
+            if player.hitbox.colliderect(powerup.hitbox):
+                type = powerup.collect()
+                player.power_up(type)
 
         # return True if player has died
         return player_die

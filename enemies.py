@@ -62,14 +62,15 @@ class Enemy1(engine.objects.AnimatedSprite):
 
     def drop_powerup(self):
         # drop a speed powerup 25% of the time
-        #if random.random() < .25:
-        #    powerup = powerups.PowerUp(self.rect.x, self.rect.y,
-        #                               self.game.image_manager.get_image('powerups'))
-        #else:
-        #    powerup = None
+        image = self.game.image_manager.get_image('powerups')
+        type = 3
+        if random.random() < .25:
+            powerup = powerups.PowerUp(self.game, self.rect.x, self.rect.y,
+                                       type, image[type])
+        else:
+            powerup = None
         
-        #return powerup
-        pass
+        return powerup
 
     def explode(self):
         # play sound
@@ -144,7 +145,20 @@ class Enemy2(Enemy1):
             self.shot = None
 
     def drop_powerup(self):
-        pass
+        # drop a fire rate powerup 25% of the time
+        image = self.game.image_manager.get_image('powerups')
+        type = 4
+        if random.random() < .30:
+            powerup = powerups.PowerUp(self.game, self.rect.x, self.rect.y,
+                                       type, image[type])
+        elif random.random() < 1:
+            type = 2
+            powerup = powerups.PowerUp(self.game, self.rect.x, self.rect.y,
+                                       type, image[type])
+        else:
+            powerup = None
+        
+        return powerup
 
 class Enemy3(Enemy1):
     """ Third enemy type, moves in a sine wave
@@ -175,6 +189,17 @@ class Enemy3(Enemy1):
         # update the rect
         self.rect.y = self.dy
         self.hitbox.y = self.rect.y + self.hb_offsety
+
+    def drop_powerup(self):
+        image = self.game.image_manager.get_image('powerups')
+        type = 0
+        if random.random() < 1:
+            powerup = powerups.PowerUp(self.game, self.rect.x, self.rect.y,
+                                       type, image[type])
+        else:
+            powerup = None
+        
+        return powerup
 
 class Enemy4(Enemy2):
     """ Fourth enemy type, moves into position and
@@ -226,6 +251,17 @@ class Enemy4(Enemy2):
     def spawn(self):
         # move sprite to self.spawn_point
         self.dx = self.spawn_point
+
+    def drop_powerup(self):
+        image = self.game.image_manager.get_image('powerups')
+        type = 1
+        if random.random() < 1:
+            powerup = powerups.PowerUp(self.game, self.rect.x, self.rect.y,
+                                       type, image[type])
+        else:
+            powerup = None
+        
+        return powerup
 
 
 class Enemy5(Enemy2):

@@ -27,17 +27,19 @@ class Player(engine.objects.AnimatedSprite):
     def __init__(self, game, x, y, images):
         engine.objects.AnimatedSprite.__init__(self,x,y,images, 20)
         self.game = game
-        self.speed = 60
-        self.max_speed = 90
+        self.default_speed = 60
+        self.speed = self.default_speed
+        self.max_speed = 120
         self.direction = [0,0] # [x,y]
         self.bounds = SCREEN_RECT
-        self.weapons = [weapons.BasicWeapon(game), weapons.Spreader(game),
-                        weapons.ReverseFire(game), weapons.Laser(game)]
-        self.has_spreader = True
-        self.has_reverse_fire = True
-        self.has_laser = True
+        self.weapons = [weapons.BasicWeapon(game)]
+        self.has_spreader = False
+        self.has_reverse_fire = False
+        self.has_laser = False
         self.current_weapon_index = 0
         self.current_weapon = self.weapons[self.current_weapon_index]
+        self.changed_weapon_time = 0
+        self.change_weapon_delay = 500
         self.hb_offsetx = 1 # x offset of hitbox from self.rect
         self.hb_offsety = 3 # y offset of hitbox from self.rect
         self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
@@ -48,6 +50,7 @@ class Player(engine.objects.AnimatedSprite):
         self.protected = False
         self.score = 0
         self.explosion_sound = game.sound_manager.get_sound('pl_exp')
+        self.change_weapon_sound = game.sound_manager.get_sound('changeweapon')
 
     def update(self, *args):
         current_time = args[0]
@@ -113,6 +116,8 @@ class Player(engine.objects.AnimatedSprite):
         self.hitbox.x = self.rect.x + self.hb_offsetx
         self.hitbox.y = self.rect.y + self.hb_offsety
 
+        print self.current_weapon.speed
+
     def handle_input(self, game, current_time):
         # assume no shots fired
         shots = []
@@ -135,9 +140,13 @@ class Player(engine.objects.AnimatedSprite):
 
             # cycle through weapons on 'Y' button press
             if game.input_manager.is_pressed('Y'):
-                self.current_weapon_index += 1
-                if self.current_weapon_index > len(self.weapons) - 1:
-                    self.current_weapon_index = 0
+                if current_time - self.changed_weapon_time > self.change_weapon_delay:
+                    self.current_weapon_index += 1
+                    if self.current_weapon_index > len(self.weapons) - 1:
+                        self.current_weapon_index = 0
+                    if len(self.weapons) > 1:
+                        self.change_weapon_sound.play()
+                    self.changed_weapon_time = pygame.time.get_ticks()
 
             # shoot on 'B' button press
             if game.input_manager.is_held('B'):
@@ -148,18 +157,25 @@ class Player(engine.objects.AnimatedSprite):
     def power_up(self, powerup):
         if powerup == 0: # Spreader Gun
             if not self.has_spreader:
-                self.weapons.append(weapons.Spreader(self.game))
+                self.weapons.insert(0, weapons.Spreader(self.game))
+                self.has_spreader = True
+                self.current_weapon_index = 0
         elif powerup == 1: # Reverse Fire Gun
             if not self.has_reverse_fire:
-                self.weapons.append(weapons.ReverseFire(self.game))
+                self.weapons.insert(0, weapons.ReverseFire(self.game))
+                self.has_reverse_fire = True
+                self.current_weapon_index = 0
         elif powerup == 2: # Laser Beam
             if not self.has_laser:
-                self.weapons.append(weapons.Laser(self.game))
+                self.weapons.insert(0, weapons.Laser(self.game))
+                self.has_laser = True
+                self.current_weapon_index = 0
         elif powerup == 3: # Move Speed
             if self.speed < self.max_speed:
-                self.speed += 10
+                self.speed += 20
         elif powerup == 4:  # Fire Rate
-            self.current_weapon.powerup()
+            self.current_weapon.power_up()
+
 
     def explode(self):
         # create explosion sprite
@@ -168,6 +184,16 @@ class Player(engine.objects.AnimatedSprite):
 
         # play sound
         self.explosion_sound.play()
+
+        # set speed back to default
+        # lose all weapons except the basic weapon
+        # reset boolean flags for weapons
+        self.speed = self.default_speed
+        self.weapons = [weapons.BasicWeapon(self.game)]
+        self.has_spreader = False
+        self.has_reverse_fire = False
+        self.has_laser = False
+        self.current_weapon_index = 0
 
         # save time of death and set timer for protection
         self.explode_time = pygame.time.get_ticks()

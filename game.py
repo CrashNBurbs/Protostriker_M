@@ -74,7 +74,10 @@ class PsmGame(engine.system.Game):
         self.sound_manager.load_sound('spreader.wav', 'spreader',
                                       volume = 0.4)
         self.sound_manager.load_sound('laserbeam.wav', 'laserbeam',
-                                      volume = .4)
+                                      volume = 0.3)
+        self.sound_manager.load_sound('powerup.wav', 'powerup', volume = 0.5)
+        self.sound_manager.load_sound('changeweapon.wav', 'changeweapon',
+                                      volume = 0.5)
 
         
         

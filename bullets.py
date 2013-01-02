@@ -35,7 +35,6 @@ class Bullet(pygame.sprite.Sprite):
         self.hb_offsety = 0
         self.destroyable = True
 
-
     def update(self):
         pass
 
