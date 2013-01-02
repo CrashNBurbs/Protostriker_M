@@ -37,6 +37,8 @@ class Player(engine.objects.AnimatedSprite):
         self.hitbox = pygame.Rect(0,0,28,8) # rect for collsion
         self.hb_offsetx = 1 # x offset of hitbox from self.rect
         self.hb_offsety = 3 # y offset of hitbox from self.rect
+        self.hitbox.x = self.rect.x + self.hb_offsetx
+        self.hitbox.y = self.rect.y + self.hb_offsety
         self.lives = 3
         self.respawn_point = -20 # x coord for player respawn
         self.respawning = False

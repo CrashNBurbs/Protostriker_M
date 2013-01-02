@@ -25,11 +25,10 @@ class Enemy1(engine.objects.AnimatedSprite):
         self.game = game
         self.speed = 145
         self.bounds = SCREEN_RECT
-        self.hitbox = pygame.Rect(0,0,15,12)
         self.hb_offsetx = 0 # offset for hitbox
         self.hb_offsety = 2
-        self.hitbox.x = self.rect.x + self.hb_offsetx
-        self.hitbox.y = self.rect.y + self.hb_offsety
+        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 15, 12)
         self.points = 160 # point value
         self.explosion_sound = game.sound_manager.get_sound('en_exp')
         self.hits = 0 # number of hits enemy takes, 0 is a one-shot kill
@@ -51,7 +50,7 @@ class Enemy1(engine.objects.AnimatedSprite):
         # update the rect
         self.rect.x = self.dx
         self.hitbox.x = self.rect.x + self.hb_offsetx
-        self.hitbox.y = self.rect.y + self.hb_offsety
+        #self.hitbox.y = self.rect.y + self.hb_offsety
 
     def spawn(self):
         # Called when enemy should be onscreen.
@@ -137,11 +136,10 @@ class Enemy3(Enemy1):
         self.angle = 0.0  # starting point for sin calc
         self.radius = 2.0 # value to scale sin calc by
         self.dAngle = 5.0 # change in angle(affects freq and amp)
-        self.hitbox = pygame.Rect(0,0,18,13)
         self.hb_offsetx = 4
         self.hb_offsety = 1
-        self.hitbox.x = self.rect.x + self.hb_offsetx
-        self.hitbox.y = self.rect.y + self.hb_offsety
+        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 18, 13)
         self.points = 210
 
     def update(self, *args):
@@ -157,6 +155,7 @@ class Enemy3(Enemy1):
 
         # update the rect
         self.rect.y = self.dy
+        self.hitbox.y = self.rect.y + self.hb_offsety
 
 class Enemy4(Enemy2):
     """ Fourth enemy type, moves into position and
@@ -169,11 +168,10 @@ class Enemy4(Enemy2):
         self.bounds = SCREEN_RECT
         self.shoot_speed = 1000
         self.spawn_point = 240 # x pos where enemy will be placed
-        self.hitbox = pygame.Rect(0,0,14,14)
         self.hb_offsetx = 1
         self.hb_offsety = 1
-        self.hitbox.x = self.rect.x + self.hb_offsetx
-        self.hitbox.y = self.rect.y + self.hb_offsety
+        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 14, 14)
         self.points = 125
 
     def update(self, *args):
@@ -219,11 +217,10 @@ class Enemy5(Enemy2):
         self.speed = 15
         self.shoot_speed = 1000
         self.points = 250
-        self.hitbox = pygame.Rect(0,0,25,21)
         self.hb_offsetx = 4
         self.hb_offsety = 4
-        self.hitbox.x = self.rect.x + self.hb_offsetx
-        self.hitbox.y = self.rect.y + self.hb_offsety
+        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 25, 21)
         self.hits = 4
         self.hit_sound = game.sound_manager.get_sound('hit')
         self.explosion_image = game.image_manager.get_image('shrapnel')
@@ -234,7 +231,6 @@ class Enemy5(Enemy2):
 
         self.shoot(current_time)
         return self.shot
-
 
     def shoot(self, current_time):
         # fire a shot at current pos, every
@@ -284,11 +280,10 @@ class Enemy7(Enemy1):
         self.speed = 95
         self.vspeed = 45
         self.direction = 0
-        self.hitbox = pygame.Rect(0,0,18,13)
         self.hb_offsetx = 4
         self.hb_offsety = 1
-        self.hitbox.x = self.rect.x + self.hb_offsetx
-        self.hitbox.y = self.rect.y + self.hb_offsety
+        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 18, 13)
         self.changed_dir = False
 
     def update(self, *args):

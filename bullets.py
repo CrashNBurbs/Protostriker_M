@@ -46,9 +46,10 @@ class BasicBullet(Bullet):
     def __init__(self, x, y, angle, image):
         Bullet.__init__(self, x, y, angle, image)
         self.speed = 400
-        self.hitbox = pygame.Rect(self.dx,self.dy,8,4)
         self.hb_offsety = 2
-        
+        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 8, 4)
+     
     def update(self, *args):
         # move bullet at self.speed pixels/sec
         self.dx += self.speed * TIMESTEP
@@ -69,10 +70,11 @@ class EnemyBullet(Bullet):
     def __init__(self, x, y, angle, image):
         Bullet.__init__(self, x, y, angle, image)
         self.speed = 135
-        self.hitbox = pygame.Rect(self.dx,self.dy,6,6)
         self.hb_offsetx = 1
         self.hb_offsety = 1
-
+        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 6, 6)
+   
     def update(self, *args):
         # move bullet at self.speed/sec
         self.dx -= self.speed * TIMESTEP
@@ -92,10 +94,11 @@ class SpreaderBullet(Bullet):
         Bullet.__init__(self, x, y, angle, image)
         self.speed = 300
         self.radians = -self.angle * math.pi / 180
-        self.hitbox = pygame.Rect(self.dx,self.dy,6,6)
         self.hb_offsetx = 1
         self.hb_offsety = 1
-
+        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 6, 6)
+      
     def update(self, *args):
         # calculate change in x,y
         self.dx += (math.cos(self.radians) * self.speed) * TIMESTEP
@@ -117,9 +120,10 @@ class ReverseFireBullet(SpreaderBullet):
     def __init__(self, x, y, angle, image):
         SpreaderBullet.__init__(self, x, y, angle, image)
         self.speed = 400
-        self.hitbox = pygame.Rect(self.dx,self.dy,8,4)
         self.hb_offsetx = 0
         self.hb_offsety = 2
+        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 8, 4)
         self.center = self.rect.center
         self.image = pygame.transform.rotate(self.image, angle)
         self.rect = self.image.get_rect()
@@ -201,9 +205,10 @@ class Shrapnel(Bullet):
         Bullet.__init__(self, x, y, angle, images[0])
         self.image = images[angle / 45]
         self.radians = -self.angle * math.pi / 180  
-        self.hitbox = pygame.Rect(self.dx,self.dy,6,6)
         self.hb_offsetx = 1
         self.hb_offsety = 1
+        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 6, 6)
         self.speed = 35
 
     def update(self, *args):
