@@ -108,7 +108,7 @@ class GameState(engine.system.State):
                                     self.game.image_manager.get_image('ship'))
         self.background = self.game.image_manager.get_image('background')
         self.viewport = engine.graphics.Viewport(self.game, self.background)
-        self.sprite_manager.add_sprite(self.player, 'player_group')
+        self.sprite_manager.add_sprite(self.player, 'b_player_group')
         self.score_render = self.font.render("SCORE " + str(self.player.score),
                                              False, self.text_color)
         self.lives_render = self.font.render("LIVES " + str(self.player.lives),
@@ -130,7 +130,7 @@ class GameState(engine.system.State):
         # none if not.
         bullets = self.player.handle_input(self.game, pygame.time.get_ticks())
         for bullet in bullets:
-            self.sprite_manager.add_sprite(bullet, 'player_shots')
+            self.sprite_manager.add_sprite(bullet, 'a_player_shots')
 
         # On start button press, push the pause state
         if self.game.input_manager.is_pressed('START'):
@@ -194,21 +194,21 @@ class GameState(engine.system.State):
 
           # uncomment this code to display all the sprites image rects
           # in green, and their hitboxes (collision region) in red
-        pygame.draw.rect(screen, (0,255,0), self.player.rect, 1)
-        pygame.draw.rect(screen, (255,0,0), self.player.hitbox, 1)
+        #pygame.draw.rect(screen, (0,255,0), self.player.rect, 1)
+        #pygame.draw.rect(screen, (255,0,0), self.player.hitbox, 1)
 
-        for enemy in self.sprite_manager.sprites['enemy_group']:
-            pygame.draw.rect(screen, (0,255,0), enemy.rect, 1)
-            pygame.draw.rect(screen, (255,0,0), enemy.hitbox, 1)
+        #for enemy in self.sprite_manager.sprites['enemy_group']:
+        #    pygame.draw.rect(screen, (0,255,0), enemy.rect, 1)
+        #    pygame.draw.rect(screen, (255,0,0), enemy.hitbox, 1)
 
 
-        for bullet in self.sprite_manager.sprites['player_shots']:
-            pygame.draw.rect(screen, (0,255,0), bullet.rect, 1)
-            pygame.draw.rect(screen, (255,0,0), bullet.hitbox, 1)
+        #for bullet in self.sprite_manager.sprites['player_shots']:
+        #    pygame.draw.rect(screen, (0,255,0), bullet.rect, 1)
+        #    pygame.draw.rect(screen, (255,0,0), bullet.hitbox, 1)
 
-        for shot in self.sprite_manager.sprites['enemy_shots']:
-            pygame.draw.rect(screen, (0,255,0), shot.rect, 1)
-            pygame.draw.rect(screen, (255,0,0), shot.hitbox, 1)
+        #for shot in self.sprite_manager.sprites['enemy_shots']:
+        #    pygame.draw.rect(screen, (0,255,0), shot.rect, 1)
+        #    pygame.draw.rect(screen, (255,0,0), shot.hitbox, 1)
 
 class PauseState(engine.system.State):
     """ pause menu state """

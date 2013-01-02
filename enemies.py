@@ -14,6 +14,8 @@ import engine
 import math
 import pygame
 import bullets
+import random
+import powerups
 from engine.system import TIMESTEP
 from engine.system import SCREEN_RECT
 
@@ -58,6 +60,17 @@ class Enemy1(engine.objects.AnimatedSprite):
         # to the edge of the screen.
         self.dx = self.bounds.right
 
+    def drop_powerup(self):
+        # drop a speed powerup 25% of the time
+        #if random.random() < .25:
+        #    powerup = powerups.PowerUp(self.rect.x, self.rect.y,
+        #                               self.game.image_manager.get_image('powerups'))
+        #else:
+        #    powerup = None
+        
+        #return powerup
+        pass
+
     def explode(self):
         # play sound
         self.explosion_sound.play()
@@ -71,7 +84,10 @@ class Enemy1(engine.objects.AnimatedSprite):
         # die
         self.kill()
 
-        return ex
+        # get a powerup
+        powerup = self.drop_powerup()
+        
+        return ex, powerup
 
 class Enemy2(Enemy1):
     """ Second enemy type, moves in a straight line
@@ -126,6 +142,9 @@ class Enemy2(Enemy1):
             self.last_shot = current_time
         else:
             self.shot = None
+
+    def drop_powerup(self):
+        pass
 
 class Enemy3(Enemy1):
     """ Third enemy type, moves in a sine wave

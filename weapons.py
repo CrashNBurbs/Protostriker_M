@@ -10,7 +10,8 @@ class BasicWeapon():
     def __init__(self, game):
         self.sound = game.sound_manager.get_sound('laser')
         self.bullet_image = game.image_manager.get_image('pshot')
-        self.speed = 200 # delay for creating shots
+        self.speed = 300 # delay for creating shots
+        self.max_speed = 201
         self.last_shot = 0 # time of last shot
         self.angles = [0]
         
@@ -30,6 +31,10 @@ class BasicWeapon():
                                      self.bullet_image)
         return bullet
 
+    def power_up(self):
+        if self.speed < self.max_speed:
+            self.speed -= 33
+
 class Spreader(BasicWeapon):
     """ Spreader weapon - Fire three shots simultaneously """
 
@@ -37,7 +42,8 @@ class Spreader(BasicWeapon):
         BasicWeapon.__init__(self, game)
         self.sound = game.sound_manager.get_sound('spreader')
         self.bullet_image = game.image_manager.get_image('spreadshot')
-        self.speed = 400
+        self.speed = 500
+        self.max_speed = 401
         self.angles = [0, 10, 350]
 
     def get_bullet(self, player_rect, angle):
@@ -53,7 +59,8 @@ class ReverseFire(BasicWeapon):
         BasicWeapon.__init__(self, game)
         self.sound = game.sound_manager.get_sound('laser')
         self.bullet_image = game.image_manager.get_image('pshot')
-        self.speed = 200
+        self.speed = 300
+        self.max_speed = 201
         self.angles = [0, 140, 220]
 
     def get_bullet(self, player_rect, angle):
@@ -69,7 +76,8 @@ class Laser(BasicWeapon):
     def __init__(self, game):
         BasicWeapon.__init__(self, game)
         self.sound = game.sound_manager.get_sound('laserbeam')
-        self.speed = 950
+        self.speed = 1050
+        self.max_speed = 951
 
     def get_bullet(self, player_rect, angle):
         bullet = bullets.LaserBeam(player_rect.right - 6,

@@ -27,18 +27,21 @@ class Player(engine.objects.AnimatedSprite):
     def __init__(self, game, x, y, images):
         engine.objects.AnimatedSprite.__init__(self,x,y,images, 20)
         self.game = game
-        self.speed = 90
+        self.speed = 60
+        self.max_speed = 90
         self.direction = [0,0] # [x,y]
         self.bounds = SCREEN_RECT
         self.weapons = [weapons.BasicWeapon(game), weapons.Spreader(game),
                         weapons.ReverseFire(game), weapons.Laser(game)]
+        self.has_spreader = True
+        self.has_reverse_fire = True
+        self.has_laser = True
         self.current_weapon_index = 0
         self.current_weapon = self.weapons[self.current_weapon_index]
-        self.hitbox = pygame.Rect(0,0,28,8) # rect for collsion
         self.hb_offsetx = 1 # x offset of hitbox from self.rect
         self.hb_offsety = 3 # y offset of hitbox from self.rect
-        self.hitbox.x = self.rect.x + self.hb_offsetx
-        self.hitbox.y = self.rect.y + self.hb_offsety
+        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 28, 8) # rect for collsion
         self.lives = 3
         self.respawn_point = -20 # x coord for player respawn
         self.respawning = False
@@ -141,7 +144,23 @@ class Player(engine.objects.AnimatedSprite):
                 shots = self.current_weapon.fire(current_time, self.rect)
         # return shot list   
         return shots
-             
+
+    def power_up(self, powerup):
+        if powerup == 0: # Spreader Gun
+            if not self.has_spreader:
+                self.weapons.append(weapons.Spreader(self.game))
+        elif powerup == 1: # Reverse Fire Gun
+            if not self.has_reverse_fire:
+                self.weapons.append(weapons.ReverseFire(self.game))
+        elif powerup == 2: # Laser Beam
+            if not self.has_laser:
+                self.weapons.append(weapons.Laser(self.game))
+        elif powerup == 3: # Move Speed
+            if self.speed < self.max_speed:
+                self.speed += 10
+        elif powerup == 4:  # Fire Rate
+            self.current_weapon.powerup()
+
     def explode(self):
         # create explosion sprite
         ex = bullets.Explosion(self.rect.x, self.rect.y, 

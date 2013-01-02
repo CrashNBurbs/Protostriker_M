@@ -29,13 +29,17 @@ class SpriteManager(engine.objects.SpriteManager):
         enemy_group = pygame.sprite.Group()
         player_shots = pygame.sprite.Group()
         enemy_shots = pygame.sprite.Group()
+        powerups_group = pygame.sprite.Group()
         explosion_group = pygame.sprite.Group()
-        self.add_group(player_group, 'player_group')
-        self.add_group(enemy_group, 'enemy_group')
-        self.add_group(player_shots, 'player_shots')
-        self.add_group(enemy_shots, 'enemy_shots')
-        self.add_group(explosion_group, 'explosions')
+       
+        self.add_group(enemy_group, 'a_enemy_group')
+        self.add_group(player_shots, 'a_player_shots')
+        self.add_group(enemy_shots, 'a_enemy_shots')
+        self.add_group(explosion_group, 'a_explosions')
+        self.add_group(powerups_group, 'a_powerups')
+        self.add_group(player_group, 'b_player_group')
         self.enemy_queue = [] # list of offscreen enemies
+        print self.sprites
 
     def update(self, current_time, viewport, player_rect):
         # update all sprites in the game
@@ -46,7 +50,7 @@ class SpriteManager(engine.objects.SpriteManager):
             for sprite in self.sprites[key]:
                 enemy_bullet = sprite.update(current_time, player_rect)
                 if enemy_bullet is not None:
-                    self.add_sprite(enemy_bullet, 'enemy_shots')
+                    self.add_sprite(enemy_bullet, 'a_enemy_shots')
 
         # spawn enemies
         # check each enenmy's dx against level_pos
@@ -58,7 +62,7 @@ class SpriteManager(engine.objects.SpriteManager):
                 index = self.enemy_queue.index(enemy)
                 spawn_enemy = self.enemy_queue.pop(index)
                 spawn_enemy.spawn()
-                self.add_sprite(spawn_enemy, 'enemy_group')
+                self.add_sprite(spawn_enemy, 'a_enemy_group')
 
     def check_collisions(self, player):
         # check for each type of collsion, update appropriately
@@ -67,7 +71,7 @@ class SpriteManager(engine.objects.SpriteManager):
 
         # Check for player collision and player shot collision
         # with all enemies onscreen
-        for enemy in self.sprites['enemy_group']:
+        for enemy in self.sprites['a_enemy_group']:
             # check player collision with enemy
             if player.hitbox.colliderect(enemy.hitbox) and \
             not player.protected:
@@ -76,11 +80,11 @@ class SpriteManager(engine.objects.SpriteManager):
                 enemy.kill()
                 player_ex = player.explode()
                 enemy_ex = enemy.explode()
-                self.add_sprite(player_ex, 'explosions')
-                self.add_sprite(enemy_ex, 'explosions')
-                self.sprites['player_shots'].empty()
+                self.add_sprite(player_ex, 'a_explosions')
+                self.add_sprite(enemy_ex, 'a_explosions')
+                self.sprites['a_player_shots'].empty()
                 player_die = True
-            for bullet in self.sprites['player_shots']:
+            for bullet in self.sprites['a_player_shots']:
                 # check player shot collision with enemy
                 if bullet.hitbox.colliderect(enemy.hitbox):
                     # decrement enemy.hits if multi-hit enemy
@@ -94,26 +98,32 @@ class SpriteManager(engine.objects.SpriteManager):
                         if bullet.destroyable:
                             bullet.kill()
                         player.score += enemy.points
-                        ex = enemy.explode()
+                        # kill the enemy, get an explosion sprite, and 
+                        # a powerup on change
+                        ex, powerup = enemy.explode()
+                        # add the explosion sprite
                         for sprite in ex:
-                            self.add_sprite(sprite,'explosions')
+                            self.add_sprite(sprite,'a_explosions')
+                        # add the powerup if you get one
+                        if powerup is not None:
+                            self.add_sprite(powerup, 'a_powerups')
 
         # check for shrapnel explosion collision with player
-        for shrapnel in self.sprites['explosions']:
+        for shrapnel in self.sprites['a_explosions']:
             if shrapnel.hitbox is not None:
                 if shrapnel.hitbox.colliderect(player.hitbox) and \
                 not player.respawning and not player.protected:
                     player_ex = player.explode()
-                    self.add_sprite(player_ex, 'explosions')
+                    self.add_sprite(player_ex, 'a_explosions')
                     player_die = True
 
         # check enemy bullet collision with player
-        for bullet in self.sprites['enemy_shots']:
+        for bullet in self.sprites['a_enemy_shots']:
             if bullet.hitbox.colliderect(player.hitbox) and \
             not player.protected:
                 bullet.kill()
                 player_ex = player.explode()
-                self.add_sprite(player_ex, 'explosions')
+                self.add_sprite(player_ex, 'a_explosions')
                 player_die = True
 
         # return True if player has died

@@ -8,10 +8,13 @@ from engine.system import TIMESTEP
 from engine.system import SCREEN_RECT
 
 class PowerUp(pygame.sprite.Sprite):
-    """ Base class for powerups """
-    def __init__(self, x, y, image):
+    """ PowerUp Class - A power up sprite that can be collected by 
+        the player.  Power up types: 0 -  Spreader Gun, 1 - Reverse Fire Gun,
+        2 - Laser Beam, 3 - Move Speed, 4 - Fire Speed """
+    def __init__(self, x, y, type, image):
         pygame.sprite.Sprite.__init__(self)
-        self.image = image
+        self.type = type 
+        self.image = image[self.type]
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -28,8 +31,14 @@ class PowerUp(pygame.sprite.Sprite):
     def update(self, *args):
         self.dx -= self.speed * TIMESTEP
 
-        self.rect.x = dx
+        self.rect.x = self.dx
         self.hitbox.x = self.rect.x + self.hb_offsetx
 
         if self.rect.left < self.bounds.left:
             self.kill()
+
+    def collect(self):
+        # returns an integer id for power up type
+        return self.type
+
+            
