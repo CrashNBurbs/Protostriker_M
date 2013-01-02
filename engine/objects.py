@@ -65,7 +65,7 @@ class SpriteManager():
     def draw(self, surface):
         # draw all sprites, in all groups
         # to surface
-        for key in self.sprites.iterkeys():
+        for key in self.draw_order:
             self.sprites[key].draw(surface)
 
     def add_group(self, group, key):

@@ -108,7 +108,7 @@ class GameState(engine.system.State):
                                     self.game.image_manager.get_image('ship'))
         self.background = self.game.image_manager.get_image('background')
         self.viewport = engine.graphics.Viewport(self.game, self.background)
-        self.sprite_manager.add_sprite(self.player, 'b_player_group')
+        self.sprite_manager.add_sprite(self.player, 'player_group')
         self.score_render = self.font.render("SCORE " + str(self.player.score),
                                              False, self.text_color)
         self.lives_render = self.font.render("LIVES " + str(self.player.lives),
@@ -130,7 +130,7 @@ class GameState(engine.system.State):
         # none if not.
         bullets = self.player.handle_input(self.game, pygame.time.get_ticks())
         for bullet in bullets:
-            self.sprite_manager.add_sprite(bullet, 'a_player_shots')
+            self.sprite_manager.add_sprite(bullet, 'player_shots')
 
         # On start button press, push the pause state
         if self.game.input_manager.is_pressed('START'):

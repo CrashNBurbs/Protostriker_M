@@ -27,7 +27,7 @@ class Player(engine.objects.AnimatedSprite):
     def __init__(self, game, x, y, images):
         engine.objects.AnimatedSprite.__init__(self,x,y,images, 20)
         self.game = game
-        self.default_speed = 60
+        self.default_speed = 120 #60
         self.speed = self.default_speed
         self.max_speed = 120
         self.direction = [0,0] # [x,y]
@@ -115,8 +115,6 @@ class Player(engine.objects.AnimatedSprite):
         self.rect.y = self.dy
         self.hitbox.x = self.rect.x + self.hb_offsetx
         self.hitbox.y = self.rect.y + self.hb_offsety
-
-        print self.current_weapon.speed
 
     def handle_input(self, game, current_time):
         # assume no shots fired
