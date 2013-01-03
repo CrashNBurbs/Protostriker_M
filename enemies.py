@@ -64,13 +64,14 @@ class Enemy1(engine.objects.AnimatedSprite):
         # drop a speed powerup 25% of the time
         image = self.game.image_manager.get_image('powerups')
         type = 3
-        if random.random() < .25:
+        if random.random() < 1:
             powerup = powerups.PowerUp(self.game, self.rect.x, self.rect.y,
                                        type, image[type])
         else:
             powerup = None
         
         return powerup
+       
 
     def explode(self):
         # play sound
@@ -148,17 +149,11 @@ class Enemy2(Enemy1):
         # drop a fire rate powerup 25% of the time
         image = self.game.image_manager.get_image('powerups')
         type = 4
-        if random.random() < .30:
+        if random.random() < 1:
             powerup = powerups.PowerUp(self.game, self.rect.x, self.rect.y,
                                        type, image[type])
-        elif random.random() < 1:
-            type = 2
-            powerup = powerups.PowerUp(self.game, self.rect.x, self.rect.y,
-                                       type, image[type])
-        else:
-            powerup = None
-        
         return powerup
+    
 
 class Enemy3(Enemy1):
     """ Third enemy type, moves in a sine wave
