@@ -11,8 +11,6 @@
 #!/usr/bin/env python
 import pygame
 import engine
-import game
-import states
 
 class StartMenu(engine.gui.Menu):
     """ Menu on titlescreen
