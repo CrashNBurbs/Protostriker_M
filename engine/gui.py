@@ -319,3 +319,38 @@ class MenuManager():
             return True
         else:
             return False
+
+class HudElement():
+    """ Bass class for HUD elements such as score, power bars, etc """
+
+    def __init__(self, game, size, pos):
+        self.pos = pos
+        self.background = pygame.Surface((size[0], size[1])).convert()
+        self.font = game.font
+        self.text_color = game.text_color
+
+    def update(self):
+        pass
+
+    def draw(self):
+        pass
+
+class Hud():
+    """ Base class for in-game HUD """
+
+    def __init__(self, game, player):
+        self.game = game
+        self.font = game.font
+        self.elements = []
+        self.player = player
+        self.background = pygame.Surface((320, 32)).convert()
+    
+    def update(self, *args):
+        for element in self.elements:
+            element.update(*args)
+
+    def draw(self, screen):
+        for element in self.elements:
+            self.background.blit(element.background, element.pos)
+
+        screen.blit(self.background, (0,0))

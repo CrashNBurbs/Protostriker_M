@@ -17,6 +17,7 @@ import engine
 import player
 import menus
 import sprite_manager
+import hud
 
 from engine.system import SCREEN_RECT
 
@@ -77,6 +78,7 @@ class GameState(engine.system.State):
         self.sprite_manager = sprite_manager.SpriteManager()
         self.font = game.font
         self.text_color = game.text_color
+        self.level = game.current_level
         self.game_over_triggered = False
         self.level_complete = False
 
@@ -97,10 +99,11 @@ class GameState(engine.system.State):
         self.game.input_manager.clear()
 
         # load the level on state activation
-        self.sprite_manager.load_level(self.game, 'level_1.txt')
+        level_string = 'level_%d.txt' % self.level
+        self.sprite_manager.load_level(self.game, level_string)
 
         # play music
-        self.game.sound_manager.play_music("gamemusic.wav")
+        #self.game.sound_manager.play_music("gamemusic.wav")
 
         # create player, viewport, score and lives render, 
         # add player to sprite manager group
@@ -116,8 +119,11 @@ class GameState(engine.system.State):
         # toggle game.paused 
         self.game.paused = False
 
-        self.message = engine.gui.Message(self.game, "LEVEL 1", 4000)
+        level_string = "LEVEL %d" % self.level
+        self.message = engine.gui.Message(self.game, level_string, 4000) 
         self.show_message = True
+
+        self.hud = hud.GameHud(self.game, self.player)
 
     def reactivate(self, transition):
         engine.system.State.reactivate(self, transition)
@@ -146,14 +152,7 @@ class GameState(engine.system.State):
         self.sprite_manager.update(pygame.time.get_ticks(), self.viewport,
                                    self.player.rect)
 
-        # update the score display
-        self.score_render = self.font.render("SCORE " + str(self.player.score),
-                                False, self.text_color)
-
-        # update lives display
-        self.lives_render = self.font.render("LIVES " + 
-                                                str(self.player.lives),
-                                                False, self.text_color)
+        self.hud.update(self.player)
 
         # check for all collsions, get player death
         player_die = self.sprite_manager.check_collisions(self.player)
@@ -173,18 +172,21 @@ class GameState(engine.system.State):
         # If player has reached the end of the level, create a
         # level complete message, set game over to True.
         if self.viewport.level_pos > 10400:
+            self.game.current_level += 1
             self.game.push_state(engine.objects.EventState(self.game, "LEVEL 1 COMPLETE!",
                                             "levelwin.wav",
-                                            TitleScreenState(self.game)))
+                                            GameState(self.game)))
            
     def draw(self, screen):
         # draw the background and all sprites
         self.viewport.draw(screen)
         self.sprite_manager.draw(screen)
 
+        self.hud.draw(screen)
+
         # draw the score and player lives
-        screen.blit(self.score_render, (8,8))
-        screen.blit(self.lives_render, (256,8))
+        #screen.blit(self.score_render, (8,8))
+        #screen.blit(self.lives_render, (256,8))
 
         if self.show_message:
             self.show_message = self.message.show(screen)

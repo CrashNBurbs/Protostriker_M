@@ -14,6 +14,7 @@ class BasicWeapon():
         self.max_speed = 175
         self.last_shot = 0 # time of last shot
         self.angles = [0]
+        self.name = "NORMAL"
         
     def fire(self, current_time, player_rect):
         shots = []
@@ -45,6 +46,7 @@ class Spreader(BasicWeapon):
         self.speed = 550
         self.max_speed = 325
         self.angles = [0, 10, 350]
+        self.name = "SPREAD"
 
     def get_bullet(self, player_rect, angle):
         bullet = bullets.SpreaderBullet(player_rect.right - 6,
@@ -62,6 +64,7 @@ class ReverseFire(BasicWeapon):
         self.speed = 400
         self.max_speed = 175
         self.angles = [0, 140, 220]
+        self.name = "REVERSE"
 
     def get_bullet(self, player_rect, angle):
         bullet= bullets.ReverseFireBullet(player_rect.right - 24, 
@@ -78,6 +81,7 @@ class Laser(BasicWeapon):
         self.sound = game.sound_manager.get_sound('laserbeam')
         self.speed = 1250
         self.max_speed = 800
+        self.name = "BEAM"
 
     def get_bullet(self, player_rect, angle):
         bullet = bullets.LaserBeam(player_rect.right - 6,

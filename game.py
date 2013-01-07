@@ -22,6 +22,7 @@ class PsmGame(engine.system.Game):
         self.font = self.image_manager.get_font()
         self.text_color = (252,248,252)
         self.load_content()
+        self.current_level = 1
         self.push_state(states.TitleScreenState(self), 
                         engine.graphics.FadeAnimation("in"))
 
