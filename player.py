@@ -176,6 +176,7 @@ class Player(engine.objects.AnimatedSprite):
 
     def reset_pos(self):
         # reset player pos to original pos
+        self.direction = [0,0]
         self.dx = 16
         self.dy = 112
 

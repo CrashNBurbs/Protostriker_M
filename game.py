@@ -40,6 +40,7 @@ class PsmGame(engine.system.Game):
         return end_game
 
     def reset_player(self):
+        # create a new player, resetting all values
         self.player = player.Player(self, 16, 112,
                                     self.image_manager.get_image('ship'))
 

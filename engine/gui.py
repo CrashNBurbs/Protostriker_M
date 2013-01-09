@@ -323,14 +323,16 @@ class MenuManager():
 class HudElement():
     """ Bass class for HUD elements such as score, power bars, etc """
 
-    def __init__(self, game, size, pos):
+    def __init__(self, game, size, pos, color):
         self.pos = pos
+        self.color = color
         self.background = pygame.Surface((size[0], size[1])).convert()
+        self.background.fill(self.color)
         self.font = game.font
         self.text_color = game.text_color
 
     def update(self):
-        pass
+        self.background.fill(self.color)
 
     def draw(self):
         pass
@@ -338,12 +340,14 @@ class HudElement():
 class Hud():
     """ Base class for in-game HUD """
 
-    def __init__(self, game, player):
+    def __init__(self, game, player, color):
         self.game = game
         self.font = game.font
         self.elements = []
         self.player = player
+        self.color = color
         self.background = pygame.Surface((320, 32)).convert()
+        self.background.fill(self.color)
     
     def update(self, *args):
         for element in self.elements:
