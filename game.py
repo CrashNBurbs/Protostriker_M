@@ -11,6 +11,7 @@
 #!/usr/bin/env python
 import engine
 import states
+import player
 
 class PsmGame(engine.system.Game):
 
@@ -23,8 +24,31 @@ class PsmGame(engine.system.Game):
         self.text_color = (252,248,252)
         self.load_content()
         self.current_level = 1
+        self.player = player.Player(self, 16, 112, 
+                                    self.image_manager.get_image('ship'))
         self.push_state(states.TitleScreenState(self), 
                         engine.graphics.FadeAnimation("in"))
+
+    def next_level(self):
+        # change to a new level and return False if there are more levels
+        # otherwise return true
+        end_game = False
+        if self.current_level < 2:
+            self.current_level += 1
+        else:
+            end_game = True
+        return end_game
+
+    def reset_player(self):
+        self.player = player.Player(self, 16, 112,
+                                    self.image_manager.get_image('ship'))
+
+    def reset(self):
+        # reset the game back to original state
+        self.current_level = 1
+        self.reset_player()
+        self.change_state(states.TitleScreenState(self), 
+                          engine.graphics.FadeAnimation("in"))
 
     def load_content(self):
         self.image_manager.load_sheet('textborder.bmp', 'textborder',

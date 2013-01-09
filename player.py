@@ -174,6 +174,10 @@ class Player(engine.objects.AnimatedSprite):
         elif powerup == 4:  # Fire Rate
             self.current_weapon.power_up()
 
+    def reset_pos(self):
+        # reset player pos to original pos
+        self.dx = 16
+        self.dy = 112
 
     def explode(self):
         # create explosion sprite

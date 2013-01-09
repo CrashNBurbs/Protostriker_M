@@ -107,8 +107,7 @@ class GameState(engine.system.State):
 
         # create player, viewport, score and lives render, 
         # add player to sprite manager group
-        self.player = player.Player(self.game, 16, 112, 
-                                    self.game.image_manager.get_image('ship'))
+        self.player = self.game.player
         self.background = self.game.image_manager.get_image('background')
         self.viewport = engine.graphics.Viewport(self.game, self.background)
         self.sprite_manager.add_sprite(self.player, 'player_group')
@@ -165,17 +164,31 @@ class GameState(engine.system.State):
             # if player has lost all lives, push a game over event state
             # set game over to True.
             if self.player.lives == -1:
-                self.game.push_state(engine.objects.EventState(self.game, "GAME OVER", 
-                                                "gameovermusic.wav", 
-                                                GameState(self.game)))
+                text = "GAME OVER"
+                state = engine.objects.EventState(self.game, text, 
+                                                  "gameovermusic.wav",
+                                                  GameState(self.game))
+                self.game.reset_player()
+                self.game.change_state(state)
         
         # If player has reached the end of the level, create a
         # level complete message, set game over to True.
         if self.viewport.level_pos > 10400:
-            self.game.current_level += 1
-            self.game.push_state(engine.objects.EventState(self.game, "LEVEL 1 COMPLETE!",
-                                            "levelwin.wav",
-                                            GameState(self.game)))
+            end = self.game.next_level()
+            if not end:  # go to next level
+                text = "LEVEL %d COMPLETE!" % self.level
+                state = engine.objects.EventState(self.game, text, 
+                                                  "levelwin.wav", 
+                                                  GameState(self.game))
+                self.game.player.reset_pos()
+                self.game.change_state(state)
+               
+            else:  # show ending
+                text = "GAME OVER"
+                state = engine.objects.EventState(self.game, text, 
+                                                  "gameovermusic.wav",
+                                                  TitleScreenState(self.game))
+                self.game.change_state(state)
            
     def draw(self, screen):
         # draw the background and all sprites
@@ -249,8 +262,7 @@ class PauseState(engine.system.State):
         # user has quit to title
         if self.done_exiting:
             self.game.menu_manager.pop_menu()
-            self.game.change_state(TitleScreenState(self.game), 
-                                   engine.graphics.FadeAnimation("in"))
+            self.game.reset()
 
     def draw(self, screen):
         # draw all menus
