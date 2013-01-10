@@ -29,6 +29,7 @@ class Player(engine.objects.AnimatedSprite):
         self.game = game
         self.default_speed = 60
         self.speed = self.default_speed
+        self.speed_increment = 20
         self.max_speed = 120
         self.direction = [0,0] # [x,y]
         self.bounds = SCREEN_RECT
@@ -168,9 +169,9 @@ class Player(engine.objects.AnimatedSprite):
                 self.weapons.insert(0, weapons.Laser(self.game))
                 self.has_laser = True
                 self.current_weapon_index = 0
-        elif powerup == 3: # Move Speed
+        elif powerup == 3: # Move Speed  60, 80, 100, 120
             if self.speed < self.max_speed:
-                self.speed += 20
+                self.speed += self.speed_increment
         elif powerup == 4:  # Fire Rate
             self.current_weapon.power_up()
 

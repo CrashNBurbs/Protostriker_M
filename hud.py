@@ -9,12 +9,14 @@ class GameHud(engine.gui.Hud):
 
     def __init__(self, game, player, color):
         engine.gui.Hud.__init__(self, game, player, color)
-        score = ScoreElement(game, (96,8), (0,4), color)
-        gun = WeaponNameElement(game, (88,8), (110,4), color)
-        level = LevelElement(game, (56,8), (264, 4), color)
+        score = ScoreElement(game, (96,8), (8,4), color)
+        gun = WeaponNameElement(game, (88,8), (120,4), color)
+        level = LevelElement(game, (56,8), (256, 4), color)
+        speed = SpeedElement(game, (102,8), (8,16), color)
         self.elements.append(score)
         self.elements.append(gun)
         self.elements.append(level)
+        self.elements.append(speed)
 
 class ScoreElement(engine.gui.HudElement):
     """ Player score """
@@ -78,6 +80,43 @@ class LevelElement(engine.gui.HudElement):
         string = "LEVEL " + str(level)
         render = self.font.render(string, False, self.text_color)
         self.background.blit(render, (0,0))
+
+class SpeedElement(engine.gui.HudElement):
+    """ Displays the current movement speed """
+
+    def __init__(self, game, size, pos, color):
+        engine.gui.HudElement.__init__(self, game, size, pos, color)
+        self.image = game.image_manager.get_image('hudbars')
+        self.string = "SPEED"
+        self.render = self.font.render(self.string, False, self.text_color)
+
+    def update(self, *args):
+        engine.gui.HudElement.update(self)
+        player = args[0]
+
+        # calculate the player's speed level 
+        # (0-4), 0 being default speed
+        difference = player.speed - player.default_speed
+        speed_level = difference / player.speed_increment
+        
+        # draw the string
+        self.background.blit(self.render, (0,0))
+
+        # start drawing bars after the string + 3px
+        x = self.render.get_width() + 3
+        for level in xrange(1,4):
+            # draw one empty bar for each possible speed level
+            self.background.blit(self.image[0], (x,0))
+            # draw a filled bar on top of empty bar for each speed leve
+            # the player actually has
+            if speed_level >= level:
+                self.background.blit(self.image[2], (x,0))
+            # increase draw pos by width of the bar + 2px
+            x += self.image[0].get_width() + 2
+
+
+
+
 
 
 

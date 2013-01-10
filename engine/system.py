@@ -455,10 +455,6 @@ class Game():
         # load content for the entire game
         pass
 
-    def load_content(self):
-        # unlead content for the entire game
-        pass
-
     def get_current_state(self):
         # get state at the top of the stack
         return self.states[-1]
@@ -478,6 +474,7 @@ class Game():
         while self.states:
             self.get_current_state().unload_content()
             self.states.pop()
+        state.load_content()
         self.states.append(state)
         state.activate(transition)
 

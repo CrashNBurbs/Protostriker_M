@@ -17,7 +17,7 @@ import system
 class TextBox():
     """ Abstract base class for displaying a bordered text box in game.
         Menus, dialog boxes, etc. """
-    def __init__(self, game, x, y):
+    def __init__(self, game):
         # create font
         self.font = game.font
         self.text_color = game.text_color
@@ -63,7 +63,7 @@ class Menu(TextBox):
     this class to create specific menus and handle input
     options - a list of desired options in string form """
     def __init__(self, game, x, y,options):
-        TextBox.__init__(self, game, x, y)
+        TextBox.__init__(self, game)
         self.options = options
         self.current_option = 0  # option currently selected
         # load cursor and set rect
@@ -181,7 +181,7 @@ class Menu(TextBox):
 class DialogBox(TextBox):
     """ A class for displaying dialog or text in-game """
     def __init__(self, game, x, y, text):
-        TextBox.__init__(self, game, x, y)
+        TextBox.__init__(self, game)
         self.width = 288  # w,h of dialog boxes are always 288x72
         self.height = 72
         self.background = pygame.Surface((self.width, self.height)).convert()
@@ -337,23 +337,25 @@ class HudElement():
     def draw(self):
         pass
 
-class Hud():
+class Hud(TextBox):
     """ Base class for in-game HUD """
 
     def __init__(self, game, player, color):
+        TextBox.__init__(self, game)
         self.game = game
-        self.font = game.font
         self.elements = []
         self.player = player
         self.color = color
         self.background = pygame.Surface((320, 32)).convert()
         self.background.fill(self.color)
+        self.build_text_box()
     
     def update(self, *args):
         for element in self.elements:
             element.update(*args)
 
     def draw(self, screen):
+        
         for element in self.elements:
             self.background.blit(element.background, element.pos)
 
