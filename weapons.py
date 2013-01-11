@@ -10,7 +10,9 @@ class BasicWeapon():
     def __init__(self, game):
         self.sound = game.sound_manager.get_sound('laser')
         self.bullet_image = game.image_manager.get_image('pshot')
-        self.speed = 400  # delay for creating shots
+        self.default_speed = 400
+        self.speed = self.default_speed # delay for creating shots
+        self.speed_increment = 75 
         self.max_speed = 175
         self.last_shot = 0 # time of last shot
         self.angles = [0]
@@ -34,7 +36,7 @@ class BasicWeapon():
 
     def power_up(self):
         if self.speed > self.max_speed:
-            self.speed -= 75
+            self.speed -= self.speed_increment
 
 class Spreader(BasicWeapon):
     """ Spreader weapon - Fire three shots simultaneously """
@@ -43,7 +45,8 @@ class Spreader(BasicWeapon):
         BasicWeapon.__init__(self, game)
         self.sound = game.sound_manager.get_sound('spreader')
         self.bullet_image = game.image_manager.get_image('spreadshot')
-        self.speed = 550
+        self.default_speed = 550
+        self.speed = self.default_speed
         self.max_speed = 325
         self.angles = [0, 10, 350]
         self.name = "SPREAD"
@@ -61,8 +64,6 @@ class ReverseFire(BasicWeapon):
         BasicWeapon.__init__(self, game)
         self.sound = game.sound_manager.get_sound('laser')
         self.bullet_image = game.image_manager.get_image('pshot')
-        self.speed = 400
-        self.max_speed = 175
         self.angles = [0, 140, 220]
         self.name = "REVERSE"
 
@@ -79,7 +80,9 @@ class Laser(BasicWeapon):
     def __init__(self, game):
         BasicWeapon.__init__(self, game)
         self.sound = game.sound_manager.get_sound('laserbeam')
-        self.speed = 1250
+        self.default_speed = 1250 
+        self.speed = self.default_speed
+        self.speed_increment = 150 
         self.max_speed = 800
         self.name = "BEAM"
 
@@ -87,7 +90,3 @@ class Laser(BasicWeapon):
         bullet = bullets.LaserBeam(player_rect.right - 6,
                                    player_rect.centery - 2)
         return bullet
-
-    def power_up(self):
-        if self.speed > self.max_speed:
-            self.speed -= 150

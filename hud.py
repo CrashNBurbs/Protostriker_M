@@ -13,10 +13,12 @@ class GameHud(engine.gui.Hud):
         gun = WeaponNameElement(game, (88,8), (120,4), color)
         level = LevelElement(game, (56,8), (256, 4), color)
         speed = SpeedElement(game, (102,8), (8,16), color)
+        power = FireRateElement(game, (102,8), (120,16), color)
         self.elements.append(score)
         self.elements.append(gun)
         self.elements.append(level)
         self.elements.append(speed)
+        self.elements.append(power)
 
 class ScoreElement(engine.gui.HudElement):
     """ Player score """
@@ -87,17 +89,24 @@ class SpeedElement(engine.gui.HudElement):
     def __init__(self, game, size, pos, color):
         engine.gui.HudElement.__init__(self, game, size, pos, color)
         self.image = game.image_manager.get_image('hudbars')
+        self.empty_bar = self.image[0]
+        self.filled_bar = self.image[2]
         self.string = "SPEED"
         self.render = self.font.render(self.string, False, self.text_color)
+
+    def calc_level(self, player):
+        # calculate the player's speed level 
+        # (0-4), 0 being default speed
+        difference = player.speed - player.default_speed
+        level = difference / player.speed_increment
+        return level
 
     def update(self, *args):
         engine.gui.HudElement.update(self)
         player = args[0]
 
-        # calculate the player's speed level 
-        # (0-4), 0 being default speed
-        difference = player.speed - player.default_speed
-        speed_level = difference / player.speed_increment
+        # get the player's speed level
+        player_level = self.calc_level(player)
         
         # draw the string
         self.background.blit(self.render, (0,0))
@@ -106,13 +115,30 @@ class SpeedElement(engine.gui.HudElement):
         x = self.render.get_width() + 3
         for level in xrange(1,4):
             # draw one empty bar for each possible speed level
-            self.background.blit(self.image[0], (x,0))
+            self.background.blit(self.empty_bar, (x,0))
             # draw a filled bar on top of empty bar for each speed leve
             # the player actually has
-            if speed_level >= level:
-                self.background.blit(self.image[2], (x,0))
+            if player_level >= level:
+                self.background.blit(self.filled_bar, (x,0))
             # increase draw pos by width of the bar + 2px
-            x += self.image[0].get_width() + 2
+            x += self.empty_bar.get_width() + 2
+
+class FireRateElement(SpeedElement):
+    """ Displays the current firing speed """
+
+    def __init__(self, game, size, pos, color):
+        SpeedElement.__init__(self, game, size, pos, color)
+        self.filled_bar = self.image[1]
+        self.string = "POWER"
+        self.render = self.font.render(self.string, False, self.text_color)
+
+    def calc_level(self, player):
+        weapon = player.current_weapon
+        difference = weapon.default_speed - weapon.speed
+        level = difference / weapon.speed_increment
+        return level
+
+
 
 
 

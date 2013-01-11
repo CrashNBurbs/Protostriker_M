@@ -240,7 +240,7 @@ class PauseState(engine.system.State):
         self.pause_sound.play()
         self.game \
             .menu_manager \
-            .push_menu(menus.PauseMenu(self.game, 96, 16, ['RESUME','OPTIONS',
+            .push_menu(menus.PauseMenu(self.game, 96, 40, ['RESUME','OPTIONS',
                             'OUIT TO TITLE','QUIT GAME']))
 
     def handle_input(self):
