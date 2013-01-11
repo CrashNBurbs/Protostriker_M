@@ -491,7 +491,7 @@ class Game():
         while(current_state):
             # check for state change
             current_state = self.get_current_state()
-
+       
             # get time passed since last frame (in seconds)
             tick = self.clock.tick() / 1000.0
             # cap the max frame time

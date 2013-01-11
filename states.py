@@ -168,7 +168,7 @@ class GameState(engine.system.State):
                                                   "gameovermusic.wav",
                                                   GameState(self.game))
                 self.game.reset_player()
-                self.game.change_state(state)
+                self.game.push_state(state)
         
         # If player has reached the end of the level, create a
         # level complete message, set game over to True.
@@ -180,14 +180,14 @@ class GameState(engine.system.State):
                                                   "levelwin.wav", 
                                                   GameState(self.game))
                 self.game.player.reset_pos()
-                self.game.change_state(state)
+                self.game.push_state(state)
                
             else:  # show ending
                 text = "GAME OVER"
                 state = engine.objects.EventState(self.game, text, 
                                                   "gameovermusic.wav",
                                                   TitleScreenState(self.game))
-                self.game.change_state(state)
+                self.game.push_state(state)
            
     def draw(self, screen):
         # draw the background and all sprites
@@ -195,10 +195,6 @@ class GameState(engine.system.State):
         self.sprite_manager.draw(screen)
 
         self.hud.draw(screen)
-
-        # draw the score and player lives
-        #screen.blit(self.score_render, (8,8))
-        #screen.blit(self.lives_render, (256,8))
 
         if self.show_message:
             self.show_message = self.message.show(screen)
