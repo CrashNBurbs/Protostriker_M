@@ -135,6 +135,8 @@ class FireRateElement(SpeedElement):
         self.render = self.font.render(self.string, False, self.text_color)
 
     def calc_level(self, player):
+        # calculate the player's current weapon level 
+        # (0-4), 0 being default speed
         weapon = player.current_weapon
         difference = weapon.default_speed - weapon.speed
         level = difference / weapon.speed_increment
@@ -151,10 +153,13 @@ class LivesElement(engine.gui.HudElement):
         engine.gui.HudElement.update(self)
         player = args[0]
 
+        # get the number of lives remaining,
+        # build string and render
         lives = player.lives
         string = " X " + str(lives)
         render = self.font.render(string, False, self.text_color)
 
+        # draw small ship and render to background
         self.background.blit(self.image, (0,0))
         self.background.blit(render, (self.image.get_width(), 0))
 
