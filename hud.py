@@ -14,11 +14,13 @@ class GameHud(engine.gui.Hud):
         level = LevelElement(game, (56,8), (256, 4), color)
         speed = SpeedElement(game, (102,8), (8,16), color)
         power = FireRateElement(game, (102,8), (120,16), color)
+        lives = LivesElement(game, (48,8), (256,16), color)
         self.elements.append(score)
         self.elements.append(gun)
         self.elements.append(level)
         self.elements.append(speed)
         self.elements.append(power)
+        self.elements.append(lives)
 
 class ScoreElement(engine.gui.HudElement):
     """ Player score """
@@ -137,6 +139,25 @@ class FireRateElement(SpeedElement):
         difference = weapon.default_speed - weapon.speed
         level = difference / weapon.speed_increment
         return level
+
+class LivesElement(engine.gui.HudElement):
+    """ Displays the current number of remaining lives """
+
+    def __init__(self, game, size, pos, color):
+        engine.gui.HudElement.__init__(self, game, size, pos, color)
+        self.image = game.image_manager.get_image('smallship')
+
+    def update(self, *args):
+        engine.gui.HudElement.update(self)
+        player = args[0]
+
+        lives = player.lives
+        string = " X " + str(lives)
+        render = self.font.render(string, False, self.text_color)
+
+        self.background.blit(self.image, (0,0))
+        self.background.blit(render, (self.image.get_width(), 0))
+
 
 
 
