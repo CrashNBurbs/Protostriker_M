@@ -7,8 +7,8 @@ import engine
 
 class GameHud(engine.gui.Hud):
 
-    def __init__(self, game, player, color):
-        engine.gui.Hud.__init__(self, game, player, color)
+    def __init__(self, game, size, color):
+        engine.gui.Hud.__init__(self, game, size, color)
         score = ScoreElement(game, (96,8), (8,4), color)
         gun = WeaponNameElement(game, (88,8), (120,4), color)
         level = LevelElement(game, (56,8), (256, 4), color)

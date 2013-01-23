@@ -340,13 +340,14 @@ class HudElement():
 class Hud(TextBox):
     """ Base class for in-game HUD """
 
-    def __init__(self, game, player, color):
+    def __init__(self, game, size, color):
         TextBox.__init__(self, game)
         self.game = game
         self.elements = []
-        self.player = player
+        self.width = size[0]
+        self.height = size[1]
         self.color = color
-        self.background = pygame.Surface((320, 32)).convert()
+        self.background = pygame.Surface(size).convert()
         self.background.fill(self.color)
         self.build_text_box()
     

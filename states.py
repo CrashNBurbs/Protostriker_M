@@ -17,7 +17,6 @@ import engine
 import player
 import menus
 import sprite_manager
-import hud
 
 from engine.system import SCREEN_RECT
 
@@ -122,7 +121,7 @@ class GameState(engine.system.State):
         self.message = engine.gui.Message(self.game, level_string, 4000) 
         self.show_message = True
 
-        self.hud = hud.GameHud(self.game, self.player, (0,0,0))
+        
 
     def reactivate(self, transition):
         engine.system.State.reactivate(self, transition)
@@ -151,7 +150,7 @@ class GameState(engine.system.State):
         self.sprite_manager.update(pygame.time.get_ticks(), self.viewport,
                                    self.player.rect)
 
-        self.hud.update(self.player, self.game)
+        self.game.hud.update(self.player, self.game)
 
         # check for all collsions, get player death
         player_die = self.sprite_manager.check_collisions(self.player)
@@ -194,7 +193,7 @@ class GameState(engine.system.State):
         self.viewport.draw(screen)
         self.sprite_manager.draw(screen)
 
-        self.hud.draw(screen)
+        self.game.hud.draw(screen)
 
         if self.show_message:
             self.show_message = self.message.show(screen)

@@ -9,9 +9,13 @@
 # Licence:     <your licence>
 #----------------------------------------------------------------------------
 #!/usr/bin/env python
+import pygame
 import engine
 import states
 import player
+import hud
+
+from engine.system import SCREEN_RECT
 
 class PsmGame(engine.system.Game):
 
@@ -24,8 +28,13 @@ class PsmGame(engine.system.Game):
         self.text_color = (252,248,252)
         self.load_content()
         self.current_level = 1
+        self.hud = hud.GameHud(self, (320, 32), (0,0,0))
+        self.game_world = pygame.rect.Rect(0, SCREEN_RECT.top + self.hud.height,
+                                           320, SCREEN_RECT.height - self.hud.height)
         self.player = player.Player(self, 16, 112, 
                                     self.image_manager.get_image('ship'))
+     
+        print self.game_world
         self.push_state(states.TitleScreenState(self), 
                         engine.graphics.FadeAnimation("in"))
 
