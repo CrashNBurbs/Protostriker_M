@@ -349,7 +349,6 @@ class Hud(TextBox):
         self.color = color
         self.background = pygame.Surface(size).convert()
         self.background.fill(self.color)
-        self.build_text_box()
     
     def update(self, *args):
         for element in self.elements:
