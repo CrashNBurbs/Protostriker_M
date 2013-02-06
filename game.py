@@ -34,7 +34,6 @@ class PsmGame(engine.system.Game):
         self.player = player.Player(self, 16, 112, 
                                     self.image_manager.get_image('ship'))
      
-        print self.game_world
         self.push_state(states.TitleScreenState(self), 
                         engine.graphics.FadeAnimation("in"))
 

@@ -26,7 +26,7 @@ class Enemy1(engine.objects.AnimatedSprite):
         engine.objects.AnimatedSprite.__init__(self, x, y, images, fps)
         self.game = game
         self.speed = 145
-        self.bounds = SCREEN_RECT
+        self.bounds = game.game_world
         self.hb_offsetx = 0 # offset for hitbox
         self.hb_offsety = 2
         self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
@@ -52,7 +52,6 @@ class Enemy1(engine.objects.AnimatedSprite):
         # update the rect
         self.rect.x = self.dx
         self.hitbox.x = self.rect.x + self.hb_offsetx
-        #self.hitbox.y = self.rect.y + self.hb_offsety
 
     def spawn(self):
         # Called when enemy should be onscreen.
@@ -204,7 +203,7 @@ class Enemy4(Enemy2):
         Enemy2.__init__(self, game, x, y, images)
         self.speed = 50
         self.direction = -1
-        self.bounds = SCREEN_RECT
+        self.bounds = game.game_world
         self.shoot_speed = 1000
         self.spawn_point = 240 # x pos where enemy will be placed
         self.hb_offsetx = 1
