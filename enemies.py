@@ -22,7 +22,7 @@ from engine.system import SCREEN_RECT
 class Enemy1(engine.objects.AnimatedSprite):
     """ First enemy type, moves in a straight line
     at a high speed """
-    def __init__(self, game, x, y, images, fps = 20):
+    def __init__(self, game, x, y, has_powerup, images, fps = 20):
         engine.objects.AnimatedSprite.__init__(self, x, y, images, fps)
         self.game = game
         self.speed = 145
@@ -31,9 +31,12 @@ class Enemy1(engine.objects.AnimatedSprite):
         self.hb_offsety = 2
         self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
                                   self.dy + self.hb_offsety, 15, 12)
+        self.has_powerup = has_powerup
+        self.powerup_type = 3 # speed
         self.points = 160 # point value
         self.explosion_sound = game.sound_manager.get_sound('en_exp')
         self.hits = 0 # number of hits enemy takes, 0 is a one-shot kill
+        
 
     def update(self, *args):
         current_time = args[0]
@@ -60,18 +63,14 @@ class Enemy1(engine.objects.AnimatedSprite):
         self.dx = self.bounds.right
 
     def drop_powerup(self):
-        # drop a speed powerup 25% of the time
-        image = self.game.image_manager.get_image('powerups')
-        type = 3
-        if random.random() < 1:
+        # drop a speed powerup if self.has_powerup
+        if self.has_powerup:
             powerup = powerups.PowerUp(self.game, self.rect.x, self.rect.y,
-                                       type, image[type])
+                                        self.powerup_type)
         else:
             powerup = None
-        
         return powerup
        
-
     def explode(self):
         # play sound
         self.explosion_sound.play()
@@ -93,8 +92,8 @@ class Enemy1(engine.objects.AnimatedSprite):
 class Enemy2(Enemy1):
     """ Second enemy type, moves in a straight line
     at a slow speed and shoots """
-    def __init__(self, game, x, y, images):
-        Enemy1.__init__(self, game, x, y, images)
+    def __init__(self, game, x, y, has_powerup, images):
+        Enemy1.__init__(self, game, x, y, has_powerup, images)
         self.speed = 25
         self.bullet_image = game.image_manager.get_image('eshot')
         self.shoot_speed = 150  # shooting delay
@@ -105,7 +104,7 @@ class Enemy2(Enemy1):
         self.shots = 0 # shots fired
         self.start_shoot = 290 # x coord to being firing
         self.points = 90
-
+        self.powerup_type = 4
 
     def update(self, *args):
         current_time = args[0]
@@ -144,16 +143,6 @@ class Enemy2(Enemy1):
         else:
             self.shot = None
 
-    def drop_powerup(self):
-        # drop a fire rate powerup 25% of the time
-        image = self.game.image_manager.get_image('powerups')
-        type = 4
-        if random.random() < 1:
-            powerup = powerups.PowerUp(self.game, self.rect.x, self.rect.y,
-                                       type, image[type])
-        return powerup
-    
-
 class Enemy3(Enemy1):
     """ Third enemy type, moves in a sine wave
     pattern at a moderate speed """
@@ -168,6 +157,7 @@ class Enemy3(Enemy1):
         self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
                                   self.dy + self.hb_offsety, 18, 13)
         self.points = 210
+        self.powerup_type = 1
 
     def update(self, *args):
         # call parent classes update method
@@ -183,17 +173,6 @@ class Enemy3(Enemy1):
         # update the rect
         self.rect.y = self.dy
         self.hitbox.y = self.rect.y + self.hb_offsety
-
-    def drop_powerup(self):
-        image = self.game.image_manager.get_image('powerups')
-        type = 0
-        if random.random() < 1:
-            powerup = powerups.PowerUp(self.game, self.rect.x, self.rect.y,
-                                       type, image[type])
-        else:
-            powerup = None
-        
-        return powerup
 
 class Enemy4(Enemy2):
     """ Fourth enemy type, moves into position and
@@ -245,18 +224,6 @@ class Enemy4(Enemy2):
     def spawn(self):
         # move sprite to self.spawn_point
         self.dx = self.spawn_point
-
-    def drop_powerup(self):
-        image = self.game.image_manager.get_image('powerups')
-        type = 1
-        if random.random() < 1:
-            powerup = powerups.PowerUp(self.game, self.rect.x, self.rect.y,
-                                       type, image[type])
-        else:
-            powerup = None
-        
-        return powerup
-
 
 class Enemy5(Enemy2):
     """ Large, multi-hit taking, enemy that creats shrapnel on explode """

@@ -159,45 +159,50 @@ class SpriteManager(engine.objects.SpriteManager):
             # associated values in temp variables.
             # At end_enemy, pass temp variables to create enemy
             for element in enemy_data:
-                index = enemy_data.index(element)
+                next_index = enemy_data.index(element) + 1
                 if element == 'type':
                     # Data to read is at next index
-                    enemy_type = enemy_data[index + 1]
+                    enemy_type = enemy_data[next_index]
                 elif element == 'x':
-                    x = int(enemy_data[index + 1])
+                    x = int(enemy_data[next_index])
                 elif element == 'y':
-                    y = int(enemy_data[index + 1])
+                    y = int(enemy_data[next_index])
+                elif element == 'has_powerup':
+                    if enemy_data[next_index] == 'True':
+                        has_powerup = True 
+                    else:
+                        has_powerup = False
                 elif element == 'end_enemy':
-                    self.create_enemy(game, enemy_type, x, y)
+                    self.create_enemy(game, enemy_type, x, y, has_powerup)
                     enemy_data = []  # reset the list
 
         # close the level file
         level.close()
 
-    def create_enemy(self, game, enemy_type, x, y):
+    def create_enemy(self, game, enemy_type, x, y, has_powerup):
         # Creates an enemy of enemy_type at x, y
 
         # create appropriate enemy depending on enemy_type
         if enemy_type == 'enemy_01':
-            enemy = enemies.Enemy1(game, x, y, 
+            enemy = enemies.Enemy1(game, x, y, has_powerup,
                                    game.image_manager.get_image('enemy1'))
         elif enemy_type == 'enemy_02':
-            enemy = enemies.Enemy2(game, x, y,
+            enemy = enemies.Enemy2(game, x, y, has_powerup,
                                    game.image_manager.get_image('enemy2'))
         elif enemy_type == 'enemy_03':
-            enemy = enemies.Enemy3(game, x, y, 
+            enemy = enemies.Enemy3(game, x, y, has_powerup,
                                    game.image_manager.get_image('enemy3'))
         elif enemy_type == 'enemy_04':
-            enemy = enemies.Enemy4(game, x, y,
+            enemy = enemies.Enemy4(game, x, y, has_powerup,
                                    game.image_manager.get_image('enemy4'))
         elif enemy_type == 'enemy_05':
-            enemy = enemies.Enemy5(game, x, y,
+            enemy = enemies.Enemy5(game, x, y, has_powerup,
                                    game.image_manager.get_image('enemy5'))
         elif enemy_type == 'enemy_06':
-            enemy = enemies.Enemy6(game, x, y,
+            enemy = enemies.Enemy6(game, x, y, has_powerup,
                                    game.image_manager.get_image('enemy6'))
         elif enemy_type == 'enemy_07':
-            enemy = enemies.Enemy7(game, x, y,
+            enemy = enemies.Enemy7(game, x, y, has_powerup,
                                    game.image_manager.get_image('enemy7'))
 
         # Add enemy to enemy queue
