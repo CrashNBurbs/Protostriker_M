@@ -329,3 +329,35 @@ class Enemy7(Enemy1):
         self.rect.y = self.dy
         self.hitbox.x = self.rect.x + self.hb_offsetx
         self.hitbox.y = self.rect.y + self.hb_offsety
+
+class Enemy8(Enemy1):
+    """ enemy 1 type that moves left to right """
+    def __init__(self, game, x, y, has_powerup, images):
+        # Flip all images on their x axis
+        # Call Enemy1 init, passing new flipped images
+        Enemy1.__init__(self, game, x, y, has_powerup, images)
+
+    
+    def spawn(self):
+        # Called when enemy should be onscreen.
+        # Move enemy from its pos in the level
+        # to the edge of the screen.
+        self.dx = self.bounds.left - self.rect.width
+
+    def update(self, *args):
+        current_time = args[0]
+
+        # call parent class update function for frame
+        # animation
+        engine.objects.AnimatedSprite.update(self, current_time)
+
+        # calculate change in x
+        self.dx += self.speed * TIMESTEP
+
+        # kill sprite if offscreen
+        if self.dx > self.bounds.right:
+            self.kill()
+
+        # update the rect
+        self.rect.x = self.dx
+        self.hitbox.x = self.rect.x + self.hb_offsetx

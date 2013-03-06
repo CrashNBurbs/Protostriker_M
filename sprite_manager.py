@@ -47,6 +47,7 @@ class SpriteManager(engine.objects.SpriteManager):
         # update all sprites in the game
         # step through self.objects and call
         # each groups update method
+        print self.sprites['enemy_group']
 
         for key in self.update_order:
             for sprite in self.sprites[key]:
@@ -204,6 +205,11 @@ class SpriteManager(engine.objects.SpriteManager):
         elif enemy_type == 'enemy_07':
             enemy = enemies.Enemy7(game, x, y, has_powerup,
                                    game.image_manager.get_image('enemy7'))
+        elif enemy_type == 'enemy_08':
+            images = list(game.image_manager.get_image('enemy1'))
+            for i in xrange(0, len(images)):
+                images[i] = pygame.transform.flip(images[i], True, False)
+            enemy = enemies.Enemy8(game, x, y, has_powerup, images)
 
         # Add enemy to enemy queue
         self.enemy_queue.append(enemy)
