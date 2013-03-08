@@ -102,7 +102,7 @@ class GameState(engine.system.State):
         self.sprite_manager.load_level(self.game, level_string)
 
         # play music
-        #self.game.sound_manager.play_music("gamemusic.wav")
+        self.game.sound_manager.play_music("gamemusic.wav")
 
         # create player, viewport, score and lives render, 
         # add player to sprite manager group
@@ -141,6 +141,8 @@ class GameState(engine.system.State):
             self.game.push_state(PauseState(self.game))
 
     def update(self):
+        print self.viewport.level_pos + self.game.game_world.width
+
         engine.system.State.update(self)
 
         # scroll the background
@@ -171,7 +173,7 @@ class GameState(engine.system.State):
         
         # If player has reached the end of the level, create a
         # level complete message, set game over to True.
-        if self.viewport.level_pos > 10400:
+        if self.viewport.level_pos > 10900:
             end = self.game.next_level()
             if not end:  # go to next level
                 text = "LEVEL %d COMPLETE!" % self.level

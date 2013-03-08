@@ -157,7 +157,7 @@ class Enemy3(Enemy1):
         self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
                                   self.dy + self.hb_offsety, 18, 13)
         self.points = 210
-        self.powerup_type = 1
+        self.powerup_type = 0
 
     def update(self, *args):
         # call parent classes update method
