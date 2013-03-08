@@ -66,19 +66,19 @@ class PsmGame(engine.system.Game):
         self.image_manager.load_single('dialogarrow.bmp', 'arrow', -1)
         self.image_manager.load_sheet('ship1.bmp','ship', 32, 16, 
                                            False, -1)
-        self.image_manager.load_sheet('enemy1.bmp', 'enemy1', 16, 16, 
+        self.image_manager.load_sheet('enemy1.bmp', 'enemy_01', 16, 16, 
                                            False, -1)
-        self.image_manager.load_sheet('enemy2.bmp', 'enemy2', 16, 16,
+        self.image_manager.load_sheet('enemy2.bmp', 'enemy_02', 16, 16,
                                            False, -1)
-        self.image_manager.load_sheet('enemy3.bmp', 'enemy3', 24,16, 
+        self.image_manager.load_sheet('enemy3.bmp', 'enemy_03', 24,16, 
                                            False, -1)
-        self.image_manager.load_sheet('enemy4.bmp', 'enemy4', 16,16, 
+        self.image_manager.load_sheet('enemy4.bmp', 'enemy_04', 16,16, 
                                            False, -1)
-        self.image_manager.load_sheet('enemy5.bmp', 'enemy5', 32,32, 
+        self.image_manager.load_sheet('enemy5.bmp', 'enemy_05', 32,32, 
                                            False, -1)
-        self.image_manager.load_sheet('enemy6.bmp', 'enemy6', 16,16,
+        self.image_manager.load_sheet('enemy6.bmp', 'enemy_06', 16,16,
                                            False, -1)
-        self.image_manager.load_sheet('enemy7.bmp', 'enemy7', 24,16, 
+        self.image_manager.load_sheet('enemy7.bmp', 'enemy_07', 24,16, 
                                            False, -1)
         self.image_manager.load_single('laser.bmp', 'pshot',
                                             (255,0,255))

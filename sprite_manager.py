@@ -47,7 +47,6 @@ class SpriteManager(engine.objects.SpriteManager):
         # update all sprites in the game
         # step through self.objects and call
         # each groups update method
-        print self.sprites['enemy_group']
 
         for key in self.update_order:
             for sprite in self.sprites[key]:
@@ -183,33 +182,41 @@ class SpriteManager(engine.objects.SpriteManager):
     def create_enemy(self, game, enemy_type, x, y, has_powerup):
         # Creates an enemy of enemy_type at x, y
 
-        # create appropriate enemy depending on enemy_type
-        if enemy_type == 'enemy_01':
-            enemy = enemies.Enemy1(game, x, y, has_powerup,
-                                   game.image_manager.get_image('enemy1'))
-        elif enemy_type == 'enemy_02':
-            enemy = enemies.Enemy2(game, x, y, has_powerup,
-                                   game.image_manager.get_image('enemy2'))
-        elif enemy_type == 'enemy_03':
-            enemy = enemies.Enemy3(game, x, y, has_powerup,
-                                   game.image_manager.get_image('enemy3'))
-        elif enemy_type == 'enemy_04':
-            enemy = enemies.Enemy4(game, x, y, has_powerup,
-                                   game.image_manager.get_image('enemy4'))
-        elif enemy_type == 'enemy_05':
-            enemy = enemies.Enemy5(game, x, y, has_powerup,
-                                   game.image_manager.get_image('enemy5'))
-        elif enemy_type == 'enemy_06':
-            enemy = enemies.Enemy6(game, x, y, has_powerup,
-                                   game.image_manager.get_image('enemy6'))
-        elif enemy_type == 'enemy_07':
-            enemy = enemies.Enemy7(game, x, y, has_powerup,
-                                   game.image_manager.get_image('enemy7'))
-        elif enemy_type == 'enemy_08':
-            images = list(game.image_manager.get_image('enemy1'))
+        # flip images if left to right enemy       
+        flipped_enemies = ['enemy_08', 'enemy_09', 'enemy_10']
+        if enemy_type in flipped_enemies:
+            if enemy_type == 'enemy_08':
+                images = list(game.image_manager.get_image('enemy_01'))
+            elif enemy_type == 'enemy_09':
+                images = list(game.image_manager.get_image('enemy_03'))
+            elif enemy_type == 'enemy_10':
+                images = list(game.image_manager.get_image('enemy_06'))
             for i in xrange(0, len(images)):
                 images[i] = pygame.transform.flip(images[i], True, False)
+        else: # right to left enemy, use normal images
+             images = game.image_manager.get_image(enemy_type)
+
+        # create appropriate enemy depending on enemy_type
+        if enemy_type == 'enemy_01':
+            enemy = enemies.Enemy1(game, x, y, has_powerup, images)
+        elif enemy_type == 'enemy_02':
+            enemy = enemies.Enemy2(game, x, y, has_powerup, images)
+        elif enemy_type == 'enemy_03':
+            enemy = enemies.Enemy3(game, x, y, has_powerup, images)
+        elif enemy_type == 'enemy_04':
+            enemy = enemies.Enemy4(game, x, y, has_powerup, images)
+        elif enemy_type == 'enemy_05':
+            enemy = enemies.Enemy5(game, x, y, has_powerup, images)
+        elif enemy_type == 'enemy_06':
+            enemy = enemies.Enemy6(game, x, y, has_powerup, images)
+        elif enemy_type == 'enemy_07':
+            enemy = enemies.Enemy7(game, x, y, has_powerup, images)
+        elif enemy_type == 'enemy_08':
             enemy = enemies.Enemy8(game, x, y, has_powerup, images)
+        elif enemy_type == 'enemy_09':
+            enemy = enemies.Enemy9(game, x, y, has_powerup, images)
+        elif enemy_type == 'enemy_10':
+            enemy = enemies.Enemy10(game, x, y, has_powerup, images)
 
         # Add enemy to enemy queue
         self.enemy_queue.append(enemy)

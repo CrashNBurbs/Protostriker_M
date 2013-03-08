@@ -146,8 +146,8 @@ class Enemy2(Enemy1):
 class Enemy3(Enemy1):
     """ Third enemy type, moves in a sine wave
     pattern at a moderate speed """
-    def __init__(self, game, x, y, images):
-        Enemy1.__init__(self, game, x, y, images, 40)
+    def __init__(self, game, x, y, has_powerup, images):
+        Enemy1.__init__(self, game, x, y, has_powerup, images, 40)
         self.speed = 95
         self.angle = 0.0  # starting point for sin calc
         self.radius = 2.0 # value to scale sin calc by
@@ -178,8 +178,8 @@ class Enemy4(Enemy2):
     """ Fourth enemy type, moves into position and
     then vertical from the top to the bottom of the screen
     until destroyed """
-    def __init__(self, game, x, y, images):
-        Enemy2.__init__(self, game, x, y, images)
+    def __init__(self, game, x, y, has_powerup, images):
+        Enemy2.__init__(self, game, x, y, has_powerup, images)
         self.speed = 50
         self.direction = -1
         self.bounds = game.game_world
@@ -228,8 +228,8 @@ class Enemy4(Enemy2):
 class Enemy5(Enemy2):
     """ Large, multi-hit taking, enemy that creats shrapnel on explode """
 
-    def __init__(self, game, x, y, images):
-        Enemy2.__init__(self, game, x, y, images)
+    def __init__(self, game, x, y, has_powerup, images):
+        Enemy2.__init__(self, game, x, y, has_powerup, images)
         self.speed = 15
         self.shoot_speed = 1000
         self.points = 250
@@ -281,8 +281,8 @@ class Enemy5(Enemy2):
 
 class Enemy6(Enemy3):
     """ Wide sine-wave enemy """
-    def __init__(self, game, x, y, images):
-        Enemy3.__init__(self, game, x, y, images)
+    def __init__(self, game, x, y, has_powerup, images):
+        Enemy3.__init__(self, game, x, y, has_powerup, images)
         self.dAngle = 3.5
         self.radius = 3.0
         self.points = 250
@@ -291,8 +291,8 @@ class Enemy6(Enemy3):
 
 class Enemy7(Enemy1):
     """ Homing enemy """
-    def __init__(self, game, x, y, images):
-        Enemy1.__init__(self, game, x, y, images)
+    def __init__(self, game, x, y, has_powerup, images):
+        Enemy1.__init__(self, game, x, y, has_powerup, images)
         self.speed = 95
         self.vspeed = 45
         self.direction = 0
@@ -336,6 +336,7 @@ class Enemy8(Enemy1):
         # Flip all images on their x axis
         # Call Enemy1 init, passing new flipped images
         Enemy1.__init__(self, game, x, y, has_powerup, images)
+        self.speed = 135
 
     
     def spawn(self):
@@ -361,3 +362,46 @@ class Enemy8(Enemy1):
         # update the rect
         self.rect.x = self.dx
         self.hitbox.x = self.rect.x + self.hb_offsetx
+
+class Enemy9(Enemy3):
+    """ sine wave enemy that moves left to right """
+    def __init__(self, game, x, y, has_powerup, images):
+        Enemy3.__init__(self, game, x, y, has_powerup, images)
+        self.speed = 85
+
+    def spawn(self):
+        # Called when enemy should be onscreen.
+        # Move enemy from its pos in the level
+        # to the edge of the screen.
+        self.dx = self.bounds.left - self.rect.width
+
+    def update(self, *args):
+        current_time = args[0]
+        engine.objects.AnimatedSprite.update(self, current_time)
+
+        # calculate change in y, sin of current angle
+        # scaled by radius
+        self.dy += math.sin(self.angle) * self.radius
+        self.dx += self.speed * TIMESTEP
+
+        # increment the radius by dAngle, scaled by timestep
+        self.angle += self.dAngle * TIMESTEP
+
+        # kill sprite if offscreen
+        if self.dx > self.bounds.right:
+            self.kill()
+
+        # update the rect
+        self.rect.x = self.dx
+        self.rect.y = self.dy
+        self.hitbox.x = self.rect.x + self.hb_offsetx
+        self.hitbox.y = self.rect.y + self.hb_offsety
+
+class Enemy10(Enemy9):
+    """ Wide sine wave enemy that moves left to right """
+    def __init__(self, game, x, y, has_powerup, images):
+        Enemy9.__init__(self, game, x, y, has_powerup, images)
+        self.dAngle = 3.5
+        self.radius = 3.0
+        self.points = 250
+        self.speed = 65
