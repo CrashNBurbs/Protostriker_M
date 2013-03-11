@@ -154,6 +154,9 @@ class Player(engine.objects.AnimatedSprite):
         return shots
 
     def power_up(self, powerup):
+        # increase score
+        self.score += 200
+
         if powerup == 0: # Spreader Gun
             if not self.has_spreader:
                 self.weapons.insert(0, weapons.Spreader(self.game))
@@ -210,7 +213,6 @@ class Player(engine.objects.AnimatedSprite):
             self.respawning = True
             self.dx = -20 - self.image.get_width()
             self.dy = 112
-
         else: # no lives remain, kill ship sprite
             self.kill()
             self.hitbox.y = -10

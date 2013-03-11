@@ -33,7 +33,7 @@ class Enemy1(engine.objects.AnimatedSprite):
                                   self.dy + self.hb_offsety, 15, 12)
         self.has_powerup = has_powerup
         self.powerup_type = 3 # speed
-        self.points = 160 # point value
+        self.points = 120 # point value
         self.explosion_sound = game.sound_manager.get_sound('en_exp')
         self.hits = 0 # number of hits enemy takes, 0 is a one-shot kill
         
@@ -148,15 +148,15 @@ class Enemy3(Enemy1):
     pattern at a moderate speed """
     def __init__(self, game, x, y, has_powerup, images):
         Enemy1.__init__(self, game, x, y, has_powerup, images, 40)
-        self.speed = 95
+        self.speed = 75
         self.angle = 0.0  # starting point for sin calc
-        self.radius = 2.0 # value to scale sin calc by
-        self.dAngle = 5.0 # change in angle(affects freq and amp)
+        self.radius = 2.75 #2.0 # value to scale sin calc by
+        self.dAngle = 5.0 #5.0 # change in angle(affects freq and amp)
         self.hb_offsetx = 4
         self.hb_offsety = 1
         self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
                                   self.dy + self.hb_offsety, 18, 13)
-        self.points = 210
+        self.points = 175
         self.powerup_type = 0
 
     def update(self, *args):
@@ -304,8 +304,8 @@ class Enemy6(Enemy3):
         Enemy3.__init__(self, game, x, y, has_powerup, images)
         self.dAngle = 3.5
         self.radius = 3.0
-        self.points = 250
-        self.speed = 75
+        self.points = 125
+        self.speed = 70
 
 
 class Enemy7(Enemy1):
