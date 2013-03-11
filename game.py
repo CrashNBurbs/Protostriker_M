@@ -27,7 +27,7 @@ class PsmGame(engine.system.Game):
         self.font = self.image_manager.get_font()
         self.text_color = (252,248,252)
         self.load_content()
-        self.current_level = 1
+        self.current_level = 0
         self.hud = hud.GameHud(self, (320, 32), (0,0,0))
         self.game_world = pygame.rect.Rect(0, SCREEN_RECT.top + self.hud.height,
                                            320, SCREEN_RECT.height - self.hud.height)

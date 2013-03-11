@@ -189,6 +189,7 @@ class Enemy4(Enemy2):
         self.hb_offsety = 1
         self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
                                   self.dy + self.hb_offsety, 14, 14)
+        self.explosion_image = game.image_manager.get_image('shrapnel')
         self.points = 125
 
     def update(self, *args):
@@ -224,6 +225,24 @@ class Enemy4(Enemy2):
     def spawn(self):
         # move sprite to self.spawn_point
         self.dx = self.spawn_point
+
+    def explode(self):
+        ex = []
+        # create explosion sprite
+
+        for angle in range(0,360,45):
+            ex.append(bullets.Shrapnel(self.rect.centerx, self.rect.centery,
+                                       angle, self.explosion_image))
+
+        # play sound
+        self.explosion_sound.play()
+
+        # die
+        self.kill()
+
+        powerup = None
+
+        return ex, powerup
 
 class Enemy5(Enemy2):
     """ Large, multi-hit taking, enemy that creats shrapnel on explode """
