@@ -81,12 +81,12 @@ class Enemy1(engine.objects.AnimatedSprite):
                                self.game.image_manager.get_image('explosion'))
         ex.append(anim)
         
+        # get a powerup
+        powerup = self.drop_powerup()
+
         # die
         self.kill()
 
-        # get a powerup
-        powerup = self.drop_powerup()
-        
         return ex, powerup
 
 class Enemy2(Enemy1):
@@ -259,6 +259,10 @@ class Enemy5(Enemy2):
         self.hits = 4
         self.hit_sound = game.sound_manager.get_sound('hit')
         self.explosion_image = game.image_manager.get_image('shrapnel')
+        self.flash_image = pygame.surface.Surface((self.image.get_width(),
+                                                  self.image.get_height()))
+        self.flash_image.fill((255,0,255))
+        self.flash_image.set_colorkey((255,0,255))
 
     def update(self, *args):
         current_time = args[0]
@@ -281,6 +285,7 @@ class Enemy5(Enemy2):
         # decrement hits on hit, play hit sound
         self.hits -= 1
         self.hit_sound.play()
+        self.image = self.flash_image
 
     def explode(self):
         ex = []
@@ -293,17 +298,19 @@ class Enemy5(Enemy2):
         # play sound
         self.explosion_sound.play()
 
+        powerup = self.drop_powerup()
+
         # die
         self.kill()
 
-        return ex
+        return ex, powerup
 
 class Enemy6(Enemy3):
     """ Wide sine-wave enemy """
     def __init__(self, game, x, y, has_powerup, images):
         Enemy3.__init__(self, game, x, y, has_powerup, images)
         self.dAngle = 3.5
-        self.radius = 3.0
+        self.radius = 3.25
         self.points = 125
         self.speed = 70
 
@@ -386,7 +393,7 @@ class Enemy9(Enemy3):
     """ sine wave enemy that moves left to right """
     def __init__(self, game, x, y, has_powerup, images):
         Enemy3.__init__(self, game, x, y, has_powerup, images)
-        self.speed = 85
+        self.speed = 55
 
     def spawn(self):
         # Called when enemy should be onscreen.
@@ -421,6 +428,6 @@ class Enemy10(Enemy9):
     def __init__(self, game, x, y, has_powerup, images):
         Enemy9.__init__(self, game, x, y, has_powerup, images)
         self.dAngle = 3.5
-        self.radius = 3.0
+        self.radius = 3.25
         self.points = 250
         self.speed = 65
