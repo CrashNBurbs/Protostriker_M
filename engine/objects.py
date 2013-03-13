@@ -87,19 +87,24 @@ class EventState(system.State):
         system.State.__init__(self, game)
         self.duration = duration
         self.text = text
+        self.font_height = game.font.get_height()
+        self.lines = []
         self.music = music
         self.to_state = to_state
-        self.last_update = pygame.time.get_ticks()
+        
     
     def activate(self, transition):
+        system.State.activate(self, transition)
+
         # pause interpolated draw, stop music create render from text, 
         # centered
+        self.last_update = pygame.time.get_ticks()
         self.game.paused = True
         self.game.sound_manager.music_control('stop')
-        self.render = self.game.font.render(self.text, False, 
-                                          self.game.text_color)
-        self.render_x = (SCREEN_RECT.width - self.render.get_width()) / 2
-        self.render_y = (SCREEN_RECT.height - self.render.get_height()) / 2
+        for line in self.text:
+            self.render = self.game.font.render(line, False, 
+                                              self.game.text_color)
+            self.lines.append(self.render)
 
     def update(self):
         system.State.update(self)
@@ -116,7 +121,14 @@ class EventState(system.State):
             self.game.change_state(self.to_state, graphics.FadeAnimation("in"))
 
     def draw(self, screen):
-        screen.blit(self.render, (self.render_x, self.render_y))
+        
+        self.render_y = (SCREEN_RECT.height - self.font_height * len(self.lines)) / 2
+
+        for line in self.lines:
+            self.render_x = (SCREEN_RECT.width - line.get_width()) / 2
+            
+            screen.blit(line, (self.render_x, self.render_y))
+            self.render_y += 10
 
         if self.transitioning:
             self.transition.draw(screen)

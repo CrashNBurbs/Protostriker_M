@@ -46,7 +46,7 @@ class PauseMenu(engine.gui.Menu):
             game.pop_state()
         elif selected == 'OPTIONS':
             options = ['TOGGLE FULLSCREEN/WINDOW', 'CONTROLS', 'BACK']
-            game.menu_manager.push_menu(OptionMenu(game, 52, 16, options))
+            game.menu_manager.push_menu(OptionMenu(game, 52, 40, options))
         elif selected == 'OUIT TO TITLE':
             return True
         elif selected == 'QUIT GAME':
@@ -88,7 +88,8 @@ class ControlsMenu(engine.gui.Menu):
         selected = engine.gui.Menu.handle_input(self, game)
         if selected == 'VIEW DEFAULT':
             text = ['MOVE - arrow keys or D-pad\nSHOOT\CONFIRM' \
-                    + '- Z key or button 2']
+                    + '- Z key or gamepad\nbutton 3\nCYCLE WEAPONS - A key ' \
+                    'or gamepad\nbutton 4']
             game.menu_manager.push_menu(engine.gui \
                                               .DialogBox(game, 16, 160, text))
         elif selected == 'RECONFIGURE':
@@ -98,6 +99,7 @@ class ControlsMenu(engine.gui.Menu):
                     'Press button for UP',
                     'Press button for DOWN',
                     'Press button for SHOOT',
+                    'Press button for WEAPON CYCLE',
                     'Press button for START',
                     'Configure Complete!']
             game.menu_manager.push_menu(ConfigDialogBox(game, 16, 160, text))
@@ -124,7 +126,7 @@ class ConfigDialogBox(engine.gui.DialogBox):
     def __init__(self, game, x, y, text):
         engine.gui.DialogBox.__init__(self, game, x, y, text)
         # buttons to reconfigure
-        self.buttons = ['LEFT', 'RIGHT', 'UP', 'DOWN',
+        self.buttons = ['LEFT', 'RIGHT', 'UP', 'DOWN', 'Y',
                         'B','START']
         self.current = 0  # index of current button
 

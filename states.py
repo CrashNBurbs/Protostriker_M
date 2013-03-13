@@ -164,7 +164,7 @@ class GameState(engine.system.State):
             self.player.lives -= 1
             # if player has lost all lives, push a game over event state
             if self.player.lives == -1:
-                text = "GAME OVER"
+                text = ["GAME OVER"]
                 state = engine.objects.EventState(self.game, text, 
                                                   "gameovermusic.wav",
                                                   GameState(self.game))
@@ -176,7 +176,7 @@ class GameState(engine.system.State):
         if self.viewport.level_pos > 11500:
             end = self.game.next_level()
             if not end:  # go to next level
-                text = "LEVEL %d COMPLETE!" % self.level
+                text = ["LEVEL %d COMPLETE!" % self.level]
                 state = engine.objects.EventState(self.game, text, 
                                                   "levelwin.wav", 
                                                   GameState(self.game))
@@ -184,7 +184,7 @@ class GameState(engine.system.State):
                 self.game.push_state(state)
                
             else:  # show ending
-                text = "GAME OVER"
+                text = ["GAME OVER"]
                 state = engine.objects.EventState(self.game, text, 
                                                   "gameovermusic.wav",
                                                   TitleScreenState(self.game))
