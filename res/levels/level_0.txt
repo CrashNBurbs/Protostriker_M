@@ -12,7 +12,6 @@ begin_enemy    type    enemy_01   x      6944   y        32   has_powerup    Fal
 begin_enemy    type    enemy_01   x      6960   y        32   has_powerup     True    end_enemy
 begin_enemy    type    enemy_03   x      8288   y        32   has_powerup    False    end_enemy
 begin_enemy    type    enemy_02   x      8688   y        32   has_powerup    False    end_enemy
-begin_enemy    type    enemy_05   x       656   y        32   has_powerup    False    end_enemy
 begin_enemy    type    enemy_02   x      2096   y        48   has_powerup     True    end_enemy
 begin_enemy    type    enemy_01   x      3552   y        48   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      3888   y        48   has_powerup    False    end_enemy
@@ -23,6 +22,7 @@ begin_enemy    type    enemy_01   x      7744   y        48   has_powerup    Fal
 begin_enemy    type    enemy_01   x      7760   y        48   has_powerup     True    end_enemy
 begin_enemy    type    enemy_01   x      8416   y        48   has_powerup    False    end_enemy
 begin_enemy    type    enemy_02   x      8688   y        48   has_powerup     True    end_enemy
+begin_enemy    type    enemy_01   x     10000   y        48   has_powerup    False    end_enemy
 begin_enemy    type    enemy_02   x      2096   y        64   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      3536   y        64   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      3904   y        64   has_powerup    False    end_enemy
@@ -34,6 +34,9 @@ begin_enemy    type    enemy_03   x      8784   y        64   has_powerup    Fal
 begin_enemy    type    enemy_03   x      8832   y        64   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      9232   y        64   has_powerup    False    end_enemy
 begin_enemy    type    enemy_02   x      9376   y        64   has_powerup    False    end_enemy
+begin_enemy    type    enemy_02   x      9776   y        64   has_powerup    False    end_enemy
+begin_enemy    type    enemy_01   x      9984   y        64   has_powerup    False    end_enemy
+begin_enemy    type    enemy_02   x     10144   y        64   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x       864   y        80   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x       880   y        80   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x       896   y        80   has_powerup     True    end_enemy
@@ -47,6 +50,9 @@ begin_enemy    type    enemy_02   x      6800   y        80   has_powerup    Fal
 begin_enemy    type    enemy_03   x      8288   y        80   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      8352   y        80   has_powerup     True    end_enemy
 begin_enemy    type    enemy_03   x      8736   y        80   has_powerup    False    end_enemy
+begin_enemy    type    enemy_02   x      9776   y        80   has_powerup    False    end_enemy
+begin_enemy    type    enemy_01   x      9968   y        80   has_powerup    False    end_enemy
+begin_enemy    type    enemy_02   x     10112   y        80   has_powerup    False    end_enemy
 begin_enemy    type    enemy_02   x      1600   y        96   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      2224   y        96   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      3504   y        96   has_powerup    False    end_enemy
@@ -54,6 +60,11 @@ begin_enemy    type    enemy_01   x      3936   y        96   has_powerup    Fal
 begin_enemy    type    enemy_01   x      5376   y        96   has_powerup    False    end_enemy
 begin_enemy    type    enemy_02   x      9264   y        96   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      9408   y        96   has_powerup    False    end_enemy
+begin_enemy    type    enemy_02   x      9904   y        96   has_powerup    False    end_enemy
+begin_enemy    type    enemy_01   x      9920   y        96   has_powerup    False    end_enemy
+begin_enemy    type    enemy_01   x      9936   y        96   has_powerup    False    end_enemy
+begin_enemy    type    enemy_01   x      9952   y        96   has_powerup    False    end_enemy
+begin_enemy    type    enemy_02   x     10080   y        96   has_powerup    False    end_enemy
 begin_enemy    type    enemy_02   x      1600   y       112   has_powerup     True    end_enemy
 begin_enemy    type    enemy_01   x      2064   y       112   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      2080   y       112   has_powerup    False    end_enemy
@@ -67,6 +78,7 @@ begin_enemy    type    enemy_01   x      5376   y       112   has_powerup    Fal
 begin_enemy    type    enemy_02   x      6096   y       112   has_powerup     True    end_enemy
 begin_enemy    type    enemy_01   x      7072   y       112   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      8672   y       112   has_powerup    False    end_enemy
+begin_enemy    type    enemy_02   x      9904   y       112   has_powerup    False    end_enemy
 begin_enemy    type    enemy_02   x      1600   y       128   has_powerup    False    end_enemy
 begin_enemy    type    enemy_03   x      2816   y       128   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      3504   y       128   has_powerup    False    end_enemy
@@ -82,12 +94,20 @@ begin_enemy    type    enemy_03   x      8288   y       128   has_powerup    Fal
 begin_enemy    type    enemy_03   x      8784   y       128   has_powerup    False    end_enemy
 begin_enemy    type    enemy_03   x      8832   y       128   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      9312   y       128   has_powerup    False    end_enemy
+begin_enemy    type    enemy_02   x      9904   y       128   has_powerup    False    end_enemy
+begin_enemy    type    enemy_01   x      9920   y       128   has_powerup    False    end_enemy
+begin_enemy    type    enemy_01   x      9936   y       128   has_powerup    False    end_enemy
+begin_enemy    type    enemy_01   x      9952   y       128   has_powerup    False    end_enemy
+begin_enemy    type    enemy_05   x     10128   y       112   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      2224   y       144   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      2576   y       144   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      3520   y       144   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      3920   y       144   has_powerup    False    end_enemy
 begin_enemy    type    enemy_02   x      4784   y       144   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      9424   y       144   has_powerup    False    end_enemy
+begin_enemy    type    enemy_02   x      9776   y       144   has_powerup    False    end_enemy
+begin_enemy    type    enemy_01   x      9968   y       144   has_powerup    False    end_enemy
+begin_enemy    type    enemy_02   x     10080   y       144   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      1216   y       160   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      1232   y       160   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      1248   y       160   has_powerup     True    end_enemy
@@ -98,6 +118,9 @@ begin_enemy    type    enemy_02   x      6800   y       160   has_powerup    Fal
 begin_enemy    type    enemy_01   x      8416   y       160   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      8672   y       160   has_powerup    False    end_enemy
 begin_enemy    type    enemy_02   x      9328   y       160   has_powerup    False    end_enemy
+begin_enemy    type    enemy_02   x      9776   y       160   has_powerup    False    end_enemy
+begin_enemy    type    enemy_01   x      9984   y       160   has_powerup    False    end_enemy
+begin_enemy    type    enemy_02   x     10112   y       160   has_powerup    False    end_enemy
 begin_enemy    type    enemy_02   x      2096   y       176   has_powerup     True    end_enemy
 begin_enemy    type    enemy_01   x      3552   y       176   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      3888   y       176   has_powerup    False    end_enemy
@@ -106,6 +129,8 @@ begin_enemy    type    enemy_02   x      6096   y       176   has_powerup    Fal
 begin_enemy    type    enemy_02   x      6816   y       176   has_powerup    False    end_enemy
 begin_enemy    type    enemy_02   x      8688   y       176   has_powerup     True    end_enemy
 begin_enemy    type    enemy_01   x      9280   y       176   has_powerup    False    end_enemy
+begin_enemy    type    enemy_01   x     10000   y       176   has_powerup    False    end_enemy
+begin_enemy    type    enemy_02   x     10144   y       176   has_powerup    False    end_enemy
 begin_enemy    type    enemy_01   x      3568   y       192   has_powerup     True    end_enemy
 begin_enemy    type    enemy_01   x      3872   y       192   has_powerup    False    end_enemy
 begin_enemy    type    enemy_02   x      5408   y       192   has_powerup    False    end_enemy

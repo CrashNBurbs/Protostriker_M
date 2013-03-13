@@ -27,6 +27,7 @@ class PsmGame(engine.system.Game):
         self.font = self.image_manager.get_font()
         self.text_color = (252,248,252)
         self.load_content()
+        pygame.display.set_icon(self.image_manager.get_image('icon'))
         self.current_level = 0
         self.hud = hud.GameHud(self, (320, 32), (0,0,0))
         self.game_world = pygame.rect.Rect(0, SCREEN_RECT.top + self.hud.height,
@@ -60,6 +61,7 @@ class PsmGame(engine.system.Game):
                           engine.graphics.FadeAnimation("in"))
 
     def load_content(self):
+        self.image_manager.load_single('icon.bmp', 'icon', -1)
         self.image_manager.load_sheet('textborder.bmp', 'textborder',
                                            8, 8, False)
         self.image_manager.load_single('menuarrow.bmp', 'cursor', -1)

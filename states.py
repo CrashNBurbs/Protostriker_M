@@ -173,7 +173,7 @@ class GameState(engine.system.State):
         
         # If player has reached the end of the level, create a
         # level complete message, set game over to True.
-        if self.viewport.level_pos > 10900:
+        if self.viewport.level_pos > 11500:
             end = self.game.next_level()
             if not end:  # go to next level
                 text = "LEVEL %d COMPLETE!" % self.level
