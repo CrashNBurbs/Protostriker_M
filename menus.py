@@ -126,8 +126,8 @@ class ConfigDialogBox(engine.gui.DialogBox):
     def __init__(self, game, x, y, text):
         engine.gui.DialogBox.__init__(self, game, x, y, text)
         # buttons to reconfigure
-        self.buttons = ['LEFT', 'RIGHT', 'UP', 'DOWN', 'Y',
-                        'B','START']
+        self.buttons = ['LEFT', 'RIGHT', 'UP', 'DOWN', 'B',
+                        'Y','START']
         self.current = 0  # index of current button
 
     def handle_input(self, game):
