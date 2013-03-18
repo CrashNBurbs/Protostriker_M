@@ -261,6 +261,7 @@ class Enemy5(Enemy2):
         self.explosion_image = game.image_manager.get_image('shrapnel')
         self.flash_image = pygame.surface.Surface((self.image.get_width(),
                                                   self.image.get_height()))
+        self.flash_image.convert()
         self.flash_image.fill((255,0,255))
         self.flash_image.set_colorkey((255,0,255))
 
