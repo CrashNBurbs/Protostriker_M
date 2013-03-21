@@ -118,11 +118,11 @@ class Enemy2(Enemy1):
         self.dx < self.start_shoot:
             self.shooting = True
         else:
-            self.shot = None
+            shot = None
 
         # fire three shots per volley
         if self.shooting:
-            self.shoot(current_time)
+            shot = self.shoot(current_time)
             if self.shots == 3: # reset values
                 self.last_volley = current_time
                 self.shooting = False
@@ -130,18 +130,19 @@ class Enemy2(Enemy1):
 
         # return the bullet sprite if shooting
         # or None if not shooting
-        return self.shot
+        return shot
 
     def shoot(self, current_time):
         # fire a shot at current pos, every
         # self.shoot_speed m/s, keep track of shots fired
         if current_time - self.last_shot > self.shoot_speed:
-            self.shot = bullets.EnemyBullet(self.rect.left,
+            shot = bullets.EnemyBullet(self.rect.left,
                              self.rect.centery, 0, self.bullet_image)
             self.shots += 1
             self.last_shot = current_time
         else:
-            self.shot = None
+            shot = None
+        return shot
 
 class Enemy3(Enemy1):
     """ Third enemy type, moves in a sine wave
@@ -196,6 +197,8 @@ class Enemy4(Enemy2):
         current_time = args[0]
         engine.objects.AnimatedSprite.update(self, current_time)
 
+        shot = None
+
         # Move vertically on the screen, reversing direction
         # if screen bounds are hit
         if self.direction == -1: # moving up
@@ -216,11 +219,11 @@ class Enemy4(Enemy2):
         self.hitbox.y = self.rect.y + self.hb_offsety
 
         # shoot at a delay
-        self.shoot(current_time)
+        shot = self.shoot(current_time)
 
         # return bullet sprite if shooting,
         # None if not shooting
-        return self.shot
+        return shot
 
     def spawn(self):
         # move sprite to self.spawn_point
@@ -432,3 +435,33 @@ class Enemy10(Enemy9):
         self.radius = 3.25
         self.points = 250
         self.speed = 65
+
+class Enemy11(Enemy2):
+    def __init__(self, game, x, y, has_powerup, images):
+        Enemy2.__init__(self, game, x, y, has_powerup, images)
+        self.speed = 50
+        self.shoot_speed = 1500
+        self.points = 155
+        self.hb_offsetx = 1
+        self.hb_offsety = 1
+        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 14, 14)
+
+
+    def update(self, *args):
+        current_time = args[0]
+        player_rect = args[1]
+        Enemy1.update(self, current_time)
+
+        self.shoot(current_time)
+        return self.shot
+
+    def shoot(self, current_time):
+        # fire a shot at current pos, every
+        # self.shoot_speed m/s, keep track of shots fired
+        if current_time - self.last_shot > self.shoot_speed:
+            self.shot = bullets.EnemyBullet(self.rect.left + 2,
+                             self.rect.centery + 5, 0, self.bullet_image)
+            self.last_shot = current_time
+        else:
+            self.shot = None
