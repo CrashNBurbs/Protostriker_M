@@ -12,8 +12,8 @@ class BasicWeapon():
         self.bullet_image = game.image_manager.get_image('pshot')
         self.default_speed = 400
         self.speed = self.default_speed # delay for creating shots
-        self.speed_increment = 75 
-        self.max_speed = 175
+        self.speed_increment = 65
+        self.max_speed = 205
         self.last_shot = 0 # time of last shot
         self.angles = [0]
         self.name = "NORMAL"
@@ -37,7 +37,7 @@ class BasicWeapon():
     def power_up(self):
         if self.speed > self.max_speed:
             self.speed -= self.speed_increment
-
+        print self.speed
 class Spreader(BasicWeapon):
     """ Spreader weapon - Fire three shots simultaneously """
 
@@ -45,9 +45,9 @@ class Spreader(BasicWeapon):
         BasicWeapon.__init__(self, game)
         self.sound = game.sound_manager.get_sound('spreader')
         self.bullet_image = game.image_manager.get_image('spreadshot')
-        self.default_speed = 550
+        self.default_speed = 575
         self.speed = self.default_speed
-        self.max_speed = 325
+        self.max_speed = 380
         self.angles = [0, 10, 350]
         self.name = "SPREAD"
 
