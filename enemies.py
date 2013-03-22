@@ -463,18 +463,20 @@ class Enemy11(Enemy2):
 
         self.player_angle = math.atan2(player_rect.centery - self.rect.centery,
                                        player_rect.centerx - self.rect.centerx)
-        print self.player_angle
 
         if self.dx > self.stop_shoot:
-            shot = self.shoot(current_time)
+            shot = self.shoot(current_time, player_rect)
         return shot
 
-    def shoot(self, current_time):
+    def shoot(self, current_time, player_rect):
         # fire a shot at current pos, every
         # self.shoot_speed m/s, keep track of shots fired
         if current_time - self.last_shot > self.shoot_speed:
+            angle = math.atan2(player_rect.centery - self.rect.centery,
+                               player_rect.centerx - self.rect.centerx)
+
             shot = bullets.EnemyBulletAngle(self.rect.left,
-                             self.rect.centery, self.player_angle, 
+                             self.rect.centery, angle, 
                              self.bullet_image)
             self.last_shot = current_time
         else:

@@ -27,10 +27,10 @@ class Player(engine.objects.AnimatedSprite):
     def __init__(self, game, x, y, images):
         engine.objects.AnimatedSprite.__init__(self,x,y,images, 20)
         self.game = game
-        self.default_speed = 60
+        self.default_speed = 65
         self.speed = self.default_speed
         self.speed_increment = 20
-        self.max_speed = 120
+        self.max_speed = 125
         self.direction = [0,0] # [x,y]
         self.bounds = game.game_world
         self.weapons = [weapons.BasicWeapon(game)]
