@@ -36,6 +36,7 @@ class Enemy1(engine.objects.AnimatedSprite):
         self.points = 120 # point value
         self.explosion_sound = game.sound_manager.get_sound('en_exp')
         self.hits = 0 # number of hits enemy takes, 0 is a one-shot kill
+        self.hit_sound = game.sound_manager.get_sound('hit')
         
     def update(self, *args):
         current_time = args[0]
@@ -93,6 +94,14 @@ class Enemy1(engine.objects.AnimatedSprite):
         self.kill()
 
         return ex, powerup
+
+    def get_flash_image(self):
+        flash_image = pygame.surface.Surface((self.image.get_width(),
+                                              self.image.get_height()))
+        flash_image.convert()
+        flash_image.fill((255,0,255))
+        flash_image.set_colorkey((255,0,255))
+        return flash_image
 
 class Enemy2(Enemy1):
     """ Second enemy type, moves in a straight line
@@ -266,14 +275,9 @@ class Enemy5(Enemy2):
         self.hb_offsety = 4
         self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
                                   self.dy + self.hb_offsety, 25, 21)
-        self.hits = 4
-        self.hit_sound = game.sound_manager.get_sound('hit')
+        self.hits = 6
         self.explosion_image = game.image_manager.get_image('shrapnel')
-        self.flash_image = pygame.surface.Surface((self.image.get_width(),
-                                                  self.image.get_height()))
-        self.flash_image.convert()
-        self.flash_image.fill((255,0,255))
-        self.flash_image.set_colorkey((255,0,255))
+        self.flash_image = self.get_flash_image()
 
     def update(self, *args):
         current_time = args[0]
@@ -295,8 +299,6 @@ class Enemy5(Enemy2):
         else:
             shot = None
         return shot
-
-
 
     def explode(self):
         ex = []
@@ -324,6 +326,8 @@ class Enemy6(Enemy3):
         self.radius = 3.25
         self.points = 125
         self.speed = 70
+        self.hits = 3
+        self.flash_image = self.get_flash_image()
 
 
 class Enemy7(Enemy1):
@@ -338,6 +342,8 @@ class Enemy7(Enemy1):
         self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
                                   self.dy + self.hb_offsety, 18, 13)
         self.changed_dir = False
+        self.hits = 3
+        self.flash_image = self.get_flash_image()
 
     def update(self, *args):
         current_time = args[0]
@@ -454,6 +460,8 @@ class Enemy11(Enemy2):
         self.hb_offsety = 1
         self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
                                   self.dy + self.hb_offsety, 14, 14)
+        self.hits = 2
+        self.flash_image = self.get_flash_image()
 
     def update(self, *args):
         current_time = args[0]

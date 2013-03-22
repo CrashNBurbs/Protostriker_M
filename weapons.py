@@ -37,7 +37,7 @@ class BasicWeapon():
     def power_up(self):
         if self.speed > self.max_speed:
             self.speed -= self.speed_increment
-        print self.speed
+
 class Spreader(BasicWeapon):
     """ Spreader weapon - Fire three shots simultaneously """
 
