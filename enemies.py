@@ -37,7 +37,6 @@ class Enemy1(engine.objects.AnimatedSprite):
         self.explosion_sound = game.sound_manager.get_sound('en_exp')
         self.hits = 0 # number of hits enemy takes, 0 is a one-shot kill
         
-
     def update(self, *args):
         current_time = args[0]
 
@@ -70,6 +69,12 @@ class Enemy1(engine.objects.AnimatedSprite):
         else:
             powerup = None
         return powerup
+    
+    def hit(self):
+        # decrement hits on hit, play hit sound
+        self.hits -= 1
+        self.hit_sound.play()
+        self.image = self.flash_image
        
     def explode(self):
         # play sound
@@ -291,11 +296,7 @@ class Enemy5(Enemy2):
             shot = None
         return shot
 
-    def hit(self):
-        # decrement hits on hit, play hit sound
-        self.hits -= 1
-        self.hit_sound.play()
-        self.image = self.flash_image
+
 
     def explode(self):
         ex = []

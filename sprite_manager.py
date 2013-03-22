@@ -99,7 +99,6 @@ class SpriteManager(engine.objects.SpriteManager):
                         # let the laser beam pass through enemies
                         if bullet.destroyable:
                             bullet.kill()
-                        player.score += enemy.points
                         # kill the enemy, get an explosion sprite, and 
                         # a powerup on change
                         ex, powerup = enemy.explode()
@@ -109,6 +108,7 @@ class SpriteManager(engine.objects.SpriteManager):
                         # add the powerup if you get one
                         if powerup is not None:
                             self.add_sprite(powerup, 'powerups')
+                        player.score += enemy.points
 
         # check for shrapnel explosion collision with player
         for shrapnel in self.sprites['explosions']:
