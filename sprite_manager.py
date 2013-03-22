@@ -38,7 +38,7 @@ class SpriteManager(engine.objects.SpriteManager):
         self.add_group(powerups_group, 'powerups')
         self.add_group(player_group, 'player_group')
         self.enemy_queue = [] # list of offscreen enemies
-        self.update_order = ['player_group', 'player_shots', 'enemy_group',
+        self.update_order = ['player_group',  'enemy_group', 'player_shots',
                              'enemy_shots', 'powerups', 'explosions']
         self.draw_order = ['player_shots', 'player_group', 'enemy_shots',
                            'enemy_group', 'powerups', 'explosions']
@@ -217,6 +217,8 @@ class SpriteManager(engine.objects.SpriteManager):
             enemy = enemies.Enemy9(game, x, y, has_powerup, images)
         elif enemy_type == 'enemy_10':
             enemy = enemies.Enemy10(game, x, y, has_powerup, images)
+        elif enemy_type == 'enemy_11':
+            enemy = enemies.Enemy11(game, x, y, has_powerup, images)
 
         # Add enemy to enemy queue
         self.enemy_queue.append(enemy)

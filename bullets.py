@@ -87,6 +87,33 @@ class EnemyBullet(Bullet):
         if self.rect.left < self.bounds.left:
             self.kill()
 
+class EnemyBulletAngle(Bullet):
+    """ Enemy bullets that travel at an angle """
+    def __init__(self, x, y, angle, image):
+        Bullet.__init__(self, x, y, angle, image)
+        self.speed = 100
+        self.radians = angle
+        self.hb_offsetx = 1
+        self.hb_offsety = 1
+        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 6, 6)
+
+    def update(self, *args):
+        # calculate change in x,y
+        self.dx += (math.cos(self.radians) * self.speed) * TIMESTEP
+        self.dy += (math.sin(self.radians) * self.speed) * TIMESTEP
+
+
+        # update the rects
+        self.rect.x = self.dx
+        self.rect.y = self.dy
+        self.hitbox.x = self.rect.x + self.hb_offsetx
+        self.hitbox.y = self.rect.y + self.hb_offsety
+
+        # check for screen bounds, kill if offscreen
+        if not self.bounds.contains(self.rect):
+            self.kill()
+
 class SpreaderBullet(Bullet):
     """ bullet for the spreader gun, can travel at an angle """
     def __init__(self, x, y, angle, image):

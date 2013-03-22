@@ -103,6 +103,7 @@ class Enemy2(Enemy1):
         self.shooting = False
         self.shots = 0 # shots fired
         self.start_shoot = 290 # x coord to being firing
+        self.stop_shoot = 64 # x coord to cease firing
         self.points = 90
         self.powerup_type = 4
 
@@ -115,7 +116,7 @@ class Enemy2(Enemy1):
         # set shooting to true every self.volley_speed m/s
         # if enemy has passed the start shooting pos
         if current_time - self.last_volley > self.volley_speed and \
-        self.dx < self.start_shoot:
+        self.dx < self.start_shoot and self.dx > self.stop_shoot:
             self.shooting = True
         else:
             shot = None
@@ -219,7 +220,8 @@ class Enemy4(Enemy2):
         self.hitbox.y = self.rect.y + self.hb_offsety
 
         # shoot at a delay
-        shot = self.shoot(current_time)
+        if self.dx > self.stop_shoot:
+            shot = self.shoot(current_time)
 
         # return bullet sprite if shooting,
         # None if not shooting
@@ -272,18 +274,22 @@ class Enemy5(Enemy2):
         current_time = args[0]
         Enemy1.update(self, current_time)
 
-        self.shoot(current_time)
-        return self.shot
+        shot = None
+
+        if self.dx > self.stop_shoot:
+            shot = self.shoot(current_time)
+        return shot
 
     def shoot(self, current_time):
         # fire a shot at current pos, every
         # self.shoot_speed m/s, keep track of shots fired
         if current_time - self.last_shot > self.shoot_speed:
-            self.shot = bullets.EnemyBullet(self.rect.left + 2,
+            shot = bullets.EnemyBullet(self.rect.left + 2,
                              self.rect.centery + 5, 0, self.bullet_image)
             self.last_shot = current_time
         else:
-            self.shot = None
+            shot = None
+        return shot
 
     def hit(self):
         # decrement hits on hit, play hit sound
@@ -437,31 +443,40 @@ class Enemy10(Enemy9):
         self.speed = 65
 
 class Enemy11(Enemy2):
+    """ enemy that shoots single shots at the player """
     def __init__(self, game, x, y, has_powerup, images):
         Enemy2.__init__(self, game, x, y, has_powerup, images)
-        self.speed = 50
-        self.shoot_speed = 1500
+        self.speed = 40
+        self.shoot_speed = 1000
         self.points = 155
         self.hb_offsetx = 1
         self.hb_offsety = 1
         self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
                                   self.dy + self.hb_offsety, 14, 14)
 
-
     def update(self, *args):
         current_time = args[0]
         player_rect = args[1]
         Enemy1.update(self, current_time)
 
-        self.shoot(current_time)
-        return self.shot
+        shot = None
+
+        self.player_angle = math.atan2(player_rect.centery - self.rect.centery,
+                                       player_rect.centerx - self.rect.centerx)
+        print self.player_angle
+
+        if self.dx > self.stop_shoot:
+            shot = self.shoot(current_time)
+        return shot
 
     def shoot(self, current_time):
         # fire a shot at current pos, every
         # self.shoot_speed m/s, keep track of shots fired
         if current_time - self.last_shot > self.shoot_speed:
-            self.shot = bullets.EnemyBullet(self.rect.left + 2,
-                             self.rect.centery + 5, 0, self.bullet_image)
+            shot = bullets.EnemyBulletAngle(self.rect.left,
+                             self.rect.centery, self.player_angle, 
+                             self.bullet_image)
             self.last_shot = current_time
         else:
-            self.shot = None
+            shot = None
+        return shot
