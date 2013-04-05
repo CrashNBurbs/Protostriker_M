@@ -68,7 +68,7 @@ class EnemyBullet(Bullet):
     it is on screen """
     def __init__(self, x, y, angle, image):
         Bullet.__init__(self, x, y, angle, image)
-        self.speed = 135
+        self.speed = 100
         self.hb_offsetx = 1
         self.hb_offsety = 1
         self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
@@ -91,7 +91,7 @@ class EnemyBulletAngle(Bullet):
     """ Enemy bullets that travel at an angle """
     def __init__(self, x, y, angle, image):
         Bullet.__init__(self, x, y, angle, image)
-        self.speed = 100
+        self.speed = 75
         self.radians = angle
         self.hb_offsetx = 1
         self.hb_offsety = 1

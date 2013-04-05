@@ -110,7 +110,7 @@ class Enemy2(Enemy1):
         Enemy1.__init__(self, game, x, y, has_powerup, images)
         self.speed = 25
         self.bullet_image = game.image_manager.get_image('eshot')
-        self.shoot_speed = 150  # shooting delay
+        self.shoot_speed = 185 #150  # shooting delay
         self.last_shot = 0 # time of last shot
         self.volley_speed = 2000 # volley of shots delay
         self.last_volley = 0 # time of last volley
@@ -454,7 +454,7 @@ class Enemy11(Enemy2):
     def __init__(self, game, x, y, has_powerup, images):
         Enemy2.__init__(self, game, x, y, has_powerup, images)
         self.speed = 40
-        self.shoot_speed = 1000
+        self.shoot_speed = 1100
         self.points = 155
         self.hb_offsetx = 1
         self.hb_offsety = 1
@@ -469,9 +469,6 @@ class Enemy11(Enemy2):
         Enemy1.update(self, current_time)
 
         shot = None
-
-        self.player_angle = math.atan2(player_rect.centery - self.rect.centery,
-                                       player_rect.centerx - self.rect.centerx)
 
         if self.dx > self.stop_shoot:
             shot = self.shoot(current_time, player_rect)
