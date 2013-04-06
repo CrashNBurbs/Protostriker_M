@@ -15,6 +15,7 @@ import pygame
 from pygame.locals import *
 import os
 import system
+import resource_path
 
 class ImageManager():
     """ loads all game images and font into a single dictionary
@@ -34,9 +35,10 @@ class ImageManager():
         # call pygame image load function
 
         # create platform independent path
-        fullname = os.path.join('res', 'images', filename)
+        relative = os.path.join('res', 'images', filename)
+        path = resource_path.resource_path(relative)
         try:
-            image = pygame.image.load(fullname)
+            image = pygame.image.load(path)
         except pygame.error, message:
             print 'Cannot load image:', filename
             raise SystemExit, message

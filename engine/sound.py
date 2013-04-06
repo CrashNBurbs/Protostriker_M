@@ -13,6 +13,7 @@
 import pygame
 from pygame.locals import *
 import os
+import resource_path
 
 class SoundManager():
     """ This class handles the loading and playback of sounds
@@ -23,9 +24,10 @@ class SoundManager():
 
     def load(self, filename, volume = 0.5):
         # load a sound for playback
-        fullname = os.path.join('res', 'sound_effects', filename)
+        relative = os.path.join('res', 'sound_effects', filename)
+        path = resource_path.resource_path(relative)
         try:
-            sound = pygame.mixer.Sound(fullname)
+            sound = pygame.mixer.Sound(path)
         except pygame.error, message:
             print 'Cannot load sound:', filename
             raise SystemExit, message
