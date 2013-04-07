@@ -28,7 +28,7 @@ class PsmGame(engine.system.Game):
         self.text_color = (252,248,252)
         self.load_content()
         pygame.display.set_icon(self.image_manager.get_image('icon'))
-        self.current_level = 0
+        self.current_level = 1
         self.hud = hud.GameHud(self, (320, 32), (0,0,0))
         self.game_world = pygame.rect.Rect(0, SCREEN_RECT.top + self.hud.height,
                                            320, SCREEN_RECT.height - self.hud.height)
@@ -42,7 +42,7 @@ class PsmGame(engine.system.Game):
         # change to a new level and return False if there are more levels
         # otherwise return true
         end_game = False
-        if self.current_level < 2:
+        if self.current_level < 1:
             self.current_level += 1
         else:
             end_game = True
@@ -55,7 +55,7 @@ class PsmGame(engine.system.Game):
 
     def reset(self):
         # reset the game back to original state
-        self.current_level = 0
+        self.current_level = 1
         self.reset_player()
         self.change_state(states.TitleScreenState(self), 
                           engine.graphics.FadeAnimation("in"))
@@ -77,10 +77,6 @@ class PsmGame(engine.system.Game):
         self.image_manager.load_sheet('enemy4.bmp', 'enemy_04', 16,16, 
                                            False, -1)
         self.image_manager.load_sheet('enemy5.bmp', 'enemy_05', 32,32, 
-                                           False, -1)
-        self.image_manager.load_sheet('enemy6.bmp', 'enemy_06', 16,16,
-                                           False, -1)
-        self.image_manager.load_sheet('enemy7.bmp', 'enemy_07', 24,16, 
                                            False, -1)
         self.image_manager.load_sheet('enemy11.bmp', 'enemy_11', 16, 16,
                                       False, -1)

@@ -184,10 +184,23 @@ class GameState(engine.system.State):
                 self.game.push_state(state)
                
             else:  # show ending
-                text = ["GAME OVER"]
+                text = ["LEVEL %d COMPLETE!" % self.level]
+                screen3 = engine.objects.EventState(self.game, ["COMING " +
+                                            "SUMMER 2013"], "none.wav",
+                                            TitleScreenState(self.game))
+                screen2 = engine.objects.EventState(self.game, 
+                                            ["FULL GAME FEATURES:",
+                                            "NEW WEAPONS!", "NEW LEVELS!",
+                                            "NEW ENEMIES!"], "none.wav",
+                                            screen3)
+                screen1 = engine.objects.EventState(self.game, 
+                                            ["THANKS FOR PLAYING ",
+                                            "THE PROTOSTRIKER M DEMO!"],
+                                            "none.wav", screen2)
                 state = engine.objects.EventState(self.game, text, 
                                                   "gameovermusic.wav",
-                                                  TitleScreenState(self.game))
+                                                  screen1)
+                self.game.reset_player()
                 self.game.push_state(state)
            
     def draw(self, screen):
