@@ -83,7 +83,8 @@ class GameState(engine.system.State):
 
     def load_content(self):
         # load images
-        self.game.image_manager.load_single('background.bmp', 'background')
+        background = 'background%d.bmp' % self.level
+        self.game.image_manager.load_single(background, 'background')
 
     def unload_content(self):
         self.game.image_manager.unload_image('background')
