@@ -326,7 +326,7 @@ class Enemy6(Enemy3):
         self.radius = 3.25
         self.points = 125
         self.speed = 70
-        self.hits = 3
+        self.hits = 1
         self.flash_image = self.get_flash_image()
 
 
@@ -376,8 +376,6 @@ class Enemy7(Enemy1):
 class Enemy8(Enemy1):
     """ enemy 1 type that moves left to right """
     def __init__(self, game, x, y, has_powerup, images):
-        # Flip all images on their x axis
-        # Call Enemy1 init, passing new flipped images
         Enemy1.__init__(self, game, x, y, has_powerup, images)
         self.speed = 135
 
@@ -460,6 +458,8 @@ class Enemy11(Enemy2):
         self.hb_offsety = 1
         self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
                                   self.dy + self.hb_offsety, 14, 14)
+        self.has_powerup = has_powerup
+        self.powerup_type = 1 # reverse fire gun
         self.hits = 2
         self.flash_image = self.get_flash_image()
 

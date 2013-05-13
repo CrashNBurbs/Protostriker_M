@@ -33,7 +33,7 @@ class Player(engine.objects.AnimatedSprite):
         self.max_speed = 125
         self.direction = [0,0] # [x,y]
         self.bounds = game.game_world
-        self.weapons = [weapons.BasicWeapon(game)]
+        self.weapons = [weapons.BasicWeapon(game), weapons.Spreader(game)]
         self.has_spreader = False
         self.has_reverse_fire = False
         self.has_laser = False

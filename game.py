@@ -28,7 +28,7 @@ class PsmGame(engine.system.Game):
         self.text_color = (252,248,252)
         self.load_content()
         pygame.display.set_icon(self.image_manager.get_image('icon'))
-        self.current_level = 1
+        self.current_level = 2
         self.hud = hud.GameHud(self, (320, 32), (0,0,0))
         self.game_world = pygame.rect.Rect(0, SCREEN_RECT.top + self.hud.height,
                                            320, SCREEN_RECT.height - self.hud.height)
@@ -55,7 +55,7 @@ class PsmGame(engine.system.Game):
 
     def reset(self):
         # reset the game back to original state
-        self.current_level = 0
+        self.current_level = 2
         self.reset_player()
         self.change_state(states.TitleScreenState(self), 
                           engine.graphics.FadeAnimation("in"))
