@@ -40,8 +40,8 @@ class SpriteManager(engine.objects.SpriteManager):
         self.enemy_queue = [] # list of offscreen enemies
         self.update_order = ['player_group',  'enemy_group', 'player_shots',
                              'enemy_shots', 'powerups', 'explosions']
-        self.draw_order = ['player_group', 'enemy_group', 'powerups', 
-                           'explosions','player_shots','enemy_shots']
+        self.draw_order = ['player_shots','player_group', 'enemy_group', 
+                           'powerups', 'explosions','enemy_shots']
 
     def update(self, current_time, viewport, player_rect):
         # update all sprites in the game
