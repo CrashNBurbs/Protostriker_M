@@ -10,10 +10,10 @@ class BasicWeapon():
     def __init__(self, game):
         self.sound = game.sound_manager.get_sound('laser')
         self.bullet_image = game.image_manager.get_image('pshot')
-        self.default_speed = 400
+        self.default_speed = 380
         self.speed = self.default_speed # delay for creating shots
         self.speed_increment = 65
-        self.max_speed = 205
+        self.max_speed = 185
         self.last_shot = 0 # time of last shot
         self.angles = [0]
         self.name = "NORMAL"

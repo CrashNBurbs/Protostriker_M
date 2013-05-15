@@ -452,7 +452,7 @@ class Enemy11(Enemy2):
     def __init__(self, game, x, y, has_powerup, images):
         Enemy2.__init__(self, game, x, y, has_powerup, images)
         self.speed = 40
-        self.shoot_speed = 1100
+        self.shoot_speed = 1250
         self.points = 155
         self.hb_offsetx = 1
         self.hb_offsety = 1

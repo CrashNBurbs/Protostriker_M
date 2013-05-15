@@ -33,7 +33,7 @@ class Player(engine.objects.AnimatedSprite):
         self.max_speed = 125
         self.direction = [0,0] # [x,y]
         self.bounds = game.game_world
-        self.weapons = [weapons.BasicWeapon(game), weapons.Spreader(game)]
+        self.weapons = [weapons.BasicWeapon(game)]
         self.has_spreader = False
         self.has_reverse_fire = False
         self.has_laser = False
@@ -204,7 +204,7 @@ class Player(engine.objects.AnimatedSprite):
 
         # save time of death and set timer for protection
         self.explode_time = pygame.time.get_ticks()
-        self.protect_duration = 2000
+        self.protect_duration = 3000
 
         # If lives remain, disable player input, hide the
         # ship offscreen, toggle protected and respawning.
