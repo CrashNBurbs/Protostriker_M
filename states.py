@@ -104,7 +104,8 @@ class GameState(engine.system.State):
 
         # play music
         music_string = 'level_%d.wav' % self.level
-        #self.game.sound_manager.play_music(music_string)
+        if self.game.current_level < 3:
+            self.game.sound_manager.play_music(music_string)
 
         # create player, viewport, score and lives render, 
         # add player to sprite manager group
