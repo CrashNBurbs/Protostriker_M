@@ -156,9 +156,9 @@ class InputManager():
         pygame.joystick.init()
         self.redefined = False  # Start with default controls
         # dictionary of held buttons
-        self.held = {'keys' : [], 'buttons' : [], 'dpad' : []}
+        self.held = {'keys' : [], 'buttons' : [], 'dpad' : [], 'stick' : []}
          # dictionary of pressed buttons
-        self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}
+        self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : [], 'stick' : []}
         self.config_mode = False
         self.input_enabled = True
         self.set = [(-1, 1), (1, 1), (1, -1), (-1, -1)]
@@ -197,7 +197,8 @@ class InputManager():
     def process_input(self):
         if not self.config_mode:
             #reset pressed buttons every call
-            self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : []}
+            self.pressed = {'keys' : [], 'buttons' : [], 'dpad' : [], 
+                            'stick' : []}
             for event in pygame.event.get():
                 if event.type == QUIT:
                         pygame.quit()
@@ -233,6 +234,17 @@ class InputManager():
                     if event.value[1] > 0:
                         dpad_state.append('up')
                     self.update_dpad(dpad_state)
+                elif event.type == JOYAXISMOTION:
+                    axis_state = []
+                    if self.gamepad.get_axis(0) < -.5:
+                        axis_state.append('left')
+                    elif self.gamepad.get_axis(0) > .5:
+                        axis_state.append('right')
+                    if self.gamepad.get_axis(1) < -.5:
+                        axis_state.append('up')
+                    elif self.gamepad.get_axis(1) > .5:
+                        axis_state.append('down')
+                    self.update_stick(axis_state)
 
     def config_process_input(self):
         # input handling for control reconfiguration
@@ -304,6 +316,12 @@ class InputManager():
         for button in state:
             self.pressed['dpad'].append(button)
             self.held['dpad'].append(button)
+
+    def update_stick(self, state):
+        self.held['stick'] = []
+        for button in state:
+            self.held['stick'].append(button)
+
 
     def redefine_button(self, button, new_value):
         # adds new values to user made button configuration
