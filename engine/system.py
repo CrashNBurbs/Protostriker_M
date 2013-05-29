@@ -234,6 +234,7 @@ class InputManager():
                     if event.value[1] > 0:
                         dpad_state.append('up')
                     self.update_dpad(dpad_state)
+                # analog stick
                 elif event.type == JOYAXISMOTION:
                     axis_state = []
                     if self.gamepad.get_axis(0) < -.5:
