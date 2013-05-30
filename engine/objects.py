@@ -24,7 +24,8 @@ class AnimatedSprite(pygame.sprite.Sprite):
         # load images and sounds
         self.images = images
         # initialize values for delays, timers, and movement
-        self.delay = 1000 / fps  # m/s per frame, amount of delay for frame animation
+        self.fps = fps
+        self.delay = 1000 / self.fps  # m/s per frame, amount of delay for frame animation
         self.last_update = 0  # keep track of last animation update
         self.frame = 0
 

@@ -1,0 +1,2 @@
+begin_enemy    type    enemy_12   x      900   y         64   has_powerup    False    end_enemy
+begin_enemy    type    enemy_13   x      932   y         140   has_powerup    False    end_enemy

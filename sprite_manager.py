@@ -63,7 +63,7 @@ class SpriteManager(engine.objects.SpriteManager):
             if viewport.level_pos + viewport.width >= enemy.dx:
                 index = self.enemy_queue.index(enemy)
                 spawn_enemy = self.enemy_queue.pop(index)
-                spawn_enemy.spawn()
+                spawn_enemy.spawn(current_time)
                 self.add_sprite(spawn_enemy, 'enemy_group')
 
     def check_collisions(self, player):
@@ -195,6 +195,7 @@ class SpriteManager(engine.objects.SpriteManager):
                 images[i] = pygame.transform.flip(images[i], True, False)
         else: # right to left enemy, use normal images
              images = game.image_manager.get_image(enemy_type)
+            
 
         # create appropriate enemy depending on enemy_type
         if enemy_type == 'enemy_01':
@@ -219,6 +220,10 @@ class SpriteManager(engine.objects.SpriteManager):
             enemy = enemies.Enemy10(game, x, y, has_powerup, images)
         elif enemy_type == 'enemy_11':
             enemy = enemies.Enemy11(game, x, y, has_powerup, images)
+        elif enemy_type == 'enemy_12':
+            enemy = enemies.Enemy12(game, x, y, has_powerup, images)
+        elif enemy_type == 'enemy_13':
+            enemy = enemies.Enemy13(game, x, y, has_powerup, images)
 
         # Add enemy to enemy queue
         self.enemy_queue.append(enemy)

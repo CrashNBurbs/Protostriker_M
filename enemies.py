@@ -56,7 +56,7 @@ class Enemy1(engine.objects.AnimatedSprite):
         self.rect.x = self.dx
         self.hitbox.x = self.rect.x + self.hb_offsetx
 
-    def spawn(self):
+    def spawn(self, current_time):
         # Called when enemy should be onscreen.
         # Move enemy from its pos in the level
         # to the edge of the screen.
@@ -453,6 +453,7 @@ class Enemy11(Enemy2):
         Enemy2.__init__(self, game, x, y, has_powerup, images)
         self.speed = 40
         self.shoot_speed = 1250
+        self.bullet_speed = 75
         self.points = 155
         self.hb_offsetx = 1
         self.hb_offsety = 1
@@ -482,9 +483,102 @@ class Enemy11(Enemy2):
                                player_rect.centerx - self.rect.centerx)
 
             shot = bullets.EnemyBulletAngle(self.rect.left,
-                             self.rect.centery, angle, 
+                             self.rect.centery, angle, self.bullet_speed,
                              self.bullet_image)
             self.last_shot = current_time
         else:
             shot = None
         return shot
+
+class Enemy12(Enemy1):
+    """ enemy that shifts up and down at intervals """
+
+    def __init__(self, game, x, y, has_powerup, images):
+        Enemy1.__init__(self, game, x, y, has_powerup, images)
+        self.fps = 15
+        self.speed = 90
+        self.v_speed = 80
+        self.bullet_speed = 110
+        self.last_shifted_pos = self.rect.y
+        self.max_shift = 48
+        self.shift_time = 1000
+        self.last_shift = 0
+        # shift down first if enemy in upper half of screen
+        if self.rect.y < 120:
+            self.shift_direction = 1
+        else: # shift up first if enemy in lower half of screen
+            self.shift_direction = -1
+
+    def update(self, *args):
+        current_time = args[0]
+        Enemy1.update(self, current_time)
+
+        # shift up and down at a delay
+        if current_time - self.last_shift > self.shift_time:
+            self.dy += (self.v_speed * self.shift_direction) * TIMESTEP
+            # shift until self.max_shift distance has been reached
+            if abs(self.dy - self.last_shifted_pos) > self.max_shift:
+                # save new pos, reverse shift direction
+                self.last_shifted_pos = self.rect.y
+                self.shift_direction *= -1
+                self.last_shift = current_time
+
+        # update rect and hitbox
+        self.rect.y = self.dy
+        self.hitbox.y = self.rect.y + self.hb_offsety
+
+
+    def spawn(self, current_time):
+        Enemy1.spawn(self, current_time)
+
+        # set last shift to at spawn time to 
+        # avoid shifting imediately 
+        self.last_shift = current_time
+
+class Enemy13(Enemy11):
+    """ enemy that shifts and shoots at player """
+
+    def __init__(self, game, x, y, has_powerup, images):
+        Enemy11.__init__(self, game, x, y, has_powerup, images)
+        self.fps = 15
+        self.speed = 40
+        self.v_speed = 110
+        self.last_shifted_pos = self.rect.y
+        self.max_shift = 48
+        self.shift_time = 800
+        self.last_shift = 0
+        # shift down first if enemy in upper half of screen
+        if self.rect.y < 120:
+            self.shift_direction = 1
+        else: # shift up first if enemy in lower half of screen
+            self.shift_direction = -1
+
+    def update(self, *args):
+        # get shots from Enemy11 type
+        shot = Enemy11.update(self, *args)
+        current_time = args[0]
+
+        # shift up and down at a delay
+        if current_time - self.last_shift > self.shift_time:
+            self.dy += (self.v_speed * self.shift_direction) * TIMESTEP
+            # shift until self.max_shift distance has been reached
+            if abs(self.dy - self.last_shifted_pos) > self.max_shift:
+                # save new pos, reverse shift direction
+                self.last_shifted_pos = self.rect.y
+                self.shift_direction *= -1
+                self.last_shift = current_time
+        
+        # update rect and hitbox
+        self.rect.y = self.dy
+        self.hitbox.y = self.rect.y + self.hb_offsety
+
+        # shoot at player
+        return shot
+
+    def spawn(self, current_time):
+        Enemy1.spawn(self, current_time)
+
+        # set last shift to at spawn time to 
+        # avoid shifting imediately 
+        self.last_shift = current_time
+

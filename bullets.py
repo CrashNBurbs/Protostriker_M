@@ -89,9 +89,9 @@ class EnemyBullet(Bullet):
 
 class EnemyBulletAngle(Bullet):
     """ Enemy bullets that travel at an angle """
-    def __init__(self, x, y, angle, image):
+    def __init__(self, x, y, angle, speed, image):
         Bullet.__init__(self, x, y, angle, image)
-        self.speed = 75
+        self.speed = speed
         self.radians = angle
         self.hb_offsetx = 1
         self.hb_offsety = 1
