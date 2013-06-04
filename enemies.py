@@ -555,6 +555,8 @@ class Enemy13(Enemy11):
             self.shift_direction = -1
         self.points = 185
         self.powerup_type = 4
+        self.flash_image.fill((220,184,252))
+
 
     def update(self, *args):
         # get shots from Enemy11 type
@@ -596,12 +598,46 @@ class Enemy14(Enemy12):
         current_time = args[0]
         engine.objects.AnimatedSprite.update(self, current_time)
         
+        # shift up and down at a delay
+        if current_time - self.last_shift > self.shift_time:
+            self.dy += (self.v_speed * self.shift_direction) * TIMESTEP
+            # shift until self.max_shift distance has been reached
+            if abs(self.dy - self.last_shifted_pos) > self.max_shift:
+                # save new pos, reverse shift direction
+                self.last_shifted_pos = self.rect.y
+                self.shift_direction *= -1
+                self.last_shift = current_time
+
         # calculate change in x
         self.dx += self.speed * TIMESTEP
 
         # kill sprite if offscreen
         if self.dx > self.bounds.right:
             self.kill()
+        
+        # update the rect
+        self.rect.x = self.dx
+        self.rect.y = self.dy
+        self.hitbox.x = self.rect.x + self.hb_offsetx
+        self.hitbox.y = self.rect.y + self.hb_offsety
+
+    def spawn(self, current_time):
+        self.dx = self.bounds.left - self.rect.width
+        self.last_shift = current_time
+
+class Enemy15(Enemy13):
+    """ left to right shooting shifting enemy """
+
+    def __init__(self, game, x, y, has_powerup, images):
+        Enemy13.__init__(self, game, x, y, has_powerup, images)
+
+    def update(self, *args):
+        current_time = args[0]
+        player_rect = args[1]
+        engine.objects.AnimatedSprite.update(self, current_time)
+
+        # get shots
+        shot = self.shoot(current_time, player_rect)
 
         # shift up and down at a delay
         if current_time - self.last_shift > self.shift_time:
@@ -613,11 +649,21 @@ class Enemy14(Enemy12):
                 self.shift_direction *= -1
                 self.last_shift = current_time
 
-        # update the rect
+        # calculate change in x
+        self.dx += self.speed * TIMESTEP
+
+        # kill sprite if offscreen
+        if self.dx > self.bounds.right:
+            self.kill()
+        
+        # update rect and hitbox
         self.rect.x = self.dx
         self.rect.y = self.dy
         self.hitbox.x = self.rect.x + self.hb_offsetx
         self.hitbox.y = self.rect.y + self.hb_offsety
+
+        # shoot at player
+        return shot
 
     def spawn(self, current_time):
         self.dx = self.bounds.left - self.rect.width

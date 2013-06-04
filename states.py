@@ -144,7 +144,7 @@ class GameState(engine.system.State):
             self.game.push_state(PauseState(self.game))
 
     def update(self):
-        #print (self.viewport.level_pos + self.game.game_world.width) / 16
+        print (self.viewport.level_pos + self.game.game_world.width) / 16
 
         engine.system.State.update(self)
 

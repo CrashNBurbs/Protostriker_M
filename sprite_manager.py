@@ -226,7 +226,11 @@ class SpriteManager(engine.objects.SpriteManager):
             enemy = enemies.Enemy13(game, x, y, has_powerup, images)
         elif enemy_type == 'enemy_14':
             enemy = enemies.Enemy14(game, x, y, has_powerup, images)
+        elif enemy_type == 'enemy_15':
+            enemy = enemies.Enemy15(game, x, y, has_powerup, images)
 
+
+        print enemy
         # Add enemy to enemy queue
         self.enemy_queue.append(enemy)
 
