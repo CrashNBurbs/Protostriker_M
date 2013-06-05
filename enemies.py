@@ -96,11 +96,16 @@ class Enemy1(engine.objects.AnimatedSprite):
         return ex, powerup
 
     def get_flash_image(self):
-        flash_image = pygame.surface.Surface((self.image.get_width(),
-                                              self.image.get_height()))
+        # create a white out image of sprite for hit animation
+        flash_image = self.image.copy()
+
+        for x in range(flash_image.get_width()):
+            for y in range(flash_image.get_height()):
+                # change all non-transparent pixels to white
+                if flash_image.get_at((x,y)) != (255,0,255):
+                    flash_image.set_at((x,y), (255,255,255))
         flash_image.convert()
-        flash_image.fill((255,0,255))
-        flash_image.set_colorkey((255,0,255))
+      
         return flash_image
 
 class Enemy2(Enemy1):
@@ -259,7 +264,7 @@ class Enemy4(Enemy2):
         # die
         self.kill()
 
-        powerup = None
+        powerup = self.drop_powerup()
 
         return ex, powerup
 
@@ -278,6 +283,7 @@ class Enemy5(Enemy2):
         self.hits = 6
         self.explosion_image = game.image_manager.get_image('shrapnel')
         self.flash_image = self.get_flash_image()
+        self.powerup_type = 2 # laser beam
 
     def update(self, *args):
         current_time = args[0]
@@ -342,7 +348,7 @@ class Enemy7(Enemy1):
         self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
                                   self.dy + self.hb_offsety, 18, 13)
         self.changed_dir = False
-        self.hits = 3
+        self.hits = 2
         self.flash_image = self.get_flash_image()
 
     def update(self, *args):
