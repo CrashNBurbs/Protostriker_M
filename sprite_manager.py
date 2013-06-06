@@ -91,12 +91,13 @@ class SpriteManager(engine.objects.SpriteManager):
                 if bullet.hitbox.colliderect(enemy.hitbox):
                     # decrement enemy.hits if multi-hit enemy
                     if enemy.hits > 0:
-                        # kill player shot to avoid one bullet registering 
-                        # multiple hits
+                        # double damage if bullet is beam
                         if bullet.destroyable:
                             damage = 1
                         else:
                             damage = 2
+                        # kill player shot to avoid one bullet registering 
+                        # multiple hits
                         bullet.kill()
                         enemy.hit(damage)
                     else: # enemy destroyed
