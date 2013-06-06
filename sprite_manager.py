@@ -79,12 +79,12 @@ class SpriteManager(engine.objects.SpriteManager):
             not player.protected:
                 # kill the enemy and player, create explosions
                 # at their positions.
+                self.sprites['player_shots'].empty()
                 enemy.kill()
                 player_ex = player.explode()
                 enemy_ex, powerup = enemy.explode()
                 self.add_sprite(player_ex, 'explosions')
                 self.add_sprite(enemy_ex, 'explosions')
-                self.sprites['player_shots'].empty()
                 player_die = True
             for bullet in self.sprites['player_shots']:
                 # check player shot collision with enemy
@@ -93,8 +93,12 @@ class SpriteManager(engine.objects.SpriteManager):
                     if enemy.hits > 0:
                         # kill player shot to avoid one bullet registering 
                         # multiple hits
+                        if bullet.destroyable:
+                            damage = 1
+                        else:
+                            damage = 2
                         bullet.kill()
-                        enemy.hit()
+                        enemy.hit(damage)
                     else: # enemy destroyed
                         # let the laser beam pass through enemies
                         if bullet.destroyable:

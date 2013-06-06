@@ -71,9 +71,9 @@ class Enemy1(engine.objects.AnimatedSprite):
             powerup = None
         return powerup
     
-    def hit(self):
+    def hit(self, damage):
         # decrement hits on hit, play hit sound
-        self.hits -= 1
+        self.hits -= damage
         self.hit_sound.play()
         self.image = self.flash_image
        
@@ -561,7 +561,7 @@ class Enemy13(Enemy11):
             self.shift_direction = -1
         self.points = 185
         self.powerup_type = 4
-        self.flash_image.fill((220,184,252))
+        self.flash_image = self.get_flash_image()
 
 
     def update(self, *args):
