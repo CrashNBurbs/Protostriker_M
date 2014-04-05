@@ -332,7 +332,7 @@ class Enemy6(Enemy3):
         self.radius = 3.25
         self.points = 125
         self.speed = 70
-        self.hits = 1
+        self.hits = 0
         self.flash_image = self.get_flash_image()
 
 

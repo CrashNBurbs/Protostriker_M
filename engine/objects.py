@@ -101,7 +101,10 @@ class EventState(system.State):
         # centered
         self.last_update = pygame.time.get_ticks()
         self.game.paused = True
-        self.game.sound_manager.music_control('stop')
+        if self.music is not None:
+            self.game.sound_manager.play_music(self.music, 1)
+        else:
+            self.game.sound_manager.music_control('stop')
         for line in self.text:
             self.render = self.game.font.render(line, False, 
                                               self.game.text_color)

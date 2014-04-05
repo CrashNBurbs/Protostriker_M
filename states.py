@@ -169,7 +169,7 @@ class GameState(engine.system.State):
             if self.player.lives == -1:
                 text = ["GAME OVER"]
                 state = engine.objects.EventState(self.game, text, 
-                                                  "gameovermusic.wav",
+                                                  "gameover.wav",
                                                   GameState(self.game))
                 self.game.reset_player()
                 self.game.push_state(state)
@@ -189,7 +189,7 @@ class GameState(engine.system.State):
             else:  # show ending
                 text = ["GAME OVER"]
                 state = engine.objects.EventState(self.game, text, 
-                                                  "gameovermusic.wav",
+                                                  None,
                                                   TitleScreenState(self.game))
                 self.game.push_state(state)
            
