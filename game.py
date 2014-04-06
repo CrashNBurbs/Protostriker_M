@@ -28,7 +28,7 @@ class PsmGame(engine.system.Game):
         self.text_color = (252,248,252)
         self.load_content()
         pygame.display.set_icon(self.image_manager.get_image('icon'))
-        self.current_level = 1
+        self.current_level = 5
         self.hud = hud.GameHud(self, (320, 32), (0,0,0))
         self.game_world = pygame.rect.Rect(0, SCREEN_RECT.top + self.hud.height,
                                            320, SCREEN_RECT.height - self.hud.height)
@@ -42,7 +42,7 @@ class PsmGame(engine.system.Game):
         # change to a new level and return False if there are more levels
         # otherwise return true
         end_game = False
-        if self.current_level < 5:
+        if self.current_level < 6:
             self.current_level += 1
         else:
             end_game = True
