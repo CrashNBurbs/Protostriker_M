@@ -110,24 +110,34 @@ class Viewport():
         self.height = 240 # height of screen
         self.coordinate = 0  # left edge of viewport
         self.last_coordinate = 0
-        self.level_pos = 0
+        self.level_pos = 11000
         self.minScroll = 0 # max value for left scrolling
         self.maxScroll = self.background.get_width() - 320 # max for right
         self.advance_velocity = 100  # speed of scroll
         self.vp = self.background.subsurface((self.coordinate, 0,
                                               self.width, self.height))
+        self.boss_level = False
+        self.call_once = False
 
     def update(self):
 
-        self.last_coordinate = self.coordinate
+        if not self.game.paused:
+            self.last_coordinate = self.coordinate
 
-        self.coordinate += self.advance_velocity * system.TIMESTEP
-        self.level_pos += self.advance_velocity * system.TIMESTEP
+            self.coordinate += self.advance_velocity * system.TIMESTEP
+            self.level_pos += self.advance_velocity * system.TIMESTEP
 
         # loop image
         if self.coordinate > self.maxScroll:
+            if not self.game.boss_level_triggered:
                 self.last_coordinate = 0
                 self.coordinate = 0
+            else:
+                self.coordinate = 640
+                self.game.paused = True
+                self.background = self.game.image_manager.get_image('closed')
+                self.coordinate = 0
+                self.game.boss_level = True
 
     def draw(self, screen):
         # create new subsurface from updated coordinate
@@ -137,6 +147,16 @@ class Viewport():
         self.vp = self.background.subsurface((draw_pos, 0, self.width,
                                               self.height))
         screen.blit(self.vp, (0,0))
+    
+    def transition_to(self, new_background):
+        if not self.call_once:
+            surf_width = self.background.get_width() + new_background.get_width()
+            surface = pygame.Surface((surf_width, self.height)).convert()
+            surface.blit(self.background, (0,0))
+            surface.blit(new_background, (self.background.get_width(),0))
+            self.background = surface
+            self.maxScroll = 640
+            self.call_once = True
 
 class FadeAnimation():
     """ fade in/fade out screen animation

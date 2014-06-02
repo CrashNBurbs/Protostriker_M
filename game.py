@@ -28,10 +28,19 @@ class PsmGame(engine.system.Game):
         self.text_color = (252,248,252)
         self.load_content()
         pygame.display.set_icon(self.image_manager.get_image('icon'))
-        self.current_level = 5
+        self.current_level = 6
+        self.boss_level = False
+        self.boss_level_triggered = False
         self.hud = hud.GameHud(self, (320, 32), (0,0,0))
         self.game_world = pygame.rect.Rect(0, SCREEN_RECT.top + self.hud.height,
                                            320, SCREEN_RECT.height - self.hud.height)
+        self.game_world_last_level = pygame.rect.Rect(0, 
+                                                      SCREEN_RECT.top + self.hud.height + 32,
+                                                      320,
+                                                      SCREEN_RECT.height - self.hud.height - 64)
+        self.game_world_boss_level = pygame.rect.Rect(16,SCREEN_RECT.top + self.hud.height + 16,
+                                                      SCREEN_RECT.right - 32,
+                                                      SCREEN_RECT.height - self.hud.height - 32)
         self.player = player.Player(self, 16, 112, 
                                     self.image_manager.get_image('ship'))
      
@@ -106,6 +115,7 @@ class PsmGame(engine.system.Game):
                                       False, -1)
         self.image_manager.load_single('smallship.bmp', 'smallship', 
                                        (255,0,255))
+        self.image_manager.load_sheet('boss.bmp', 'boss', 64, 96, False, -1)
 
         # load sounds
         self.sound_manager.load_sound('cursor.wav', 'cursor',

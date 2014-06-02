@@ -21,10 +21,11 @@ class SpriteManager(engine.objects.SpriteManager):
     """ Container for all game sprite groups and their sprites.
     Can update and draw all groups with respective methods.
     Also handles the loading of level files and the creation of enemies """
-    def __init__(self):
+    def __init__(self, game):
         engine.objects.SpriteManager.__init__(self)
         # Create all sprite groups and add them to
         # self.objects
+        self.game = game
         player_group = pygame.sprite.Group()
         enemy_group = pygame.sprite.Group()
         player_shots = pygame.sprite.Group()
@@ -50,7 +51,7 @@ class SpriteManager(engine.objects.SpriteManager):
 
         for key in self.update_order:
             for sprite in self.sprites[key]:
-                enemy_bullet = sprite.update(current_time, player_rect)
+                enemy_bullet = sprite.update(current_time, player_rect, self.game)
                 if enemy_bullet is not None:
                     self.add_sprite(enemy_bullet, 'enemy_shots')
 
@@ -233,6 +234,8 @@ class SpriteManager(engine.objects.SpriteManager):
             enemy = enemies.Enemy14(game, x, y, has_powerup, images)
         elif enemy_type == 'enemy_15':
             enemy = enemies.Enemy15(game, x, y, has_powerup, images)
+        elif enemy_type == 'boss':
+            enemy = enemies.Boss(game, x, y, has_powerup, images)
 
         # Add enemy to enemy queue
         self.enemy_queue.append(enemy)

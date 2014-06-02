@@ -74,7 +74,7 @@ class TitleScreenState(engine.system.State):
 class GameState(engine.system.State):
     def __init__(self, game):
         engine.system.State.__init__(self, game)
-        self.sprite_manager = sprite_manager.SpriteManager()
+        self.sprite_manager = sprite_manager.SpriteManager(game)
         self.font = game.font
         self.text_color = game.text_color
         self.level = game.current_level
@@ -85,6 +85,8 @@ class GameState(engine.system.State):
         # load images
         background = 'background%d.bmp' % self.level
         self.game.image_manager.load_single(background, 'background')
+        self.game.image_manager.load_single('open.bmp','open')
+        self.game.image_manager.load_single('closed.bmp','closed')
 
     def unload_content(self):
         self.game.image_manager.unload_image('background')
@@ -123,8 +125,7 @@ class GameState(engine.system.State):
         level_string = "LEVEL %d" % self.level
         self.message = engine.gui.Message(self.game, level_string, 4000) 
         self.show_message = True
-
-        
+        self.boss_spawned = False
 
     def reactivate(self, transition):
         engine.system.State.reactivate(self, transition)
@@ -141,10 +142,11 @@ class GameState(engine.system.State):
 
         # On start button press, push the pause state
         if self.game.input_manager.is_pressed('START'):
-            self.game.push_state(PauseState(self.game))
+            if not self.game.boss_level:
+                self.game.push_state(PauseState(self.game))
 
     def update(self):
-        print (self.viewport.level_pos + self.game.game_world.width) / 16
+        #print (self.viewport.level_pos + self.game.game_world.width) / 16
 
         engine.system.State.update(self)
 
@@ -175,8 +177,9 @@ class GameState(engine.system.State):
                 self.game.push_state(state)
         
         # If player has reached the end of the level, create a
-        # level complete message, set game over to True.
-        if self.viewport.level_pos > 11500:
+        # level complete message
+        print self.viewport.level_pos
+        if self.viewport.level_pos > 11500: #1150 
             end = self.game.next_level()
             if not end:  # go to next level
                 text = ["LEVEL %d COMPLETE!" % self.level]
@@ -186,12 +189,19 @@ class GameState(engine.system.State):
                 self.game.player.reset_pos()
                 self.game.push_state(state)
                
-            else:  # show ending
-                text = ["GAME OVER"]
-                state = engine.objects.EventState(self.game, text, 
-                                                  None,
-                                                  TitleScreenState(self.game))
-                self.game.push_state(state)
+            else:  # trigger boss level
+                self.game.boss_level_triggered = True
+                self.viewport.transition_to(self.game.image_manager.get_image('open'))
+
+                # boss level fully on screen
+                if self.game.boss_level == True:
+                    # spawn boss once
+                    if not self.boss_spawned:
+                        self.sprite_manager.create_enemy(self.game, 
+                                                         'boss',235, 
+                                                         59 + self.game.hud.height, 
+                                                         False)
+                        self.boss_spawned = True
            
     def draw(self, screen):
         # draw the background and all sprites

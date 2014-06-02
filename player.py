@@ -56,6 +56,12 @@ class Player(engine.objects.AnimatedSprite):
     def update(self, *args):
         current_time = args[0]
 
+        if self.game.current_level >= 6:
+            if self.game.boss_level:
+                self.bounds = self.game.game_world_boss_level
+            else:
+                self.bounds = self.game.game_world_last_level
+
         # show correct frame
         self.image = self.images[self.frame]
         self.current_weapon = self.weapons[self.current_weapon_index]

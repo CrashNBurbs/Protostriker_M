@@ -178,7 +178,7 @@ class Enemy3(Enemy1):
         self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
                                   self.dy + self.hb_offsety, 18, 13)
         self.points = 175
-        self.powerup_type = 0
+        self.powerup_type = 0 # spreader
 
     def update(self, *args):
         # call parent classes update method
@@ -216,6 +216,10 @@ class Enemy4(Enemy2):
     def update(self, *args):
         current_time = args[0]
         engine.objects.AnimatedSprite.update(self, current_time)
+
+        # smaller vertical bounds on the last level
+        if self.game.current_level == 6:
+            self.bounds = self.game.game_world_last_level
 
         shot = None
 
@@ -674,3 +678,49 @@ class Enemy15(Enemy13):
     def spawn(self, current_time):
         self.dx = self.bounds.left - self.rect.width
         self.last_shift = current_time
+
+class Boss(Enemy1):
+    def __init__(self, game, x, y, has_powerup, images):
+        Enemy1.__init__(self, game, x, y, has_powerup, images)
+        self.x = x
+        self.speed = 50
+        self.bounds = game.game_world_boss_level
+        self.hb_offsetx = 26 # offset for hitbox
+        self.hb_offsety = 24
+        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 10, 8)
+        self.direction = [0,-1]
+        self.begin_time = 3000
+        self.change_pattern = 9000
+        self.behavior_1 = True
+        self.behavior_2 = False
+
+    
+    def spawn(self, current_time):
+        self.dx = self.x
+        self.spawn_time = current_time
+
+    def update(self, *args):
+        current_time = args[0]
+        engine.objects.AnimatedSprite.update(self, current_time)
+
+        if current_time - self.spawn_time > self.begin_time:
+            if self.direction[1] == -1: # moving up
+                self.dy -= self.speed * TIMESTEP
+                if self.dy <= self.bounds.top:
+                    self.dy = self.bounds.top
+                    self.direction[1] = 1
+            if self.direction[1] == 1: # moving down
+                self.dy += self.speed * TIMESTEP
+                if self.dy + self.image.get_height() >= self.bounds.bottom:
+                    self.dy = self.bounds.bottom - self.image.get_height()
+                    self.direction[1] = -1
+
+        # update the rect
+        self.rect.x = self.dx
+        self.rect.y = self.dy
+        self.hitbox.x = self.rect.x + self.hb_offsetx
+        self.hitbox.y = self.rect.y + self.hb_offsety
+
+
+

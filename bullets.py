@@ -17,6 +17,8 @@ import math
 from engine.system import TIMESTEP
 from engine.system import SCREEN_RECT
 
+LAST_LEVEL_SCREEN_RECT = pygame.rect.Rect(0,64,320,144)
+
 class Bullet(pygame.sprite.Sprite):
     """ Abstract class for a bullet """
     def __init__(self, x, y, angle, image):
@@ -35,8 +37,10 @@ class Bullet(pygame.sprite.Sprite):
         self.hb_offsety = 0
         self.destroyable = True
 
-    def update(self):
-        pass
+    def update(self, *args):
+        game = args[2]
+        if game.current_level == 6:
+            self.bounds = LAST_LEVEL_SCREEN_RECT
 
 class BasicBullet(Bullet):
     """ Player bullet class, sub-class of Bullet
@@ -99,6 +103,9 @@ class EnemyBulletAngle(Bullet):
                                   self.dy + self.hb_offsety, 6, 6)
 
     def update(self, *args):
+        #call Bullet update for last level screen bounds
+        Bullet.update(self, *args)
+        
         # calculate change in x,y
         self.dx += (math.cos(self.radians) * self.speed) * TIMESTEP
         self.dy += (math.sin(self.radians) * self.speed) * TIMESTEP
@@ -126,6 +133,9 @@ class SpreaderBullet(Bullet):
                                   self.dy + self.hb_offsety, 6, 6)
       
     def update(self, *args):
+        #call Bullet update for last level screen bounds
+        Bullet.update(self, *args)
+
         # calculate change in x,y
         self.dx += (math.cos(self.radians) * self.speed) * TIMESTEP
         self.dy += (math.sin(self.radians) * self.speed) * TIMESTEP
@@ -238,6 +248,9 @@ class Shrapnel(Bullet):
         self.speed = 35
 
     def update(self, *args):
+        #call Bullet update for last level screen bounds
+        Bullet.update(self, *args)
+
         # calculate change in x,y
         self.dx += (math.cos(self.radians) * self.speed) * TIMESTEP
         self.dy += (math.sin(self.radians) * self.speed) * TIMESTEP
