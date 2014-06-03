@@ -142,8 +142,7 @@ class GameState(engine.system.State):
 
         # On start button press, push the pause state
         if self.game.input_manager.is_pressed('START'):
-            if not self.game.boss_level:
-                self.game.push_state(PauseState(self.game))
+            self.game.push_state(PauseState(self.game))
 
     def update(self):
         #print (self.viewport.level_pos + self.game.game_world.width) / 16
@@ -178,7 +177,7 @@ class GameState(engine.system.State):
         
         # If player has reached the end of the level, create a
         # level complete message
-        print self.viewport.level_pos
+        #print self.viewport.level_pos
         if self.viewport.level_pos > 11500: #1150 
             end = self.game.next_level()
             if not end:  # go to next level

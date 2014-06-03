@@ -497,11 +497,15 @@ class Game():
         self.states.append(state)
         state.activate(transition)
 
-    def interpolate_draw(self, current, last):
+    def interpolate_draw(self, current, last, boss_level):
         # returns an interpolated draw position
+
         if not self.paused:
-           draw_pos = current * self.alpha + last * (1.0 - self.alpha)
-        else:
+            draw_pos = current * self.alpha + last * (1.0 - self.alpha)
+            # if in boss level, background is not scrolling, always return 0
+            if boss_level:
+                draw_pos = 0
+        else: # if paused return the last coordinate passed in
            draw_pos = current
         return draw_pos
 

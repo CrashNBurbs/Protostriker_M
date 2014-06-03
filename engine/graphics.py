@@ -111,6 +111,7 @@ class Viewport():
         self.coordinate = 0  # left edge of viewport
         self.last_coordinate = 0
         self.level_pos = 11000
+        self.draw_pos = 0
         self.minScroll = 0 # max value for left scrolling
         self.maxScroll = self.background.get_width() - 320 # max for right
         self.advance_velocity = 100  # speed of scroll
@@ -121,7 +122,7 @@ class Viewport():
 
     def update(self):
 
-        if not self.game.paused:
+        if not self.game.paused and not self.game.boss_level:
             self.last_coordinate = self.coordinate
 
             self.coordinate += self.advance_velocity * system.TIMESTEP
@@ -143,7 +144,7 @@ class Viewport():
         # create new subsurface from updated coordinate
         # draw it to the screen
         draw_pos = self.game.interpolate_draw(self.coordinate, 
-                                              self.last_coordinate)
+                                              self.last_coordinate, self.game.boss_level)
         self.vp = self.background.subsurface((draw_pos, 0, self.width,
                                               self.height))
         screen.blit(self.vp, (0,0))
