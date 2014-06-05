@@ -683,7 +683,7 @@ class Boss(Enemy1):
     def __init__(self, game, x, y, has_powerup, images):
         Enemy1.__init__(self, game, x, y, has_powerup, images)
         self.x = x
-        self.speed = 50
+        self.speed = 90
         self.bounds = game.game_world_boss_level
         self.hb_offsetx = 26 # offset for hitbox
         self.hb_offsety = 24
@@ -691,9 +691,12 @@ class Boss(Enemy1):
                                   self.dy + self.hb_offsety, 10, 8)
         self.direction = [0,-1]
         self.begin_time = 3000
-        self.change_pattern = 9000
         self.behavior_1 = True
         self.behavior_2 = False
+        self.behavior_cycle = 0
+        self.bullet_image = game.image_manager.get_image('eshot')
+        self.shoot_speed = 1500 #150  # shooting delay
+        self.last_shot = 0 # time of last shot
 
     
     def spawn(self, current_time):
@@ -704,23 +707,76 @@ class Boss(Enemy1):
         current_time = args[0]
         engine.objects.AnimatedSprite.update(self, current_time)
 
+        shot = None
+
         if current_time - self.spawn_time > self.begin_time:
             if self.direction[1] == -1: # moving up
                 self.dy -= self.speed * TIMESTEP
                 if self.dy <= self.bounds.top:
                     self.dy = self.bounds.top
-                    self.direction[1] = 1
-            if self.direction[1] == 1: # moving down
-                self.dy += self.speed * TIMESTEP
-                if self.dy + self.image.get_height() >= self.bounds.bottom:
+                    self.cycle_behavior()
+                    if self.behavior_1: # move down
+                        self.direction[0] = 0
+                        self.direction[1] = 1
+                    elif self.behavior_2: # move left
+                        self.direction[0] = -1
+                        self.direction[1] = 0 
+            elif self.direction[1] == 1: # moving down
+                 self.dy += self.speed * TIMESTEP
+                 if self.dy + self.image.get_height() >= self.bounds.bottom:
                     self.dy = self.bounds.bottom - self.image.get_height()
-                    self.direction[1] = -1
+                    if self.behavior_1: # move up
+                        self.direction[0] = 0
+                        self.direction[1] = -1
+                    elif self.behavior_2: # move right
+                         self.direction[0] = 1
+                         self.direction[1] = 0
+            elif self.direction[0] == -1: # moving left
+                self.dx -= self.speed * TIMESTEP
+                if self.dx <= self.bounds.left:
+                    self.dx = self.bounds.left
+                    self.direction[0] = 0
+                    self.direction[1] = 1 # move down
+            elif self.direction[0] == 1: # moving right
+                self.dx += self.speed * TIMESTEP
+                if self.dx + self.image.get_width() >= self.bounds.right:
+                    self.dx = self.bounds.right - self.image.get_width()
+                    self.direction[0] = 0
+                    self.direction[1] = -1 # move up
 
-        # update the rect
+            shot = self.shoot_straight(current_time)
+                    
+        # update the rect and hitbox
         self.rect.x = self.dx
         self.rect.y = self.dy
         self.hitbox.x = self.rect.x + self.hb_offsetx
         self.hitbox.y = self.rect.y + self.hb_offsety
+
+        
+
+        return shot
+
+    def cycle_behavior(self):
+        self.behavior_cycle += 1
+        if self.behavior_cycle == 5:
+            self.behavior_cycle = 0
+            if self.behavior_1:
+                self.behavior_1 = False
+                self.behavior_2 = True
+            elif self.behavior_2:
+                self.behavior_2 = False
+                self.behavior_1 = True
+
+    def shoot_straight(self, current_time):
+        # fire a shot at current pos, every
+        # self.shoot_speed m/s, keep track of shots fired
+        if current_time - self.last_shot > self.shoot_speed:
+            shot = bullets.EnemyBullet(self.rect.left,
+                             self.rect.centery, 0, self.bullet_image)
+            self.last_shot = current_time
+        else:
+            shot = None
+        return shot
 
 
 
