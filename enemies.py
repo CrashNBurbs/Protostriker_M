@@ -683,7 +683,7 @@ class Boss(Enemy1):
     def __init__(self, game, x, y, has_powerup, images):
         Enemy1.__init__(self, game, x, y, has_powerup, images)
         self.x = x
-        self.speed = 90
+        self.speed = 70
         self.bounds = game.game_world_boss_level
         self.hb_offsetx = 26 # offset for hitbox
         self.hb_offsety = 24
@@ -696,7 +696,7 @@ class Boss(Enemy1):
         self.behavior_cycle = 0
         self.bullet_image = game.image_manager.get_image('eshot')
         self.shoot_speed = 1500 #150  # shooting delay
-        self.last_shot = 0 # time of last shot
+        self.last_shot = 8000 # time of last shot
 
     
     def spawn(self, current_time):
@@ -705,6 +705,7 @@ class Boss(Enemy1):
 
     def update(self, *args):
         current_time = args[0]
+        player_rect = args[1]
         engine.objects.AnimatedSprite.update(self, current_time)
 
         shot = None
@@ -744,7 +745,7 @@ class Boss(Enemy1):
                     self.direction[0] = 0
                     self.direction[1] = -1 # move up
 
-            shot = self.shoot_straight(current_time)
+            shot = self.shoot(current_time, player_rect)
                     
         # update the rect and hitbox
         self.rect.x = self.dx
@@ -767,12 +768,20 @@ class Boss(Enemy1):
                 self.behavior_2 = False
                 self.behavior_1 = True
 
-    def shoot_straight(self, current_time):
+    def shoot(self, current_time, player_rect):
         # fire a shot at current pos, every
         # self.shoot_speed m/s, keep track of shots fired
         if current_time - self.last_shot > self.shoot_speed:
-            shot = bullets.EnemyBullet(self.rect.left,
-                             self.rect.centery, 0, self.bullet_image)
+            if self.behavior_2:
+                angle = math.atan2(player_rect.centery - self.rect.centery,
+                                   player_rect.centerx - self.rect.centerx)
+                shot = bullets.EnemyBulletAngle(self.rect.left + 16,
+                             self.rect.centery - 22, angle, 75, self.bullet_image)
+            elif self.behavior_1:
+                shot = bullets.EnemyBullet(self.rect.left + 16,
+                                    self.rect.centery - 22, 
+                                    0, self.bullet_image)
+            
             self.last_shot = current_time
         else:
             shot = None

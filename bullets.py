@@ -18,6 +18,7 @@ from engine.system import TIMESTEP
 from engine.system import SCREEN_RECT
 
 LAST_LEVEL_SCREEN_RECT = pygame.rect.Rect(0,64,320,144)
+BOSS_LEVEL_SCREEN_RECT = pygame.rect.Rect(16,48,288,176)
 
 class Bullet(pygame.sprite.Sprite):
     """ Abstract class for a bullet """
@@ -40,7 +41,10 @@ class Bullet(pygame.sprite.Sprite):
     def update(self, *args):
         game = args[2]
         if game.current_level == 6:
-            self.bounds = LAST_LEVEL_SCREEN_RECT
+            if game.boss_level:
+                self.bounds = BOSS_LEVEL_SCREEN_RECT
+            else:
+                self.bounds = LAST_LEVEL_SCREEN_RECT
 
 class BasicBullet(Bullet):
     """ Player bullet class, sub-class of Bullet
@@ -79,6 +83,7 @@ class EnemyBullet(Bullet):
                                   self.dy + self.hb_offsety, 6, 6)
    
     def update(self, *args):
+        Bullet.update(self, *args)
         # move bullet at self.speed/sec
         self.dx -= self.speed * TIMESTEP
 
@@ -88,7 +93,7 @@ class EnemyBullet(Bullet):
         self.hitbox.y = self.rect.y + self.hb_offsety
 
         # kill if offscreen
-        if self.rect.left < self.bounds.left:
+        if self.rect.left <= self.bounds.left:
             self.kill()
 
 class EnemyBulletAngle(Bullet):
