@@ -106,7 +106,7 @@ class GameState(engine.system.State):
 
         # play music
         music_string = 'level_%d.wav' % self.level
-        if self.game.current_level < 4:
+        if self.game.current_level < 5:
             self.game.sound_manager.play_music(music_string)
 
         # create player, viewport, score and lives render, 
@@ -222,7 +222,8 @@ class GameState(engine.system.State):
 
         #for enemy in self.sprite_manager.sprites['enemy_group']:
         #    pygame.draw.rect(screen, (0,255,0), enemy.rect, 1)
-        #    pygame.draw.rect(screen, (255,0,0), enemy.hitbox, 1)
+        #    for box in enemy.hitbox:    
+        #        pygame.draw.rect(screen, (255,0,0), box, 1)
 
 
         #for bullet in self.sprite_manager.sprites['player_shots']:

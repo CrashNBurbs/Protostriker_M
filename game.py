@@ -28,7 +28,7 @@ class PsmGame(engine.system.Game):
         self.text_color = (252,248,252)
         self.load_content()
         pygame.display.set_icon(self.image_manager.get_image('icon'))
-        self.current_level = 6
+        self.current_level = 1
         self.boss_level = False
         self.boss_level_triggered = False
         self.hud = hud.GameHud(self, (320, 32), (0,0,0))
@@ -139,6 +139,7 @@ class PsmGame(engine.system.Game):
         self.sound_manager.load_sound('powerup.wav', 'powerup', volume = 0.5)
         self.sound_manager.load_sound('changeweapon.wav', 'changeweapon',
                                       volume = 0.5)
+        self.sound_manager.load_sound('nohit.wav', 'nohit', volume = 0.4)
 
         
         

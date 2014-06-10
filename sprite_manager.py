@@ -76,45 +76,53 @@ class SpriteManager(engine.objects.SpriteManager):
         # with all enemies onscreen
         for enemy in self.sprites['enemy_group']:
             # check player collision with enemy
-            if player.hitbox.colliderect(enemy.hitbox) and \
-            not player.protected:
-                # kill the enemy and player, create explosions
-                # at their positions.
-                self.sprites['player_shots'].empty()
-                enemy.kill()
-                player_ex = player.explode()
-                enemy_ex, powerup = enemy.explode()
-                self.add_sprite(player_ex, 'explosions')
-                self.add_sprite(enemy_ex, 'explosions')
-                player_die = True
+            for box in enemy.hitbox:
+                if player.hitbox.colliderect(box) and \
+                not player.protected:
+                    # kill the enemy and player, create explosions
+                    # at their positions.
+                    self.sprites['player_shots'].empty()
+                    player_ex = player.explode()
+                    if not self.game.boss_level: # boss does not die on collision
+                        enemy.kill()
+                        enemy_ex, powerup = enemy.explode()
+                        self.add_sprite(enemy_ex, 'explosions')
+                    self.add_sprite(player_ex, 'explosions')
+                    player_die = True
             for bullet in self.sprites['player_shots']:
-                # check player shot collision with enemy
-                if bullet.hitbox.colliderect(enemy.hitbox):
-                    # decrement enemy.hits if multi-hit enemy
-                    if enemy.hits > 0:
-                        # double damage if bullet is beam
-                        if bullet.destroyable:
-                            damage = 1
-                        else:
-                            damage = 2
-                        # kill player shot to avoid one bullet registering 
-                        # multiple hits
-                        bullet.kill()
-                        enemy.hit(damage)
-                    else: # enemy destroyed
-                        # let the laser beam pass through enemies
-                        if bullet.destroyable:
+                # check player shot collision with 
+                for box in enemy.hitbox:
+                    if bullet.hitbox.colliderect(box):
+                        # decrement enemy.hits if multi-hit enemy
+                        if enemy.hits > 0:
+                            # double damage if bullet is beam
+                            if bullet.destroyable:
+                                damage = 1
+                            else:
+                                damage = 2
+                            # kill player shot to avoid one bullet registering 
+                            # multiple hits
                             bullet.kill()
-                        # kill the enemy, get an explosion sprite, and 
-                        # a powerup on change
-                        ex, powerup = enemy.explode()
-                        # add the explosion sprite
-                        for sprite in ex:
-                            self.add_sprite(sprite,'explosions')
-                        # add the powerup if you get one
-                        if powerup is not None:
-                            self.add_sprite(powerup, 'powerups')
-                        player.score += enemy.points
+                            # Hack ass way to check if boss hurtbox
+                            if self.game.boss_level:
+                                if box.width != 7:
+                                    enemy.hit(0)
+                            else:
+                                enemy.hit(damage)
+                        else: # enemy destroyed
+                            # let the laser beam pass through enemies
+                            if bullet.destroyable:
+                                bullet.kill()
+                            # kill the enemy, get an explosion sprite, and 
+                            # a powerup on change
+                            ex, powerup = enemy.explode()
+                            # add the explosion sprite
+                            for sprite in ex:
+                                self.add_sprite(sprite,'explosions')
+                            # add the powerup if you get one
+                            if powerup is not None:
+                                self.add_sprite(powerup, 'powerups')
+                            player.score += enemy.points
 
         # check for shrapnel explosion collision with player
         for shrapnel in self.sprites['explosions']:

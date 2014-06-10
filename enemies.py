@@ -29,8 +29,8 @@ class Enemy1(engine.objects.AnimatedSprite):
         self.bounds = game.game_world
         self.hb_offsetx = 0 # offset for hitbox
         self.hb_offsety = 2
-        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
-                                  self.dy + self.hb_offsety, 15, 12)
+        self.hitbox = [pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 15, 12)]
         self.has_powerup = has_powerup
         self.powerup_type = 3 # speed
         self.points = 120 # point value
@@ -54,7 +54,7 @@ class Enemy1(engine.objects.AnimatedSprite):
 
         # update the rect
         self.rect.x = self.dx
-        self.hitbox.x = self.rect.x + self.hb_offsetx
+        self.hitbox[0].x = self.rect.x + self.hb_offsetx
 
     def spawn(self, current_time):
         # Called when enemy should be onscreen.
@@ -175,8 +175,8 @@ class Enemy3(Enemy1):
         self.dAngle = 5.0 #5.0 # change in angle(affects freq and amp)
         self.hb_offsetx = 4
         self.hb_offsety = 1
-        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
-                                  self.dy + self.hb_offsety, 18, 13)
+        self.hitbox = [pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 18, 13)]
         self.points = 175
         self.powerup_type = 0 # spreader
 
@@ -193,7 +193,7 @@ class Enemy3(Enemy1):
 
         # update the rect
         self.rect.y = self.dy
-        self.hitbox.y = self.rect.y + self.hb_offsety
+        self.hitbox[0].y = self.rect.y + self.hb_offsety
 
 class Enemy4(Enemy2):
     """ Fourth enemy type, moves into position and
@@ -208,8 +208,8 @@ class Enemy4(Enemy2):
         self.spawn_point = 240 # x pos where enemy will be placed
         self.hb_offsetx = 1
         self.hb_offsety = 1
-        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
-                                  self.dy + self.hb_offsety, 14, 14)
+        self.hitbox = [pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 14, 14)]
         self.explosion_image = game.image_manager.get_image('shrapnel')
         self.points = 125
 
@@ -239,8 +239,8 @@ class Enemy4(Enemy2):
         # update the rect
         self.rect.x = self.dx
         self.rect.y = self.dy
-        self.hitbox.x = self.rect.x + self.hb_offsetx
-        self.hitbox.y = self.rect.y + self.hb_offsety
+        self.hitbox[0].x = self.rect.x + self.hb_offsetx
+        self.hitbox[0].y = self.rect.y + self.hb_offsety
 
         # shoot at a delay
         if self.dx > self.stop_shoot:
@@ -282,8 +282,8 @@ class Enemy5(Enemy2):
         self.points = 250
         self.hb_offsetx = 4
         self.hb_offsety = 4
-        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
-                                  self.dy + self.hb_offsety, 25, 21)
+        self.hitbox = [pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 25, 21)]
         self.hits = 6
         self.explosion_image = game.image_manager.get_image('shrapnel')
         self.flash_image = self.get_flash_image()
@@ -349,8 +349,8 @@ class Enemy7(Enemy1):
         self.direction = 0
         self.hb_offsetx = 4
         self.hb_offsety = 1
-        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
-                                  self.dy + self.hb_offsety, 18, 13)
+        self.hitbox = [pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 18, 13)]
         self.changed_dir = False
         self.hits = 2
         self.flash_image = self.get_flash_image()
@@ -380,8 +380,8 @@ class Enemy7(Enemy1):
 
         self.rect.x = self.dx
         self.rect.y = self.dy
-        self.hitbox.x = self.rect.x + self.hb_offsetx
-        self.hitbox.y = self.rect.y + self.hb_offsety
+        self.hitbox[0].x = self.rect.x + self.hb_offsetx
+        self.hitbox[0].y = self.rect.y + self.hb_offsety
 
 class Enemy8(Enemy1):
     """ enemy 1 type that moves left to right """
@@ -412,7 +412,7 @@ class Enemy8(Enemy1):
 
         # update the rect
         self.rect.x = self.dx
-        self.hitbox.x = self.rect.x + self.hb_offsetx
+        self.hitbox[0].x = self.rect.x + self.hb_offsetx
 
 class Enemy9(Enemy3):
     """ sine wave enemy that moves left to right """
@@ -445,8 +445,8 @@ class Enemy9(Enemy3):
         # update the rect
         self.rect.x = self.dx
         self.rect.y = self.dy
-        self.hitbox.x = self.rect.x + self.hb_offsetx
-        self.hitbox.y = self.rect.y + self.hb_offsety
+        self.hitbox[0].x = self.rect.x + self.hb_offsetx
+        self.hitbox[0].y = self.rect.y + self.hb_offsety
 
 class Enemy10(Enemy9):
     """ Wide sine wave enemy that moves left to right """
@@ -467,8 +467,8 @@ class Enemy11(Enemy2):
         self.points = 155
         self.hb_offsetx = 1
         self.hb_offsety = 1
-        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
-                                  self.dy + self.hb_offsety, 14, 14)
+        self.hitbox = [pygame.Rect(self.dx + self.hb_offsetx,
+                                  self.dy + self.hb_offsety, 14, 14)]
         self.has_powerup = has_powerup
         self.powerup_type = 1 # reverse fire gun
         self.hits = 2
@@ -536,7 +536,7 @@ class Enemy12(Enemy1):
 
         # update rect and hitbox
         self.rect.y = self.dy
-        self.hitbox.y = self.rect.y + self.hb_offsety
+        self.hitbox[0].y = self.rect.y + self.hb_offsety
 
 
     def spawn(self, current_time):
@@ -585,7 +585,7 @@ class Enemy13(Enemy11):
         
         # update rect and hitbox
         self.rect.y = self.dy
-        self.hitbox.y = self.rect.y + self.hb_offsety
+        self.hitbox[0].y = self.rect.y + self.hb_offsety
 
         # shoot at player
         return shot
@@ -628,8 +628,8 @@ class Enemy14(Enemy12):
         # update the rect
         self.rect.x = self.dx
         self.rect.y = self.dy
-        self.hitbox.x = self.rect.x + self.hb_offsetx
-        self.hitbox.y = self.rect.y + self.hb_offsety
+        self.hitbox[0].x = self.rect.x + self.hb_offsetx
+        self.hitbox[0].y = self.rect.y + self.hb_offsety
 
     def spawn(self, current_time):
         self.dx = self.bounds.left - self.rect.width
@@ -669,8 +669,8 @@ class Enemy15(Enemy13):
         # update rect and hitbox
         self.rect.x = self.dx
         self.rect.y = self.dy
-        self.hitbox.x = self.rect.x + self.hb_offsetx
-        self.hitbox.y = self.rect.y + self.hb_offsety
+        self.hitbox[0].x = self.rect.x + self.hb_offsetx
+        self.hitbox[0].y = self.rect.y + self.hb_offsety
 
         # shoot at player
         return shot
@@ -685,20 +685,58 @@ class Boss(Enemy1):
         self.x = x
         self.speed = 70
         self.bounds = game.game_world_boss_level
-        self.hb_offsetx = 26 # offset for hitbox
-        self.hb_offsety = 24
-        self.hitbox = pygame.Rect(self.dx + self.hb_offsetx,
-                                  self.dy + self.hb_offsety, 10, 8)
         self.direction = [0,-1]
         self.begin_time = 3000
         self.behavior_1 = True
         self.behavior_2 = False
         self.behavior_cycle = 0
         self.bullet_image = game.image_manager.get_image('eshot')
-        self.shoot_speed = 1500 #150  # shooting delay
+        self.explosion_image = game.image_manager.get_image('shrapnel')
+        self.shoot_speed = 1100 # shooting delay
         self.last_shot = 8000 # time of last shot
+        self.no_hitsound = game.sound_manager.get_sound('nohit')
+        self.hits = 25
+        self.flash_image = self.get_flash_image()
+        # init offsets for hitboxs
+        self.hb_offset1 = (10,10)
+        self.hb_offset2 = (22,46)
+        self.hb_offset3 = (7,52)
+        self.hb_offset4 = (46,64)
+        self.hb_offset5 = (33,4)
+        self.hb_offset6 = (44,12)
+        self.target_offset = (24,22)
+        # create hitboxes
+        self.collision_rect1 = pygame.rect.Rect(self.dx + self.hb_offset1[0],
+                                                self.dy + self.hb_offset1[1],
+                                                20, 9)
+        self.collision_rect2 = pygame.rect.Rect(self.dx + self.hb_offset2[0],
+                                                self.dy + self.hb_offset2[1],
+                                                24, 17)
+        self.collision_rect3 = pygame.rect.Rect(self.dx + self.hb_offset3[0],
+                                                self.dy + self.hb_offset3[1],
+                                                13, 36)
+        self.collision_rect4 = pygame.rect.Rect(self.dx + self.hb_offset4[0],
+                                                self.dy + self.hb_offset4[1],
+                                                11, 30)
+        self.collision_rect5 = pygame.rect.Rect(self.dx + self.hb_offset5[0],
+                                                self.dy + self.hb_offset5[1],
+                                                8, 37)
+        self.collision_rect6 = pygame.rect.Rect(self.dx + self.hb_offset6[0],
+                                                self.dy + self.hb_offset6[1],
+                                                13, 30)
+        self.target_rect = pygame.rect.Rect(self.dx + self.target_offset[0],
+                                            self.dy + self.target_offset[1],
+                                            7, 11)
+        # add hitbox offsets to list for update
+        self.offsets = [self.hb_offset1, self.hb_offset2, self.hb_offset3,
+                        self.hb_offset4, self.hb_offset5, self.hb_offset6,
+                        self.target_offset]
+        # add hitboxes to a list for update and collision checking
+        self.hitbox = [self.collision_rect1, self.collision_rect2,
+                       self.collision_rect3, self.collision_rect4,
+                       self.collision_rect5, self.collision_rect6,
+                       self.target_rect]
 
-    
     def spawn(self, current_time):
         self.dx = self.x
         self.spawn_time = current_time
@@ -710,12 +748,15 @@ class Boss(Enemy1):
 
         shot = None
 
+        # delay action for self.begin_time m/s
         if current_time - self.spawn_time > self.begin_time:
             if self.direction[1] == -1: # moving up
                 self.dy -= self.speed * TIMESTEP
                 if self.dy <= self.bounds.top:
                     self.dy = self.bounds.top
+                    # count top bounds collision as one behavior cycle
                     self.cycle_behavior()
+                    # set new directions based on behavior
                     if self.behavior_1: # move down
                         self.direction[0] = 0
                         self.direction[1] = 1
@@ -750,15 +791,20 @@ class Boss(Enemy1):
         # update the rect and hitbox
         self.rect.x = self.dx
         self.rect.y = self.dy
-        self.hitbox.x = self.rect.x + self.hb_offsetx
-        self.hitbox.y = self.rect.y + self.hb_offsety
-
-        
+        # loop through and update hitboxes
+        for i in range(len(self.hitbox)):
+            box = self.hitbox[i]
+            offset = self.offsets[i]
+            box.x = self.rect.x + offset[0]
+            box.y = self.rect.y + offset[1]
 
         return shot
 
     def cycle_behavior(self):
+        # update cycle counter
         self.behavior_cycle += 1
+
+        # switch behaviors after 5 cycles
         if self.behavior_cycle == 5:
             self.behavior_cycle = 0
             if self.behavior_1:
@@ -772,11 +818,13 @@ class Boss(Enemy1):
         # fire a shot at current pos, every
         # self.shoot_speed m/s, keep track of shots fired
         if current_time - self.last_shot > self.shoot_speed:
+            # shoot at the player for behavior 2
             if self.behavior_2:
                 angle = math.atan2(player_rect.centery - self.rect.centery,
                                    player_rect.centerx - self.rect.centerx)
                 shot = bullets.EnemyBulletAngle(self.rect.left + 16,
                              self.rect.centery - 22, angle, 75, self.bullet_image)
+            # shoot straight for behavior 1
             elif self.behavior_1:
                 shot = bullets.EnemyBullet(self.rect.left + 16,
                                     self.rect.centery - 22, 
@@ -786,6 +834,32 @@ class Boss(Enemy1):
         else:
             shot = None
         return shot
+
+    def hit(self, damage):
+        # decrement hits on hit, play hit sound
+
+        # take damage on target hitbox hit
+        if damage > 0:
+            self.hits -= damage
+            self.hit_sound.play()
+            self.image = self.flash_image
+        else: # did not hit target hitbox, no damage
+            self.no_hitsound.play()
+
+    def explode(self):
+        ex = []
+        # create explosion sprite
+        for angle in range(0,360,45):
+            ex.append(bullets.Shrapnel(self.rect.centerx, self.rect.centery,
+                                       angle, self.explosion_image))
+        # play sound
+        self.explosion_sound.play()
+
+        # die
+        self.kill()
+        powerup = self.drop_powerup()
+
+        return ex, powerup
 
 
 

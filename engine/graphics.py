@@ -110,7 +110,7 @@ class Viewport():
         self.height = 240 # height of screen
         self.coordinate = 0  # left edge of viewport
         self.last_coordinate = 0
-        self.level_pos = 11000
+        self.level_pos = 0 #11000
         self.draw_pos = 0
         self.minScroll = 0 # max value for left scrolling
         self.maxScroll = self.background.get_width() - 320 # max for right
