@@ -28,7 +28,7 @@ class PsmGame(engine.system.Game):
         self.text_color = (252,248,252)
         self.load_content()
         pygame.display.set_icon(self.image_manager.get_image('icon'))
-        self.current_level = 1
+        self.current_level = 6
         self.boss_level = False
         self.boss_level_triggered = False
         self.hud = hud.GameHud(self, (320, 32), (0,0,0))

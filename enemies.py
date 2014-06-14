@@ -695,7 +695,7 @@ class Boss(Enemy1):
         self.shoot_speed = 1100 # shooting delay
         self.last_shot = 8000 # time of last shot
         self.no_hitsound = game.sound_manager.get_sound('nohit')
-        self.hits = 25
+        self.hits = 2
         self.flash_image = self.get_flash_image()
         # init offsets for hitboxs
         self.hb_offset1 = (10,10)
@@ -837,7 +837,6 @@ class Boss(Enemy1):
 
     def hit(self, damage):
         # decrement hits on hit, play hit sound
-
         # take damage on target hitbox hit
         if damage > 0:
             self.hits -= damage

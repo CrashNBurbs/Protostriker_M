@@ -61,11 +61,16 @@ class SpriteManager(engine.objects.SpriteManager):
         # queue, call enemy's spawn method, and add it
         # to the enemy group for update and draw
         for enemy in self.enemy_queue:
-            if viewport.level_pos + viewport.width >= enemy.dx:
-                index = self.enemy_queue.index(enemy)
-                spawn_enemy = self.enemy_queue.pop(index)
-                spawn_enemy.spawn(current_time)
-                self.add_sprite(spawn_enemy, 'enemy_group')
+            if isinstance(enemy, enemies.Boss):
+                self.enemy_queue.remove(enemy)
+                enemy.spawn(current_time)
+                self.add_sprite(enemy, 'enemy_group')
+
+            elif viewport.level_pos + viewport.width >= enemy.dx:
+                 index = self.enemy_queue.index(enemy)
+                 spawn_enemy = self.enemy_queue.pop(index)
+                 spawn_enemy.spawn(current_time)
+                 self.add_sprite(spawn_enemy, 'enemy_group')
 
     def check_collisions(self, player):
         # check for each type of collsion, update appropriately
@@ -107,6 +112,8 @@ class SpriteManager(engine.objects.SpriteManager):
                             if self.game.boss_level:
                                 if box.width != 7:
                                     enemy.hit(0)
+                                else:
+                                    enemy.hit(damage)
                             else:
                                 enemy.hit(damage)
                         else: # enemy destroyed
@@ -149,6 +156,15 @@ class SpriteManager(engine.objects.SpriteManager):
 
         # return True if player has died
         return player_die
+    
+    def boss_destoyed(self):
+        destroyed = False
+        if self.game.boss_level:
+            if len(self.sprites['enemy_group']) == 0:
+                if len(self.sprites['explosions']) == 0:
+                    destroyed = True
+        return destroyed
+
 
     def load_level(self, game, filename):
         # Load a level consisting of enemy types and x,y

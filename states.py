@@ -201,6 +201,8 @@ class GameState(engine.system.State):
                                                          59 + self.game.hud.height, 
                                                          False)
                         self.boss_spawned = True
+                    elif self.sprite_manager.boss_destoyed():
+                         print "Boss Destroyed"
            
     def draw(self, screen):
         # draw the background and all sprites
@@ -280,4 +282,11 @@ class PauseState(engine.system.State):
         if self.transitioning:
             self.transition.draw(screen)
 
+class EndState(engine.system.State):
+    """ Game ending state """
+    def __init__(self, game):
+        engine.system.State.__init__(self, game)
+
+    def activate(self, transtition):
+        engine.system.State.activate(self, transition)
 
