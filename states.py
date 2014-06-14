@@ -202,7 +202,36 @@ class GameState(engine.system.State):
                                                          False)
                         self.boss_spawned = True
                     elif self.sprite_manager.boss_destoyed():
-                         print "Boss Destroyed"
+                         text = ["LEVEL %d COMPLETE!" % self.level]
+                         screen5 = engine.objects.EventState(self.game,
+                                                             ["THANKS FOR PLAYING!"], 
+                                                             None, 
+                                                             TitleScreenState(self.game))
+
+                         screen4 = engine.objects.EventState(self.game,
+                                                             ["PROGRAMMING, ART, MUSIC, AND DESIGN BY:",
+                                                              "WILL TAPLIN"],
+                                                              None,
+                                                              screen5)
+                         screen3 = engine.objects.EventState(self.game,
+                                                             ["FOR NOW..."],
+                                                             None,
+                                                             screen4)
+                         screen2 = engine.objects.EventState(self.game,
+                                                             ["YOU HAVE TRIUMPHED OVER",
+                                                              "THE ALIENS AND BROUGHT PEACE",
+                                                              "THE GALAXY"],
+                                                              None,
+                                                              screen3)
+                         screen1 = engine.objects.EventState(self.game,
+                                                             ["CONGRATULATIONS!"],
+                                                             None,
+                                                             screen2)
+                         state = engine.objects.EventState(self.game, text, 
+                                                           "levelwin.wav", 
+                                                            screen1)
+                         self.game.player.reset_pos()
+                         self.game.push_state(state)
            
     def draw(self, screen):
         # draw the background and all sprites
@@ -282,11 +311,4 @@ class PauseState(engine.system.State):
         if self.transitioning:
             self.transition.draw(screen)
 
-class EndState(engine.system.State):
-    """ Game ending state """
-    def __init__(self, game):
-        engine.system.State.__init__(self, game)
-
-    def activate(self, transtition):
-        engine.system.State.activate(self, transition)
 
