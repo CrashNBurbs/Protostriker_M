@@ -110,8 +110,8 @@ class SpriteManager(engine.objects.SpriteManager):
                             bullet.kill()
                             # Hack ass way to check if boss hurtbox
                             if self.game.boss_level:
-                                if box.width != 7:
-                                    enemy.hit(0)
+                                if box.width != 7:  # boss hurtbos has width 7
+                                    enemy.hit(0)  # no hit
                                 else:
                                     enemy.hit(damage)
                             else:
@@ -158,6 +158,8 @@ class SpriteManager(engine.objects.SpriteManager):
         return player_die
     
     def boss_destoyed(self):
+        # Returns true if boss is completely destroyed
+        # (Boss sprite is destroyed and shrapnel pieces gone)
         destroyed = False
         if self.game.boss_level:
             if len(self.sprites['enemy_group']) == 0:

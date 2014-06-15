@@ -738,6 +738,7 @@ class Boss(Enemy1):
                        self.target_rect]
 
     def spawn(self, current_time):
+        # set pos and save spawn time
         self.dx = self.x
         self.spawn_time = current_time
 

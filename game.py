@@ -68,6 +68,8 @@ class PsmGame(engine.system.Game):
         self.boss_level = False
         self.boss_level_triggered = False
         self.reset_player()
+
+        # If called from TitleScreenState, no need to push another
         if caller != 'TitleScreenState':
             self.change_state(states.TitleScreenState(self), 
                               engine.graphics.FadeAnimation("in"))

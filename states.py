@@ -35,6 +35,7 @@ class TitleScreenState(engine.system.State):
     def activate(self, transition):
         engine.system.State.activate(self, transition)
 
+        # reset game state
         self.game.reset('TitleScreenState')
 
         # Play music, Show the start menu
@@ -205,6 +206,8 @@ class GameState(engine.system.State):
                                                          False)
                         self.boss_spawned = True
                     elif self.sprite_manager.boss_destoyed():
+                        # Boss destroyed, do ending sequence and push a 
+                        # TitleScreenState at the end
                          text = ["LEVEL %d COMPLETE!" % self.level]
                          screen5 = engine.objects.EventState(self.game,
                                                              ["THANKS FOR PLAYING!"], 
