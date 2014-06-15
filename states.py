@@ -177,6 +177,8 @@ class GameState(engine.system.State):
                                                   "gameover.wav",
                                                   GameState(self.game))
                 self.game.reset_player()
+                self.game.boss_level_triggered = False
+                self.game.boss_level = False
                 self.game.push_state(state)
         
         # If player has reached the end of the level, create a
