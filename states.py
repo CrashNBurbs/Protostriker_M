@@ -202,6 +202,8 @@ class GameState(engine.system.State):
                 if self.game.boss_level == True:
                     # spawn boss once
                     if not self.boss_spawned:
+                        self.sprite_manager.sprites['enemy_group'].empty()
+                        self.sprite_manager.sprites['explosions'].empty()
                         self.sprite_manager.create_enemy(self.game, 
                                                          'boss',235, 
                                                          59 + self.game.hud.height, 
