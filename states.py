@@ -34,6 +34,9 @@ class TitleScreenState(engine.system.State):
 
     def activate(self, transition):
         engine.system.State.activate(self, transition)
+
+        self.game.reset('TitleScreenState')
+
         # Play music, Show the start menu
         self.load_content()
         self.background = self.game.image_manager.get_image('title')
@@ -302,7 +305,7 @@ class PauseState(engine.system.State):
         # user has quit to title
         if self.done_exiting:
             self.game.menu_manager.pop_menu()
-            self.game.reset()
+            self.game.reset('PauseState')
 
     def draw(self, screen):
         # draw all menus

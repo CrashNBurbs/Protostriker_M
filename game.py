@@ -62,12 +62,15 @@ class PsmGame(engine.system.Game):
         self.player = player.Player(self, 16, 112,
                                     self.image_manager.get_image('ship'))
 
-    def reset(self):
+    def reset(self, caller):
         # reset the game back to original state
-        self.current_level = 1
+        self.current_level = 6
+        self.boss_level = False
+        self.boss_level_triggered = False
         self.reset_player()
-        self.change_state(states.TitleScreenState(self), 
-                          engine.graphics.FadeAnimation("in"))
+        if caller != 'TitleScreenState':
+            self.change_state(states.TitleScreenState(self), 
+                              engine.graphics.FadeAnimation("in"))
 
     def load_content(self):
         self.image_manager.load_single('icon.bmp', 'icon', -1)
