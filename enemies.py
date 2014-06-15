@@ -687,6 +687,7 @@ class Boss(Enemy1):
         self.bounds = game.game_world_boss_level
         self.direction = [0,-1]
         self.begin_time = 3000
+        self.begun = False
         self.behavior_1 = True
         self.behavior_2 = False
         self.behavior_cycle = 0
@@ -751,6 +752,7 @@ class Boss(Enemy1):
 
         # delay action for self.begin_time m/s
         if current_time - self.spawn_time > self.begin_time:
+            self.begun = True
             if self.direction[1] == -1: # moving up
                 self.dy -= self.speed * TIMESTEP
                 if self.dy <= self.bounds.top:
@@ -839,7 +841,7 @@ class Boss(Enemy1):
     def hit(self, damage):
         # decrement hits on hit, play hit sound
         # take damage on target hitbox hit
-        if damage > 0:
+        if damage > 0 and self.begun:
             self.hits -= damage
             self.hit_sound.play()
             self.image = self.flash_image
