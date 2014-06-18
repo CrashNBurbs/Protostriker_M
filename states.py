@@ -110,7 +110,7 @@ class GameState(engine.system.State):
 
         # play music
         music_string = 'level_%d.wav' % self.level
-        if self.game.current_level < 5:
+        if self.game.current_level < 6:
             self.game.sound_manager.play_music(music_string)
 
         # create player, viewport, score and lives render, 

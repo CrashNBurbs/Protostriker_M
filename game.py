@@ -64,7 +64,7 @@ class PsmGame(engine.system.Game):
 
     def reset(self, caller):
         # reset the game back to original state
-        self.current_level = 6
+        self.current_level = 5
         self.boss_level = False
         self.boss_level_triggered = False
         self.reset_player()
