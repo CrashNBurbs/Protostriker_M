@@ -157,7 +157,7 @@ class Viewport():
             surface.blit(new_background, (self.background.get_width(),0))
             self.background = surface
             self.maxScroll = 640
-            self.game.sound_manager.play_music('bossalert.wav')
+            self.game.sound_manager.play_music('bossalert.wav', 1)
             self.call_once = True
 
 class FadeAnimation():
