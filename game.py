@@ -28,7 +28,7 @@ class PsmGame(engine.system.Game):
         self.text_color = (252,248,252)
         self.load_content()
         pygame.display.set_icon(self.image_manager.get_image('icon'))
-        self.current_level = 6
+        self.current_level = 1
         self.boss_level = False
         self.boss_level_triggered = False
         self.hud = hud.GameHud(self, (320, 32), (0,0,0))
@@ -64,7 +64,7 @@ class PsmGame(engine.system.Game):
 
     def reset(self, caller):
         # reset the game back to original state
-        self.current_level = 6
+        self.current_level = 1
         self.boss_level = False
         self.boss_level_triggered = False
         self.reset_player()
@@ -134,11 +134,11 @@ class PsmGame(engine.system.Game):
         self.sound_manager.load_sound('player_exp.wav', 'pl_exp',
                                            volume = 0.4)
         self.sound_manager.load_sound('laser.wav', 'laser',
-                                           volume = 0.2)
+                                           volume = 0.1)
         self.sound_manager.load_sound('hit.wav', 'hit',
                                            volume = 0.4)
         self.sound_manager.load_sound('spreader.wav', 'spreader',
-                                      volume = 0.4)
+                                      volume = 0.2)
         self.sound_manager.load_sound('laserbeam.wav', 'laserbeam',
                                       volume = 0.3)
         self.sound_manager.load_sound('powerup.wav', 'powerup', volume = 0.5)

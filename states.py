@@ -129,7 +129,9 @@ class GameState(engine.system.State):
         self.message = engine.gui.Message(self.game, level_string, 4000) 
         self.show_message = True
         self.boss_spawned = False
-
+        self.game.boss_level_triggered = False
+        self.game.boss_level = False
+             
     def reactivate(self, transition):
         engine.system.State.reactivate(self, transition)
         self.game.paused = False
@@ -176,14 +178,11 @@ class GameState(engine.system.State):
                                                   "gameover.wav",
                                                   GameState(self.game))
                 self.game.reset_player()
-                self.game.boss_level_triggered = False
-                self.game.boss_level = False
                 self.game.push_state(state)
         
         # If player has reached the end of the level, create a
         # level complete message
-        #print self.viewport.level_pos
-        if self.viewport.level_pos > 11500: #1150 
+        if self.viewport.level_pos > 11500:  
             end = self.game.next_level()
             if not end:  # go to next level
                 text = ["LEVEL %d COMPLETE!" % self.level]
@@ -208,6 +207,7 @@ class GameState(engine.system.State):
                                                          59 + self.game.hud.height, 
                                                          False)
                         self.boss_spawned = True
+                        self.game.sound_manager.play_music('bossmusic.wav')
                     elif self.sprite_manager.boss_destoyed():
                         # Boss destroyed, do ending sequence and push a 
                         # TitleScreenState at the end
@@ -228,8 +228,8 @@ class GameState(engine.system.State):
                                                              screen4)
                          screen2 = engine.objects.EventState(self.game,
                                                              ["YOU HAVE TRIUMPHED OVER",
-                                                              "THE ALIENS AND BROUGHT PEACE",
-                                                              "THE GALAXY"],
+                                                              "THE ENEMY AND BROUGHT PEACE",
+                                                              "TO THE GALAXY"],
                                                               None,
                                                               screen3)
                          screen1 = engine.objects.EventState(self.game,

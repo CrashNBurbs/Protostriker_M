@@ -88,8 +88,8 @@ class ControlsMenu(engine.gui.Menu):
         selected = engine.gui.Menu.handle_input(self, game)
         if selected == 'VIEW DEFAULT':
             text = ['MOVE - arrow keys or D-pad\nSHOOT\CONFIRM' \
-                    + '- Z key or gamepad\nbutton 3\nCYCLE WEAPONS - A key ' \
-                    'or gamepad\nbutton 4']
+                    + '- Z key or gamepad\nbutton A\nCYCLE WEAPONS - A key ' \
+                    'or gamepad\nbutton X']
             game.menu_manager.push_menu(engine.gui \
                                               .DialogBox(game, 16, 160, text))
         elif selected == 'RECONFIGURE':

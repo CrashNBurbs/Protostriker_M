@@ -163,6 +163,7 @@ class SpriteManager(engine.objects.SpriteManager):
         destroyed = False
         if self.game.boss_level:
             if len(self.sprites['enemy_group']) == 0:
+                self.game.sound_manager.music_control("stop")
                 if len(self.sprites['explosions']) == 0:
                     destroyed = True
         return destroyed

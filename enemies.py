@@ -696,7 +696,7 @@ class Boss(Enemy1):
         self.shoot_speed = 1100 # shooting delay
         self.last_shot = 8000 # time of last shot
         self.no_hitsound = game.sound_manager.get_sound('nohit')
-        self.hits = 1 #30
+        self.hits = 40
         self.flash_image = self.get_flash_image()
         # init offsets for hitboxs
         self.hb_offset1 = (10,10)
@@ -705,7 +705,7 @@ class Boss(Enemy1):
         self.hb_offset4 = (46,64)
         self.hb_offset5 = (33,4)
         self.hb_offset6 = (44,12)
-        self.target_offset = (24,22)
+        self.target_offset = (24,21)
         # create hitboxes
         self.collision_rect1 = pygame.rect.Rect(self.dx + self.hb_offset1[0],
                                                 self.dy + self.hb_offset1[1],
@@ -727,7 +727,7 @@ class Boss(Enemy1):
                                                 13, 30)
         self.target_rect = pygame.rect.Rect(self.dx + self.target_offset[0],
                                             self.dy + self.target_offset[1],
-                                            7, 11)
+                                            7, 13)
         # add hitbox offsets to list for update
         self.offsets = [self.hb_offset1, self.hb_offset2, self.hb_offset3,
                         self.hb_offset4, self.hb_offset5, self.hb_offset6,

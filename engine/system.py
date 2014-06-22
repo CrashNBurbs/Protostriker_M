@@ -176,12 +176,12 @@ class InputManager():
                               'LEFT' : [K_LEFT, 'left'],
                               'UP' : [K_UP, 'up'],
                               'DOWN' : [K_DOWN, 'down'],
-                              'SELECT' : [K_QUOTE, 8],
-                              'START' : [K_RETURN, 9],
-                              'B' : [K_z, 2],
+                              'SELECT' : [K_QUOTE, 6],
+                              'START' : [K_RETURN, 7],
+                              'B' : [K_z, 0],
                               'A' : [K_x, 1],
-                              'Y' : [K_a, 3],
-                              'X' : [K_s, 0]}
+                              'Y' : [K_a, 2],
+                              'X' : [K_s, 3]}
 
         self.user_bound = {'RIGHT' : [],  # separate dictionary for user
                            'LEFT' : [],   # bound controls
@@ -206,8 +206,9 @@ class InputManager():
                 # keypress event
                 elif event.type == KEYDOWN:  
                     if event.key == K_ESCAPE:
-                        pygame.quit()
-                        quit()
+                        #pygame.quit()
+                        #quit()
+                        pass
                     self.pressed['keys'].append(event.key)
                     self.held['keys'].append(event.key)
                 # key release event
